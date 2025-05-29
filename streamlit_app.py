@@ -18,7 +18,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 openai.api_key = OPENAI_API_KEY
 
 CHROMA_PATH = "chatbot/chroma_db"
-DOC_PATH = "chatbot/macroeconomics_textbook.pdf"  # Your PDF file path
+DOC_PATH = "macroeconomics_textbook.pdf"  # Your PDF file path
 
 # Setup embedding
 embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
