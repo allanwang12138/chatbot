@@ -7,13 +7,12 @@ import os
 from langchain.prompts import ChatPromptTemplate
 from pydub import AudioSegment
 from pydub.playback import play
-import sys
 from dotenv import load_dotenv
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
-import chromadb
-from chromadb.config import Settings  # <-- Import Settings for client config
+# Import chromadb config separately, but avoid importing chromadb directly to prevent SQLite check
+from chromadb.config import Settings
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -25,10 +24,10 @@ DOC_PATH = "macroeconomics_textbook.pdf"  # Your PDF file path
 # Setup embedding
 embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
-# Client settings for chroma to use DuckDB+Parquet persistence (avoids sqlite3 version issue)
+# Create client settings to force use of duckdb+parquet persistence mode
 client_settings = Settings(
-    chroma_db_impl="duckdb+parquet",
     persist_directory=CHROMA_PATH,
+    chroma_db_impl="duckdb+parquet"
 )
 
 # Function to build the Chroma DB if not present
@@ -38,11 +37,11 @@ def build_chroma_db():
     pages = loader.load()
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
     chunks = text_splitter.split_documents(pages)
-    
     db = Chroma.from_documents(
         chunks,
         embeddings,
-        client_settings=client_settings,  # <-- Use DuckDB+Parquet persistence here
+        persist_directory=CHROMA_PATH,
+        client_settings=client_settings
     )
     db.persist()
     st.success("✅ Chroma DB successfully built and saved.")
@@ -55,7 +54,7 @@ else:
     db_chroma = Chroma(
         persist_directory=CHROMA_PATH,
         embedding_function=embeddings,
-        client_settings=client_settings,  # <-- Same here to load with DuckDB persistence
+        client_settings=client_settings
     )
 
 # Prompt templates
