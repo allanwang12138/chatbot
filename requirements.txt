@@ -4,8 +4,7 @@ langchain-openai
 openai
 python-dotenv
 pydub
-pymupdf
-python-dotenv
 pypdf
-chromadb
+chromadb>=0.3.21
+duckdb
 protobuf==3.20.3
