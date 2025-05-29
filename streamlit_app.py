@@ -1,52 +1,16 @@
-import os
 import streamlit as st
 import openai
-import subprocess
+from langchain_community.vectorstores import Chroma
+from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.chat_models import ChatOpenAI
+import os
+from langchain.prompts import ChatPromptTemplate
+from pydub import AudioSegment
+from pydub.playback import play
 import sys
-
-def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-
-# Auto-install required packages if not present
-try:
-    from langchain_community.vectorstores import Chroma
-except ImportError:
-    install("langchain-community")
-    from langchain_community.vectorstores import Chroma
-
-try:
-    from langchain_community.embeddings import OpenAIEmbeddings
-except ImportError:
-    install("langchain-community")
-    from langchain_community.embeddings import OpenAIEmbeddings
-
-try:
-    from langchain_community.chat_models import ChatOpenAI
-except ImportError:
-    install("langchain-community")
-    from langchain_community.chat_models import ChatOpenAI
-
-try:
-    import openai
-except ImportError:
-    install("openai")
-    import openai
-
-try:
-    from dotenv import load_dotenv
-except ImportError:
-    install("python-dotenv")
-    from dotenv import load_dotenv
-
-try:
-    from pydub import AudioSegment, playback
-except ImportError:
-    install("pydub")
-    from pydub import AudioSegment, playback
-
 
 __import__('pysqlite3')
-import sys
+
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 load_dotenv()
