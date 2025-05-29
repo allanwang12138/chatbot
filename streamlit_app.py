@@ -1,31 +1,47 @@
+import os
 import streamlit as st
 import openai
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.chat_models import ChatOpenAI
-import os
+from langchain.document_loaders import PyPDFLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.prompts import ChatPromptTemplate
-from pydub import AudioSegment
-from pydub.playback import play
+from dotenv import load_dotenv
+
 __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
-# Load environment variables or set directly
 
-from dotenv import load_dotenv
 load_dotenv()
-
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 openai.api_key = OPENAI_API_KEY
 
-# CHROMA_PATH = "/Users/wuxiong/Desktop/Research/RAG_econ" # your existing db path
-CHROMA_PATH = "/workspaces/chatbot/chroma_db" 
+CHROMA_PATH = "/workspaces/chatbot/chroma_db"
+DOC_PATH = "/workspaces/chatbot/macroeconomics_textbook.pdf"  # Your PDF file path
 
-# Load vector store and embedding model
+# Setup embedding
 embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
-db_chroma = Chroma(persist_directory=CHROMA_PATH, embedding_function=embeddings)
 
-# Define prompt templates
+# Function to build the Chroma DB if not present
+def build_chroma_db():
+    st.info("Chroma DB not found. Building DB from documents now. This may take a moment...")
+    loader = PyPDFLoader(DOC_PATH)
+    pages = loader.load()
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+    chunks = text_splitter.split_documents(pages)
+    db = Chroma.from_documents(chunks, embeddings, persist_directory=CHROMA_PATH)
+    db.persist()
+    st.success("✅ Chroma DB successfully built and saved.")
+    return db
+
+# Check if DB exists (simple check: directory exists and not empty)
+if not os.path.exists(CHROMA_PATH) or len(os.listdir(CHROMA_PATH)) == 0:
+    db_chroma = build_chroma_db()
+else:
+    db_chroma = Chroma(persist_directory=CHROMA_PATH, embedding_function=embeddings)
+
+# Prompt templates
 PROMPT_DETAILED = """
 Answer the question based only on the following context:
 {context}
@@ -47,7 +63,6 @@ st.title("📄 Macro Economics Q&A App")
 
 query = st.text_input("Ask a question about Macro Economics:")
 
-# Display options as horizontal buttons
 col1, col2, col3 = st.columns(3)
 with col1:
     detailed_clicked = st.button("📖 Detailed Answer")
@@ -56,7 +71,6 @@ with col2:
 with col3:
     voice_clicked = st.button("🔊 Voice Answer")
 
-# Determine selected option
 option = None
 if detailed_clicked:
     option = "Detailed Answer"
@@ -65,7 +79,6 @@ elif concise_clicked:
 elif voice_clicked:
     option = "Concise Answer + Voice"
 
-# Handle query and response if an option is chosen
 if query and option:
     docs_chroma = db_chroma.similarity_search_with_score(query, k=5)
     context_text = "\n\n".join([doc.page_content for doc, _ in docs_chroma])
@@ -81,7 +94,6 @@ if query and option:
     with st.spinner("Generating answer..."):
         response = model.predict(prompt)
 
-    # Output handling
     if option in ["Detailed Answer", "Concise Answer"]:
         st.markdown("### Answer")
         st.write(response)
