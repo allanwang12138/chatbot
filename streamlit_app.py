@@ -8,6 +8,7 @@ from langchain.prompts import ChatPromptTemplate
 from pydub import AudioSegment
 from pydub.playback import play
 import sys
+from dotenv import load_dotenv
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
