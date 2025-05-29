@@ -12,6 +12,8 @@ from dotenv import load_dotenv
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
+import chromadb
+from chromadb.config import Settings  # <-- Import Settings for client config
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -23,6 +25,12 @@ DOC_PATH = "macroeconomics_textbook.pdf"  # Your PDF file path
 # Setup embedding
 embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
+# Client settings for chroma to use DuckDB+Parquet persistence (avoids sqlite3 version issue)
+client_settings = Settings(
+    chroma_db_impl="duckdb+parquet",
+    persist_directory=CHROMA_PATH,
+)
+
 # Function to build the Chroma DB if not present
 def build_chroma_db():
     st.info("Chroma DB not found. Building DB from documents now. This may take a moment...")
@@ -30,7 +38,12 @@ def build_chroma_db():
     pages = loader.load()
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
     chunks = text_splitter.split_documents(pages)
-    db = Chroma.from_documents(chunks, embeddings, persist_directory=CHROMA_PATH)
+    
+    db = Chroma.from_documents(
+        chunks,
+        embeddings,
+        client_settings=client_settings,  # <-- Use DuckDB+Parquet persistence here
+    )
     db.persist()
     st.success("✅ Chroma DB successfully built and saved.")
     return db
@@ -39,7 +52,11 @@ def build_chroma_db():
 if not os.path.exists(CHROMA_PATH) or len(os.listdir(CHROMA_PATH)) == 0:
     db_chroma = build_chroma_db()
 else:
-    db_chroma = Chroma(persist_directory=CHROMA_PATH, embedding_function=embeddings)
+    db_chroma = Chroma(
+        persist_directory=CHROMA_PATH,
+        embedding_function=embeddings,
+        client_settings=client_settings,  # <-- Same here to load with DuckDB persistence
+    )
 
 # Prompt templates
 PROMPT_DETAILED = """
