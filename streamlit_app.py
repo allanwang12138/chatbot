@@ -1,56 +1,102 @@
 import streamlit as st
-from openai import OpenAI
+import openai
+from langchain_community.vectorstores import Chroma
+from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.chat_models import ChatOpenAI
+import os
+from langchain.prompts import ChatPromptTemplate
+from pydub import AudioSegment
+from pydub.playback import play
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+# Load environment variables or set directly
 
-# Show title and description.
-st.title("💬 Chatbot")
-st.write(
-    "This is a simple chatbot that uses OpenAI's GPT-3.5 model to generate responses. "
-    "To use this app, you need to provide an OpenAI API key, which you can get [here](https://platform.openai.com/account/api-keys). "
-    "You can also learn how to build this app step by step by [following our tutorial](https://docs.streamlit.io/develop/tutorials/llms/build-conversational-apps)."
-)
+from dotenv import load_dotenv
+load_dotenv()
 
-# Ask user for their OpenAI API key via `st.text_input`.
-# Alternatively, you can store the API key in `./.streamlit/secrets.toml` and access it
-# via `st.secrets`, see https://docs.streamlit.io/develop/concepts/connections/secrets-management
-openai_api_key = st.text_input("OpenAI API Key", type="password")
-if not openai_api_key:
-    st.info("Please add your OpenAI API key to continue.", icon="🗝️")
-else:
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+openai.api_key = OPENAI_API_KEY
 
-    # Create an OpenAI client.
-    client = OpenAI(api_key=openai_api_key)
+# CHROMA_PATH = "/Users/wuxiong/Desktop/Research/RAG_econ" # your existing db path
+CHROMA_PATH = "/workspaces/chatbot/chroma_db" 
 
-    # Create a session state variable to store the chat messages. This ensures that the
-    # messages persist across reruns.
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
+# Load vector store and embedding model
+embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
+db_chroma = Chroma(persist_directory=CHROMA_PATH, embedding_function=embeddings)
 
-    # Display the existing chat messages via `st.chat_message`.
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+# Define prompt templates
+PROMPT_DETAILED = """
+Answer the question based only on the following context:
+{context}
+Answer the question based on the above context: {question}.
+Provide a detailed answer.
+Don’t justify your answers.
+Don’t give information not mentioned in the CONTEXT INFORMATION.
+Do not say "according to the context" or "mentioned in the context" or similar.
+"""
 
-    # Create a chat input field to allow the user to enter a message. This will display
-    # automatically at the bottom of the page.
-    if prompt := st.chat_input("What is up?"):
+PROMPT_CONCISE = """
+Answer the question based only on the following context:
+{context}
+Answer the question based on the above context: {question}.
+Provide a clear and concise summary in no more than 2 sentences.
+"""
 
-        # Store and display the current prompt.
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
+st.title("📄 Macro Economics Q&A App")
 
-        # Generate a response using the OpenAI API.
-        stream = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": m["role"], "content": m["content"]}
-                for m in st.session_state.messages
-            ],
-            stream=True,
-        )
+query = st.text_input("Ask a question about Macro Economics:")
 
-        # Stream the response to the chat using `st.write_stream`, then store it in 
-        # session state.
-        with st.chat_message("assistant"):
-            response = st.write_stream(stream)
-        st.session_state.messages.append({"role": "assistant", "content": response})
+# Display options as horizontal buttons
+col1, col2, col3 = st.columns(3)
+with col1:
+    detailed_clicked = st.button("📖 Detailed Answer")
+with col2:
+    concise_clicked = st.button("✂️ Concise Answer")
+with col3:
+    voice_clicked = st.button("🔊 Voice Answer")
+
+# Determine selected option
+option = None
+if detailed_clicked:
+    option = "Detailed Answer"
+elif concise_clicked:
+    option = "Concise Answer"
+elif voice_clicked:
+    option = "Concise Answer + Voice"
+
+# Handle query and response if an option is chosen
+if query and option:
+    docs_chroma = db_chroma.similarity_search_with_score(query, k=5)
+    context_text = "\n\n".join([doc.page_content for doc, _ in docs_chroma])
+
+    if option == "Detailed Answer":
+        prompt_template = ChatPromptTemplate.from_template(PROMPT_DETAILED)
+    else:
+        prompt_template = ChatPromptTemplate.from_template(PROMPT_CONCISE)
+
+    prompt = prompt_template.format(context=context_text, question=query)
+    model = ChatOpenAI(openai_api_key=OPENAI_API_KEY)
+
+    with st.spinner("Generating answer..."):
+        response = model.predict(prompt)
+
+    # Output handling
+    if option in ["Detailed Answer", "Concise Answer"]:
+        st.markdown("### Answer")
+        st.write(response)
+    elif option == "Concise Answer + Voice":
+        with st.spinner("Generating voice..."):
+            speech_response = openai.audio.speech.create(
+                model="tts-1",
+                voice="alloy",
+                input=response
+            )
+            audio_path = "output.mp3"
+            with open(audio_path, "wb") as f:
+                f.write(speech_response.read())
+            audio_file = open(audio_path, "rb")
+            st.audio(audio_file.read(), format="audio/mp3")
+
+    with st.expander("Show Retrieved Context"):
+        st.write(context_text)
