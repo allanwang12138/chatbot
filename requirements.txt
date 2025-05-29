@@ -1,2 +1,7 @@
 streamlit
+langchain-community
+langchain-openai
 openai
+python-dotenv
+pydub
+pymupdf
