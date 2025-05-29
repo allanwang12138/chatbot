@@ -5,14 +5,9 @@ from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.chat_models import ChatOpenAI
 import os
 from langchain.prompts import ChatPromptTemplate
-from pydub import AudioSegment
-from pydub.playback import play
 from dotenv import load_dotenv
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-
-# Import chromadb config separately, but avoid importing chromadb directly to prevent SQLite check
-from chromadb.config import Settings
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -24,13 +19,12 @@ DOC_PATH = "macroeconomics_textbook.pdf"  # Your PDF file path
 # Setup embedding
 embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
-# Create client settings to force use of duckdb+parquet persistence mode
-client_settings = Settings(
-    persist_directory=CHROMA_PATH,
-    chroma_db_impl="duckdb+parquet"
-)
+# Client settings as dict to force DuckDB+Parquet backend
+client_settings = {
+    "persist_directory": CHROMA_PATH,
+    "chroma_db_impl": "duckdb+parquet"
+}
 
-# Function to build the Chroma DB if not present
 def build_chroma_db():
     st.info("Chroma DB not found. Building DB from documents now. This may take a moment...")
     loader = PyPDFLoader(DOC_PATH)
@@ -38,8 +32,8 @@ def build_chroma_db():
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
     chunks = text_splitter.split_documents(pages)
     db = Chroma.from_documents(
-        chunks,
-        embeddings,
+        documents=chunks,
+        embedding=embeddings,
         persist_directory=CHROMA_PATH,
         client_settings=client_settings
     )
@@ -47,7 +41,6 @@ def build_chroma_db():
     st.success("✅ Chroma DB successfully built and saved.")
     return db
 
-# Check if DB exists (simple check: directory exists and not empty)
 if not os.path.exists(CHROMA_PATH) or len(os.listdir(CHROMA_PATH)) == 0:
     db_chroma = build_chroma_db()
 else:
@@ -57,7 +50,6 @@ else:
         client_settings=client_settings
     )
 
-# Prompt templates
 PROMPT_DETAILED = """
 Answer the question based only on the following context:
 {context}
