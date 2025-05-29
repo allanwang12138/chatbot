@@ -6,4 +6,4 @@ python-dotenv
 pydub
 pymupdf
 python-dotenv
-
+pypdf
