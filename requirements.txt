@@ -1,9 +1,6 @@
 streamlit
 openai
 langchain
-langchain-community
 langchain-openai
+pinecone>=3.0.0
 python-dotenv
-pydub
-pypdf
-pinecone
