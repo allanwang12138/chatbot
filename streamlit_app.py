@@ -1,55 +1,52 @@
 import streamlit as st
-import openai
-from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import OpenAIEmbeddings
-from langchain_community.chat_models import ChatOpenAI
 import os
-from langchain.prompts import ChatPromptTemplate
+import openai
 from dotenv import load_dotenv
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.chat_models import ChatOpenAI
+from langchain.vectorstores import Pinecone as LangchainPinecone
+import pinecone
+from langchain.prompts import ChatPromptTemplate
 
+# Load environment variables
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
+PINECONE_ENV = os.getenv("PINECONE_ENV")
+PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME")
+DOC_PATH = "macroeconomics_textbook.pdf"
+
 openai.api_key = OPENAI_API_KEY
-
-CHROMA_PATH = "chatbot/chroma_db"
-DOC_PATH = "macroeconomics_textbook.pdf"  # Your PDF file path
-
-# Setup embedding
 embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
-# Client settings as dict to force DuckDB+Parquet backend
-client_settings = {
-    "persist_directory": CHROMA_PATH,
-    "chroma_db_impl": "duckdb+parquet"
-}
+# Initialize Pinecone
+pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)
 
-def build_chroma_db():
-    st.info("Chroma DB not found. Building DB from documents now. This may take a moment...")
+def build_pinecone_index():
+    st.info("Pinecone index is empty. Building from document...")
     loader = PyPDFLoader(DOC_PATH)
     pages = loader.load()
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-    chunks = text_splitter.split_documents(pages)
-    db = Chroma.from_documents(
+    splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+    chunks = splitter.split_documents(pages)
+    LangchainPinecone.from_documents(
         documents=chunks,
         embedding=embeddings,
-        persist_directory=CHROMA_PATH,
-        client_settings=client_settings
+        index_name=PINECONE_INDEX_NAME
     )
-    db.persist()
-    st.success("✅ Chroma DB successfully built and saved.")
-    return db
+    st.success("✅ Pinecone index populated.")
+    return LangchainPinecone.from_existing_index(PINECONE_INDEX_NAME, embeddings)
 
-if not os.path.exists(CHROMA_PATH) or len(os.listdir(CHROMA_PATH)) == 0:
-    db_chroma = build_chroma_db()
+# Check if index exists and has vectors
+index = pinecone.Index(PINECONE_INDEX_NAME)
+index_stats = index.describe_index_stats()
+if index_stats['total_vector_count'] == 0:
+    db = build_pinecone_index()
 else:
-    db_chroma = Chroma(
-        persist_directory=CHROMA_PATH,
-        embedding_function=embeddings,
-        client_settings=client_settings
-    )
+    db = LangchainPinecone.from_existing_index(PINECONE_INDEX_NAME, embeddings)
 
+# Prompts
 PROMPT_DETAILED = """
 Answer the question based only on the following context:
 {context}
@@ -67,6 +64,7 @@ Answer the question based on the above context: {question}.
 Provide a clear and concise summary in no more than 2 sentences.
 """
 
+# Streamlit UI
 st.title("📄 Macro Economics Q&A App")
 
 query = st.text_input("Ask a question about Macro Economics:")
@@ -88,15 +86,12 @@ elif voice_clicked:
     option = "Concise Answer + Voice"
 
 if query and option:
-    docs_chroma = db_chroma.similarity_search_with_score(query, k=5)
-    context_text = "\n\n".join([doc.page_content for doc, _ in docs_chroma])
+    docs = db.similarity_search_with_score(query, k=5)
+    context_text = "\n\n".join([doc.page_content for doc, _ in docs])
 
-    if option == "Detailed Answer":
-        prompt_template = ChatPromptTemplate.from_template(PROMPT_DETAILED)
-    else:
-        prompt_template = ChatPromptTemplate.from_template(PROMPT_CONCISE)
-
+    prompt_template = ChatPromptTemplate.from_template(PROMPT_DETAILED if option == "Detailed Answer" else PROMPT_CONCISE)
     prompt = prompt_template.format(context=context_text, question=query)
+
     model = ChatOpenAI(openai_api_key=OPENAI_API_KEY)
 
     with st.spinner("Generating answer..."):
@@ -115,8 +110,7 @@ if query and option:
             audio_path = "output.mp3"
             with open(audio_path, "wb") as f:
                 f.write(speech_response.read())
-            audio_file = open(audio_path, "rb")
-            st.audio(audio_file.read(), format="audio/mp3")
+            st.audio(audio_path, format="audio/mp3")
 
     with st.expander("Show Retrieved Context"):
         st.write(context_text)
