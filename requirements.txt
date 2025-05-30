@@ -1,11 +1,9 @@
 streamlit
+openai
+langchain
 langchain-community
 langchain-openai
-openai
 python-dotenv
 pydub
-pymupdf
 pypdf
-chromadb
-duckdb
-protobuf==3.20.3
+pinecone-client
