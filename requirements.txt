@@ -6,4 +6,4 @@ langchain-openai
 python-dotenv
 pydub
 pypdf
-pinecone-client
+pinecone
