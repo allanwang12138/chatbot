@@ -2,7 +2,7 @@ streamlit
 openai
 langchain
 langchain-openai
-pinecone>=3.0.0
+pinecone-client==2.2.4  # old SDK
 python-dotenv
 langchain-community
 pypdf
