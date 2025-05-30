@@ -7,8 +7,9 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.chat_models import ChatOpenAI
 from langchain.vectorstores import Pinecone as LangchainPinecone
-import pinecone
+import pinecone  
 from langchain.prompts import ChatPromptTemplate
+
 
 # Load environment variables
 load_dotenv()
