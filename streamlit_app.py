@@ -1,39 +1,63 @@
 import streamlit as st
 import openai
 import os
-import tempfile
-
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.chat_models import ChatOpenAI
-from langchain.vectorstores import Pinecone as LangchainPinecone
+from langchain_community.vectorstores import Qdrant
+from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.chat_models import ChatOpenAI
+from langchain.prompts import ChatPromptTemplate
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.prompts import ChatPromptTemplate
+from qdrant_client import QdrantClient
+from qdrant_client.models import Distance, VectorParams
+from dotenv import load_dotenv
 
-import pinecone  # Using pinecone-client v2.2.4
-
-# Load API keys and config from environment variables
+# Load environment variables
+load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
-PINECONE_ENV = os.getenv("PINECONE_ENV", "us-east-1")
-PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME", "macro-econ-index")
+QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
+QDRANT_URL = os.getenv("QDRANT_URL")
 
-# Initialize OpenAI
 openai.api_key = OPENAI_API_KEY
+DOC_PATH = "macroeconomics_textbook.pdf"
+COLLECTION_NAME = "macroecon_collection"
 
-# Initialize Pinecone v2 client
-pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)
+# Setup embedding
+embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
-# Create index if it doesn't exist
-if PINECONE_INDEX_NAME not in pinecone.list_indexes():
-    pinecone.create_index(
-        name=PINECONE_INDEX_NAME,
-        dimension=1536,
-        metric="cosine"
+# Initialize Qdrant Cloud client
+client = QdrantClient(
+    url=QDRANT_URL,
+    api_key=QDRANT_API_KEY
+)
+
+# Create collection if it doesn't exist
+existing_collections = [col.name for col in client.get_collections().collections]
+if COLLECTION_NAME not in existing_collections:
+    st.info("Qdrant Cloud: No collection found. Building one now...")
+
+    loader = PyPDFLoader(DOC_PATH)
+    pages = loader.load()
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+    chunks = text_splitter.split_documents(pages)
+
+    client.recreate_collection(
+        collection_name=COLLECTION_NAME,
+        vectors_config=VectorParams(size=1536, distance=Distance.COSINE),
     )
 
-# LangChain embedding setup
-embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
+    db = Qdrant.from_documents(
+        documents=chunks,
+        embedding=embeddings,
+        collection_name=COLLECTION_NAME,
+        client=client,
+    )
+    st.success("✅ Collection built and uploaded to Qdrant Cloud.")
+else:
+    db = Qdrant(
+        client=client,
+        collection_name=COLLECTION_NAME,
+        embedding_function=embeddings
+    )
 
 # Prompt templates
 PROMPT_DETAILED = """
@@ -53,82 +77,54 @@ Answer the question based on the above context: {question}.
 Provide a clear and concise summary in no more than 2 sentences.
 """
 
-# Streamlit UI
+# UI
 st.title("📄 Macro Economics Q&A App")
+query = st.text_input("Ask a question about Macro Economics:")
 
-uploaded_pdf = st.file_uploader("Upload your Macro Economics PDF", type="pdf")
-if uploaded_pdf:
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
-        tmp_file.write(uploaded_pdf.read())
-        tmp_file_path = tmp_file.name
+col1, col2, col3 = st.columns(3)
+with col1:
+    detailed_clicked = st.button("📖 Detailed Answer")
+with col2:
+    concise_clicked = st.button("✂️ Concise Answer")
+with col3:
+    voice_clicked = st.button("🔊 Voice Answer")
 
-    with st.spinner("Processing and indexing document..."):
-        loader = PyPDFLoader(tmp_file_path)
-        pages = loader.load()
-        splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-        chunks = splitter.split_documents(pages)
+option = None
+if detailed_clicked:
+    option = "Detailed Answer"
+elif concise_clicked:
+    option = "Concise Answer"
+elif voice_clicked:
+    option = "Concise Answer + Voice"
 
-        LangchainPinecone.from_documents(
-            chunks,
-            embeddings,
-            index_name=PINECONE_INDEX_NAME,
-            namespace="default"
-        )
-        st.success("✅ Document indexed into Pinecone.")
+if query and option:
+    docs_qdrant = db.similarity_search_with_score(query, k=5)
+    context_text = "\n\n".join([doc.page_content for doc, _ in docs_qdrant])
 
-    query = st.text_input("Ask a question about your uploaded textbook:")
+    prompt_template = ChatPromptTemplate.from_template(
+        PROMPT_DETAILED if option == "Detailed Answer" else PROMPT_CONCISE
+    )
+    prompt = prompt_template.format(context=context_text, question=query)
+    model = ChatOpenAI(openai_api_key=OPENAI_API_KEY)
 
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        detailed_clicked = st.button("📖 Detailed Answer")
-    with col2:
-        concise_clicked = st.button("✂️ Concise Answer")
-    with col3:
-        voice_clicked = st.button("🔊 Voice Answer")
+    with st.spinner("Generating answer..."):
+        response = model.predict(prompt)
 
-    option = None
-    if detailed_clicked:
-        option = "Detailed Answer"
-    elif concise_clicked:
-        option = "Concise Answer"
-    elif voice_clicked:
-        option = "Concise Answer + Voice"
+    if "Voice" in option:
+        with st.spinner("Generating voice..."):
+            speech_response = openai.audio.speech.create(
+                model="tts-1",
+                voice="alloy",
+                input=response
+            )
+            audio_path = "output.mp3"
+            with open(audio_path, "wb") as f:
+                f.write(speech_response.read())
+            audio_file = open(audio_path, "rb")
+            st.audio(audio_file.read(), format="audio/mp3")
+    else:
+        st.markdown("### Answer")
+        st.write(response)
 
-    if query and option:
-        vectorstore = LangchainPinecone(
-            index_name=PINECONE_INDEX_NAME,
-            embedding_function=embeddings,
-            namespace="default"
-        )
-        docs = vectorstore.similarity_search_with_score(query, k=5)
-        context_text = "\n\n".join([doc.page_content for doc, _ in docs])
-
-        prompt_template = ChatPromptTemplate.from_template(
-            PROMPT_DETAILED if option == "Detailed Answer" else PROMPT_CONCISE
-        )
-        prompt = prompt_template.format(context=context_text, question=query)
-        model = ChatOpenAI(openai_api_key=OPENAI_API_KEY)
-
-        with st.spinner("Generating answer..."):
-            response = model.predict(prompt)
-
-        if option in ["Detailed Answer", "Concise Answer"]:
-            st.markdown("### Answer")
-            st.write(response)
-        elif option == "Concise Answer + Voice":
-            with st.spinner("Generating voice..."):
-                speech_response = openai.audio.speech.create(
-                    model="tts-1",
-                    voice="alloy",
-                    input=response
-                )
-                audio_path = "output.mp3"
-                with open(audio_path, "wb") as f:
-                    f.write(speech_response.read())
-                audio_file = open(audio_path, "rb")
-                st.audio(audio_file.read(), format="audio/mp3")
-
-        with st.expander("Show Retrieved Context"):
-            st.write(context_text)
-else:
-    st.info("📥 Upload a PDF to begin.")
+    with st.expander("Show Retrieved Context"):
+        st.write(context_text)
