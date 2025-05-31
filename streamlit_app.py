@@ -5,11 +5,12 @@ from dotenv import load_dotenv
 from langchain_community.vectorstores import Qdrant
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.chat_models import ChatOpenAI
-from langchain_community.prompts import ChatPromptTemplate
 from langchain_community.document_loaders import PyPDFLoader
+from langchain.prompts import ChatPromptTemplate  # <- ✅ Use this
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams
+
 
 
 # Load environment variables
