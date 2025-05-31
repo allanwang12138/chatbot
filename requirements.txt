@@ -3,6 +3,6 @@ openai
 python-dotenv
 langchain==0.0.312
 pydub
-pinecone
+pinecone-client==2.2.4
 PyPDF2
 pypdf
