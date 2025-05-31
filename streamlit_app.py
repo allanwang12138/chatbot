@@ -6,14 +6,12 @@ from langchain_community.vectorstores import Qdrant
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.chat_models import ChatOpenAI
 from langchain_community.document_loaders import PyPDFLoader
-from langchain.prompts import ChatPromptTemplate  # <- ✅ Use this
+from langchain.prompts import ChatPromptTemplate
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams
 
-
-
-# Load environment variables
+# Load API keys
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
@@ -26,22 +24,23 @@ COLLECTION_NAME = "macroecon_collection"
 # Setup embedding
 embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
-# Initialize Qdrant Cloud client
+# Setup Qdrant client
 client = QdrantClient(
     url=QDRANT_URL,
     api_key=QDRANT_API_KEY
 )
 
-# Create collection if it doesn't exist
-existing_collections = [col.name for col in client.get_collections().collections]
-if COLLECTION_NAME not in existing_collections:
-    st.info("Qdrant Cloud: No collection found. Building one now...")
+# Helper to build collection
+def build_qdrant_collection():
+    st.info("No collection found. Building it from PDF...")
 
+    # Load and split PDF
     loader = PyPDFLoader(DOC_PATH)
     pages = loader.load()
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-    chunks = text_splitter.split_documents(pages)
+    splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+    chunks = splitter.split_documents(pages)
 
+    # (Re)create collection and upload embeddings
     client.recreate_collection(
         collection_name=COLLECTION_NAME,
         vectors_config=VectorParams(size=1536, distance=Distance.COSINE),
@@ -51,14 +50,21 @@ if COLLECTION_NAME not in existing_collections:
         documents=chunks,
         embedding=embeddings,
         collection_name=COLLECTION_NAME,
-        client=client,
+        client=client
     )
-    st.success("✅ Collection built and uploaded to Qdrant Cloud.")
+
+    st.success("✅ Collection successfully created and uploaded to Qdrant.")
+    return db
+
+# Check for collection existence and build/load accordingly
+existing_collections = [col.name for col in client.get_collections().collections]
+if COLLECTION_NAME not in existing_collections:
+    db = build_qdrant_collection()
 else:
     db = Qdrant(
         client=client,
         collection_name=COLLECTION_NAME,
-        embedding_function=embeddings
+        embedding_function=embeddings  # 🔧 must be passed again
     )
 
 # Prompt templates
@@ -81,6 +87,16 @@ Provide a clear and concise summary in no more than 2 sentences.
 
 # UI
 st.title("📄 Macro Economics Q&A App")
+
+# Optional: upload PDF (you only need this once if not hardcoded)
+if not os.path.exists(DOC_PATH):
+    uploaded_file = st.file_uploader("Upload your Macroeconomics textbook PDF", type="pdf")
+    if uploaded_file is not None:
+        with open(DOC_PATH, "wb") as f:
+            f.write(uploaded_file.read())
+        st.success("✅ PDF uploaded. Please refresh to build the collection.")
+        st.stop()
+
 query = st.text_input("Ask a question about Macro Economics:")
 
 col1, col2, col3 = st.columns(3)
@@ -100,8 +116,9 @@ elif voice_clicked:
     option = "Concise Answer + Voice"
 
 if query and option:
-    docs_qdrant = db.similarity_search_with_score(query, k=5)
-    context_text = "\n\n".join([doc.page_content for doc, _ in docs_qdrant])
+    with st.spinner("Searching context..."):
+        docs = db.similarity_search_with_score(query, k=5)
+        context_text = "\n\n".join([doc.page_content for doc, _ in docs])
 
     prompt_template = ChatPromptTemplate.from_template(
         PROMPT_DETAILED if option == "Detailed Answer" else PROMPT_CONCISE
