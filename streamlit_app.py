@@ -10,18 +10,23 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.prompts import ChatPromptTemplate
 import pinecone
 
+# Load API keys from environment variables
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
+PINECONE_ENV = os.getenv("PINECONE_ENV")
+PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME")
 
 # Setup APIs
 openai.api_key = OPENAI_API_KEY
 pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)
 embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
-# Initialize index
+# Initialize Pinecone index
 if PINECONE_INDEX_NAME not in pinecone.list_indexes():
     pinecone.create_index(name=PINECONE_INDEX_NAME, dimension=1536, metric="cosine")
 index = pinecone.Index(PINECONE_INDEX_NAME)
 
-# Prompts
+# Prompt templates
 PROMPT_DETAILED = """
 Answer the question based only on the following context:
 {context}
@@ -39,7 +44,7 @@ Answer the question based on the above context: {question}.
 Provide a clear and concise summary in no more than 2 sentences.
 """
 
-# UI
+# Streamlit UI
 st.title("📄 Macro Economics Q&A App")
 
 uploaded_pdf = st.file_uploader("Upload your Macro Economics PDF", type="pdf")
@@ -48,18 +53,15 @@ if uploaded_pdf:
         tmp_file.write(uploaded_pdf.read())
         tmp_file_path = tmp_file.name
 
-    # Load and index document
     with st.spinner("Processing and indexing document..."):
         loader = PyPDFLoader(tmp_file_path)
         pages = loader.load()
         splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
         chunks = splitter.split_documents(pages)
 
-        # Embed and upsert into Pinecone
         LangchainPinecone.from_documents(chunks, embeddings, index_name=PINECONE_INDEX_NAME)
         st.success("✅ Document indexed into Pinecone.")
 
-    # Proceed to query
     query = st.text_input("Ask a question about your uploaded textbook:")
 
     col1, col2, col3 = st.columns(3)
