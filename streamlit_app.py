@@ -10,31 +10,27 @@ from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.prompts import ChatPromptTemplate
 
-from pinecone import Pinecone, ServerlessSpec
+import pinecone  # Using pinecone-client v2.2.4
 
 # Load API keys and config from environment variables
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
-PINECONE_REGION = os.getenv("PINECONE_REGION", "us-east-1")
+PINECONE_ENV = os.getenv("PINECONE_ENV", "us-east-1")
 PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME", "macro-econ-index")
 
 # Initialize OpenAI
 openai.api_key = OPENAI_API_KEY
 
-# Initialize Pinecone v3 client
-pc = Pinecone(api_key=PINECONE_API_KEY)
+# Initialize Pinecone v2 client
+pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)
 
 # Create index if it doesn't exist
-if PINECONE_INDEX_NAME not in pc.list_indexes().names():
-    pc.create_index(
+if PINECONE_INDEX_NAME not in pinecone.list_indexes():
+    pinecone.create_index(
         name=PINECONE_INDEX_NAME,
         dimension=1536,
-        metric="cosine",
-        spec=ServerlessSpec(cloud="aws", region=PINECONE_REGION)
+        metric="cosine"
     )
-
-# Get the index object
-index = pc.Index(PINECONE_INDEX_NAME)
 
 # LangChain embedding setup
 embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
@@ -100,9 +96,8 @@ if uploaded_pdf:
 
     if query and option:
         vectorstore = LangchainPinecone(
-            index=index,
-            embedding_function=embeddings,
             index_name=PINECONE_INDEX_NAME,
+            embedding_function=embeddings,
             namespace="default"
         )
         docs = vectorstore.similarity_search_with_score(query, k=5)
