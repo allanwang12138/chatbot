@@ -1,8 +1,6 @@
 streamlit
 openai
-python-dotenv
-langchain==0.0.312
+langchain
+qdrant-client
 pydub
-pinecone-client==2.2.4
-PyPDF2
-pypdf
+python-dotenv
