@@ -1,7 +1,7 @@
 streamlit
 openai
 python-dotenv
-langchain>=0.1.13
+langchain==0.0.312
 pydub
 pinecone-client
 PyPDF2
