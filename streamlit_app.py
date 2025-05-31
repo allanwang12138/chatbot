@@ -1,15 +1,16 @@
 import streamlit as st
 import openai
 import os
-from langchain.vectorstores import Chroma
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.chat_models import ChatOpenAI
-from langchain.prompts import ChatPromptTemplate
-from langchain.document_loaders import PyPDFLoader
+from dotenv import load_dotenv
+from langchain_community.vectorstores import Qdrant
+from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.chat_models import ChatOpenAI
+from langchain_community.prompts import ChatPromptTemplate
+from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams
-from dotenv import load_dotenv
+
 
 # Load environment variables
 load_dotenv()
