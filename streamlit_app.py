@@ -2,29 +2,42 @@ import streamlit as st
 import openai
 import os
 import tempfile
+
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.chat_models import ChatOpenAI
 from langchain.vectorstores import Pinecone as LangchainPinecone
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.prompts import ChatPromptTemplate
-import pinecone
 
-# Load API keys from environment variables
+from pinecone import Pinecone, ServerlessSpec
+
+# Load API keys and config from environment variables
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
-PINECONE_ENV = os.getenv("PINECONE_ENV")
-PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME")
+PINECONE_REGION = os.getenv("PINECONE_REGION", "us-east-1")
+PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME", "macro-econ-index")
 
-# Setup APIs
+# Initialize OpenAI
 openai.api_key = OPENAI_API_KEY
-pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)
-embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
-# Initialize Pinecone index
-if PINECONE_INDEX_NAME not in pinecone.list_indexes():
-    pinecone.create_index(name=PINECONE_INDEX_NAME, dimension=1536, metric="cosine")
-index = pinecone.Index(PINECONE_INDEX_NAME)
+# Initialize Pinecone v3 client
+pc = Pinecone(api_key=PINECONE_API_KEY)
+
+# Create index if it doesn't exist
+if PINECONE_INDEX_NAME not in pc.list_indexes().names():
+    pc.create_index(
+        name=PINECONE_INDEX_NAME,
+        dimension=1536,
+        metric="cosine",
+        spec=ServerlessSpec(cloud="aws", region=PINECONE_REGION)
+    )
+
+# Get the index object
+index = pc.Index(PINECONE_INDEX_NAME)
+
+# LangChain embedding setup
+embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
 # Prompt templates
 PROMPT_DETAILED = """
@@ -59,7 +72,12 @@ if uploaded_pdf:
         splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
         chunks = splitter.split_documents(pages)
 
-        LangchainPinecone.from_documents(chunks, embeddings, index_name=PINECONE_INDEX_NAME)
+        LangchainPinecone.from_documents(
+            chunks,
+            embeddings,
+            index_name=PINECONE_INDEX_NAME,
+            namespace="default"
+        )
         st.success("✅ Document indexed into Pinecone.")
 
     query = st.text_input("Ask a question about your uploaded textbook:")
@@ -81,11 +99,18 @@ if uploaded_pdf:
         option = "Concise Answer + Voice"
 
     if query and option:
-        vectorstore = LangchainPinecone(index=index, embedding_function=embeddings, index_name=PINECONE_INDEX_NAME)
+        vectorstore = LangchainPinecone(
+            index=index,
+            embedding_function=embeddings,
+            index_name=PINECONE_INDEX_NAME,
+            namespace="default"
+        )
         docs = vectorstore.similarity_search_with_score(query, k=5)
         context_text = "\n\n".join([doc.page_content for doc, _ in docs])
 
-        prompt_template = ChatPromptTemplate.from_template(PROMPT_DETAILED if option == "Detailed Answer" else PROMPT_CONCISE)
+        prompt_template = ChatPromptTemplate.from_template(
+            PROMPT_DETAILED if option == "Detailed Answer" else PROMPT_CONCISE
+        )
         prompt = prompt_template.format(context=context_text, question=query)
         model = ChatOpenAI(openai_api_key=OPENAI_API_KEY)
 
