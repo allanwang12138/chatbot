@@ -1,8 +1,9 @@
 streamlit
 openai
+python-dotenv
+qdrant-client
 langchain
 langchain-community
-qdrant-client
+langchain-openai
+langchain-qdrant
 pydub
-python-dotenv
-pypdf
