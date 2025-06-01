@@ -34,9 +34,9 @@ db = Qdrant(
 # Prompt templates
 # Updated Prompt templates
 PROMPT_DETAILED = """
-You are an expert economics tutor. Your job is to answer questions in the most thorough, detailed, and educational way possible.
+You are an expert economics tutor. Your job is to answer questions in a detailed, clear, and educational way.
 
-Based only on the following context, write a comprehensive answer to the question. Include explanations, definitions, and relevant examples if appropriate.
+Based only on the following context, write a comprehensive answer to the question in no more than 6 sentences. Include explanations, definitions, and examples where appropriate, but keep the response focused and digestible.
 
 Context:
 {context}
@@ -46,6 +46,7 @@ Question:
 
 Detailed Answer:
 """
+
 
 PROMPT_CONCISE = """
 You are an expert economics tutor. Based only on the context below, provide a **very concise** answer to the question in **no more than 2 sentences**.
