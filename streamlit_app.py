@@ -32,21 +32,31 @@ db = Qdrant(
 )
 
 # Prompt templates
+# Updated Prompt templates
 PROMPT_DETAILED = """
-Answer the question based only on the following context:
+You are an expert economics tutor. Your job is to answer questions in the most thorough, detailed, and educational way possible.
+
+Based only on the following context, write a comprehensive answer to the question. Include explanations, definitions, and relevant examples if appropriate.
+
+Context:
 {context}
-Answer the question based on the above context: {question}.
-Provide a detailed answer.
-Don’t justify your answers.
-Don’t give information not mentioned in the CONTEXT INFORMATION.
-Do not say "according to the context" or "mentioned in the context" or similar.
+
+Question:
+{question}
+
+Detailed Answer:
 """
 
 PROMPT_CONCISE = """
-Answer the question based only on the following context:
+You are an expert economics tutor. Based only on the context below, provide a **very concise** answer to the question in **no more than 2 sentences**.
+
+Context:
 {context}
-Answer the question based on the above context: {question}.
-Provide a clear and concise summary in no more than 2 sentences.
+
+Question:
+{question}
+
+Concise Answer:
 """
 
 # Streamlit UI
