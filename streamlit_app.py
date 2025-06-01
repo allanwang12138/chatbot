@@ -5,11 +5,8 @@ from dotenv import load_dotenv
 from langchain_community.vectorstores import Qdrant
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.chat_models import ChatOpenAI
-from langchain_community.document_loaders import PyPDFLoader
 from langchain.prompts import ChatPromptTemplate
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, VectorParams
 
 # Load API keys
 load_dotenv()
@@ -18,54 +15,22 @@ QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
 QDRANT_URL = os.getenv("QDRANT_URL")
 
 openai.api_key = OPENAI_API_KEY
-DOC_PATH = "macroeconomics_textbook.pdf"
 COLLECTION_NAME = "macroecon_collection"
 
-# Setup embedding
+# Setup embedding and Qdrant connection
 embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
-# Setup Qdrant client
 client = QdrantClient(
     url=QDRANT_URL,
     api_key=QDRANT_API_KEY
 )
 
-# Helper to build collection
-def build_qdrant_collection():
-    st.info("No collection found. Building it from PDF...")
-
-    # Load and split PDF
-    loader = PyPDFLoader(DOC_PATH)
-    pages = loader.load()
-    splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-    chunks = splitter.split_documents(pages)
-
-    # (Re)create collection and upload embeddings
-    client.recreate_collection(
-        collection_name=COLLECTION_NAME,
-        vectors_config=VectorParams(size=1536, distance=Distance.COSINE),
-    )
-
-    db = Qdrant.from_documents(
-        documents=chunks,
-        embedding=embeddings,
-        collection_name=COLLECTION_NAME,
-        client=client
-    )
-
-    st.success("✅ Collection successfully created and uploaded to Qdrant.")
-    return db
-
-# Check for collection existence and build/load accordingly
-existing_collections = [col.name for col in client.get_collections().collections]
-if COLLECTION_NAME not in existing_collections:
-    db = build_qdrant_collection()
-else:
-    db = Qdrant(
-        client=client,
-        collection_name=COLLECTION_NAME,
-        embedding_function=embeddings  # 🔧 must be passed again
-    )
+# Connect to the existing vector store
+db = Qdrant(
+    client=client,
+    collection_name=COLLECTION_NAME,
+    embedding_function=embeddings
+)
 
 # Prompt templates
 PROMPT_DETAILED = """
@@ -87,15 +52,6 @@ Provide a clear and concise summary in no more than 2 sentences.
 
 # UI
 st.title("📄 Macro Economics Q&A App")
-
-# Optional: upload PDF (you only need this once if not hardcoded)
-if not os.path.exists(DOC_PATH):
-    uploaded_file = st.file_uploader("Upload your Macroeconomics textbook PDF", type="pdf")
-    if uploaded_file is not None:
-        with open(DOC_PATH, "wb") as f:
-            f.write(uploaded_file.read())
-        st.success("✅ PDF uploaded. Please refresh to build the collection.")
-        st.stop()
 
 query = st.text_input("Ask a question about Macro Economics:")
 
