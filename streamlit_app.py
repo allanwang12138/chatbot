@@ -2,13 +2,12 @@ import streamlit as st
 import openai
 import os
 from dotenv import load_dotenv
-from langchain_community.vectorstores import Qdrant
-from langchain_community.embeddings import OpenAIEmbeddings
-from langchain_community.chat_models import ChatOpenAI
+from langchain_qdrant import Qdrant
+from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from qdrant_client import QdrantClient
 
-# Load API keys
+# Load secrets
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
@@ -17,7 +16,7 @@ QDRANT_URL = os.getenv("QDRANT_URL")
 openai.api_key = OPENAI_API_KEY
 COLLECTION_NAME = "macroecon_collection"
 
-# Setup embedding and Qdrant connection
+# Embeddings and Qdrant connection
 embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
 client = QdrantClient(
@@ -25,11 +24,11 @@ client = QdrantClient(
     api_key=QDRANT_API_KEY
 )
 
-# Connect to the existing vector store
+# Connect to existing collection
 db = Qdrant(
     client=client,
     collection_name=COLLECTION_NAME,
-    embedding_function=embeddings
+    embeddings=embeddings  # ✅ Not embedding_function anymore
 )
 
 # Prompt templates
@@ -50,7 +49,7 @@ Answer the question based on the above context: {question}.
 Provide a clear and concise summary in no more than 2 sentences.
 """
 
-# UI
+# Streamlit UI
 st.title("📄 Macro Economics Q&A App")
 
 query = st.text_input("Ask a question about Macro Economics:")
