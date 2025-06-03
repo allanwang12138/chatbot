@@ -17,11 +17,14 @@ QDRANT_URL = os.getenv("QDRANT_URL")
 openai.api_key = OPENAI_API_KEY
 COLLECTION_NAME = "macroecon_collection"
 
-# ------------------- Load credentials from CSV -------------------
+# ------------------- Load credentials with voice assignment -------------------
 @st.cache_data
 def load_credentials():
-    df = pd.read_csv("sample_credentials.csv")
-    return {row["username"]: row["password"] for _, row in df.iterrows()}
+    df = pd.read_csv("sample_credentials_with_voices.csv")  # updated filename
+    return {
+        row["username"]: {"password": row["password"], "voice": row["voice"]}
+        for _, row in df.iterrows()
+    }
 
 CREDENTIALS = load_credentials()
 
@@ -31,10 +34,13 @@ def login():
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
     if st.button("Login"):
-        if username in CREDENTIALS and CREDENTIALS[username] == password:
+        user = CREDENTIALS.get(username)
+        if user and user["password"] == password:
             st.session_state["authenticated"] = True
-            st.success("✅ Login successful. Loading app...")
-            st.rerun() 
+            st.session_state["username"] = username
+            st.session_state["voice"] = user["voice"]
+            st.success(f"✅ Login successful. Welcome, {username}!")
+            st.rerun()
         else:
             st.error("❌ Invalid username or password. Please try again.")
 
@@ -111,10 +117,11 @@ if query and option:
         response = model.predict(prompt)
 
     if "Voice" in option:
-        with st.spinner("Generating voice..."):
+        voice_choice = st.session_state.get("voice", "alloy")
+        with st.spinner(f"Generating voice with '{voice_choice}'..."):
             speech_response = openai.audio.speech.create(
                 model="tts-1",
-                voice="alloy",
+                voice=voice_choice,
                 input=response
             )
             audio_path = "output.mp3"
