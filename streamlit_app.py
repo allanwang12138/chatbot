@@ -1,13 +1,14 @@
 import streamlit as st
 import openai
 import os
+import pandas as pd
 from dotenv import load_dotenv
 from langchain_qdrant import Qdrant
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from qdrant_client import QdrantClient
 
-# Load secrets
+# ------------------- Load secrets -------------------
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
@@ -16,23 +17,38 @@ QDRANT_URL = os.getenv("QDRANT_URL")
 openai.api_key = OPENAI_API_KEY
 COLLECTION_NAME = "macroecon_collection"
 
-# Embeddings and Qdrant connection
+# ------------------- Load credentials from CSV -------------------
+@st.cache_data
+def load_credentials():
+    df = pd.read_csv("sample_credentials.csv")
+    return {row["username"]: row["password"] for _, row in df.iterrows()}
+
+CREDENTIALS = load_credentials()
+
+def login():
+    st.title("🔐 Login")
+    st.write("Enter your username and password to access the app.")
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+    if st.button("Login"):
+        if username in CREDENTIALS and CREDENTIALS[username] == password:
+            st.session_state["authenticated"] = True
+            st.success("✅ Login successful. Loading app...")
+            st.experimental_rerun()
+        else:
+            st.error("❌ Invalid username or password. Please try again.")
+
+# ------------------- Authentication Gate -------------------
+if "authenticated" not in st.session_state or not st.session_state["authenticated"]:
+    login()
+    st.stop()
+
+# ------------------- Qdrant Setup -------------------
 embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
+client = QdrantClient(url=QDRANT_URL, api_key=QDRANT_API_KEY)
+db = Qdrant(client=client, collection_name=COLLECTION_NAME, embeddings=embeddings)
 
-client = QdrantClient(
-    url=QDRANT_URL,
-    api_key=QDRANT_API_KEY
-)
-
-# Connect to existing collection
-db = Qdrant(
-    client=client,
-    collection_name=COLLECTION_NAME,
-    embeddings=embeddings  # ✅ Not embedding_function anymore
-)
-
-# Prompt templates
-# Updated Prompt templates
+# ------------------- Prompt Templates -------------------
 PROMPT_DETAILED = """
 You are an expert economics tutor. Your job is to answer questions in a detailed, clear, and educational way.
 
@@ -47,9 +63,8 @@ Question:
 Detailed Answer:
 """
 
-
 PROMPT_CONCISE = """
-You are an expert economics tutor. Based only on the context below, provide a **very concise** answer to the question in **no more than 2 sentences**.
+You are an expert economics tutor. Based only on the context below, provide a very concise answer to the question in no more than 2 sentences.
 
 Context:
 {context}
@@ -60,7 +75,7 @@ Question:
 Concise Answer:
 """
 
-# Streamlit UI
+# ------------------- Streamlit UI -------------------
 st.title("📄 Macro Economics Q&A App")
 
 query = st.text_input("Ask a question about Macro Economics:")
