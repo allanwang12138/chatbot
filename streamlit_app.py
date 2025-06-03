@@ -34,7 +34,7 @@ def login():
         if username in CREDENTIALS and CREDENTIALS[username] == password:
             st.session_state["authenticated"] = True
             st.success("✅ Login successful. Loading app...")
-            st.experimental_rerun()
+            st.rerun() 
         else:
             st.error("❌ Invalid username or password. Please try again.")
 
