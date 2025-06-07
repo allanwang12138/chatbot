@@ -105,14 +105,11 @@ elif voice_clicked:
 if query and option:
     with st.spinner("Searching context..."):
         docs = db.similarity_search_with_score(query, k=5)
-
-        # Filter documents by score threshold (smaller is more similar)
-        score_threshold = 0.5
-        filtered_docs = [doc for doc, score in docs if score < score_threshold and doc.page_content.strip()]
+        filtered_docs = [doc for doc, score in docs if doc.page_content.strip()]
         context_text = "\n\n".join([doc.page_content for doc in filtered_docs])
 
-    # Decide based on filtered context
-    if not filtered_docs:
+    # Return fallback only if no actual content is returned
+    if not filtered_docs or context_text.strip() == "":
         response = "❗️This question appears to be outside the scope of the macroeconomics textbook."
     else:
         prompt_template = ChatPromptTemplate.from_template(
