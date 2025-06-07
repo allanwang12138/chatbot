@@ -109,7 +109,7 @@ if query and option:
         context_text = "\n\n".join([doc.page_content for doc in filtered_docs])
 
     # Check if retrieved context is too empty
-    if not context_text.strip() or len(context_text) < 100:
+    if not context_text.strip() or len(context_text) < 1:
         response = "❗️This question appears to be outside the scope of the macroeconomics textbook."
     else:
         prompt_template = ChatPromptTemplate.from_template(
