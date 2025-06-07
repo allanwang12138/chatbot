@@ -108,8 +108,8 @@ if query and option:
         filtered_docs = [doc for doc, score in docs if doc.page_content.strip()]
         context_text = "\n\n".join([doc.page_content for doc in filtered_docs])
 
-    # Check if retrieved context is too empty
-    if not context_text.strip() or len(context_text) < 1:
+    # Only consider out-of-scope if no valid docs are found
+    if not filtered_docs:
         response = "❗️This question appears to be outside the scope of the macroeconomics textbook."
     else:
         prompt_template = ChatPromptTemplate.from_template(
