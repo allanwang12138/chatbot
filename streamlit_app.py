@@ -134,9 +134,14 @@ if query and option:
         st.write(response)
 
     with st.expander("📚 Retrieved Context from the Macroeconomics Textbook"):
+        shown = False
         for i, (doc, score) in enumerate(docs, start=1):
             if doc.page_content.strip():
                 st.markdown(f"**Doc {i}** | **Score:** `{round(score, 4)}`")
                 st.markdown(f"> {doc.page_content.strip()}")
                 st.markdown("---")
+                shown = True
+        if not shown:
+            st.info("No relevant context could be retrieved for this query.")
+
 
