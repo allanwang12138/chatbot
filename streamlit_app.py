@@ -133,5 +133,10 @@ if query and option:
         st.markdown("### Answer")
         st.write(response)
 
-    with st.expander("Show Retrieved Context"):
-        st.write(context_text)
+    with st.expander("📚 Retrieved Context from the Macroeconomics Textbook"):
+        for i, (doc, score) in enumerate(docs, start=1):
+            if doc.page_content.strip():
+                st.markdown(f"**Doc {i}** | **Score:** `{round(score, 4)}`")
+                st.markdown(f"> {doc.page_content.strip()}")
+                st.markdown("---")
+
