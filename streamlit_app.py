@@ -102,9 +102,11 @@ elif concise_clicked:
 elif voice_clicked:
     option = "Concise Answer + Voice"
 
+
 if query and option:
     with st.spinner("Searching context..."):
-        docs = db.similarity_search_with_score(query, k=5)
+        raw_docs = db.similarity_search_with_score(query, k=5)
+        docs = [(doc, score) for doc, score in raw_docs if doc.page_content.strip() and score > 0.75]
         context_text = "\n\n".join([doc.page_content for doc, _ in docs])
 
     prompt_template = ChatPromptTemplate.from_template(
@@ -116,22 +118,16 @@ if query and option:
     with st.spinner("Generating answer..."):
         response = model.predict(prompt)
 
-    if "Voice" in option:
-        voice_choice = st.session_state.get("voice", "alloy")
-        with st.spinner(f"Generating voice with '{voice_choice}'..."):
-            speech_response = openai.audio.speech.create(
-                model="tts-1",
-                voice=voice_choice,
-                input=response
-            )
-            audio_path = "output.mp3"
-            with open(audio_path, "wb") as f:
-                f.write(speech_response.read())
-            audio_file = open(audio_path, "rb")
-            st.audio(audio_file.read(), format="audio/mp3")
-    else:
-        st.markdown("### Answer")
-        st.write(response)
+    # Show generated answer
+    st.markdown("### 📘 Answer")
+    st.write(response)
 
-    with st.expander("Show Retrieved Context"):
-        st.write(context_text)
+    # Show supporting context in expander only
+    with st.expander("📚 Show Supporting Context from Textbook"):
+        if docs:
+            for i, (doc, score) in enumerate(docs, 1):
+                st.markdown(f"**Chunk {i} (Score: {score:.2f})**")
+                st.write(doc.page_content)
+        else:
+            st.info("No sufficiently relevant context found.")
+
