@@ -133,15 +133,10 @@ if query and option:
         st.markdown("### Answer")
         st.write(response)
 
-    with st.expander("📚 Retrieved Context from the Macroeconomics Textbook"):
-        shown = False
-        for i, (doc, score) in enumerate(docs, start=1):
-            if doc.page_content.strip():
-                st.markdown(f"**Doc {i}** | **Score:** `{round(score, 4)}`")
-                st.markdown(f"> {doc.page_content.strip()}")
-                st.markdown("---")
-                shown = True
-        if not shown:
-            st.info("No relevant context could be retrieved for this query.")
+    with st.spinner("Searching context..."):
+        raw_docs = db.similarity_search_with_score(query, k=10)
+        docs = [(doc, score) for doc, score in raw_docs if doc.page_content.strip() and score > 0.75]
+        context_text = "\n\n".join([doc.page_content for doc, _ in docs])
+
 
 
