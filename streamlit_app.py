@@ -104,10 +104,7 @@ elif voice_clicked:
 
 if query and option:
     with st.spinner("Searching context..."):
-        raw_docs = db.similarity_search_with_score(query, k=8)
-
-        # Show all docs regardless of score, but mark EMPTY ones
-        docs = [(doc, score) for doc, score in raw_docs if doc.page_content.strip()]
+        docs = db.similarity_search_with_score(query, k=5)
         context_text = "\n\n".join([doc.page_content for doc, _ in docs])
 
     prompt_template = ChatPromptTemplate.from_template(
@@ -136,15 +133,5 @@ if query and option:
         st.markdown("### Answer")
         st.write(response)
 
-    with st.expander("📚 Retrieved Context from the Macroeconomics Textbook"):
-        if not docs:
-            st.info("⚠️ No relevant context could be retrieved for this query.")
-        else:
-            for i, (doc, score) in enumerate(docs, 1):
-                st.markdown(f"**Doc {i}** | Score: `{round(score, 4)}`")
-                st.markdown(f"> {doc.page_content.strip()}")
-                st.markdown("---")
-
-
-
-
+    with st.expander("Show Retrieved Context"):
+        st.write(context_text)
