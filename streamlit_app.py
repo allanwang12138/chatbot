@@ -103,31 +103,14 @@ elif voice_clicked:
     option = "Concise Answer + Voice"
 
 
-if query and option:
-    with st.spinner("Searching context..."):
+if query:
+    with st.spinner("Testing similarity scores..."):
         raw_docs = db.similarity_search_with_score(query, k=5)
-        docs = [(doc, score) for doc, score in raw_docs if doc.page_content.strip() and score > 0.75]
-        context_text = "\n\n".join([doc.page_content for doc, _ in docs])
-
-    prompt_template = ChatPromptTemplate.from_template(
-        PROMPT_DETAILED if option == "Detailed Answer" else PROMPT_CONCISE
-    )
-    prompt = prompt_template.format(context=context_text, question=query)
-    model = ChatOpenAI(openai_api_key=OPENAI_API_KEY)
-
-    with st.spinner("Generating answer..."):
-        response = model.predict(prompt)
-
-    # Show generated answer
-    st.markdown("### 📘 Answer")
-    st.write(response)
-
-    # Show supporting context in expander only
-    with st.expander("📚 Show Supporting Context from Textbook"):
-        if docs:
-            for i, (doc, score) in enumerate(docs, 1):
-                st.markdown(f"**Chunk {i} (Score: {score:.2f})**")
-                st.write(doc.page_content)
+        if raw_docs:
+            st.markdown("### 🔍 Top Retrieved Chunks:")
+            for i, (doc, score) in enumerate(raw_docs, 1):
+                st.markdown(f"**Chunk {i} — Score: {score:.2f}**")
+                st.write(doc.page_content if doc.page_content else "❌ Empty Content")
         else:
-            st.info("No sufficiently relevant context found.")
+            st.warning("No documents returned.")
 
