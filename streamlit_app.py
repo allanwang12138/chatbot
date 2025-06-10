@@ -102,12 +102,11 @@ elif concise_clicked:
 elif voice_clicked:
     option = "Concise Answer + Voice"
 
-
 if query and option:
     with st.spinner("Searching context..."):
         raw_docs = db.similarity_search_with_score(query, k=5)
-        docs = [(doc, score) for doc, score in raw_docs if doc.payload.get("text", "").strip()]
-        context_text = "\n\n".join([doc.payload.get("text", "") for doc, _ in docs])
+        docs = [(doc, score) for doc, score in raw_docs if doc.page_content.strip()]
+        context_text = "\n\n".join([doc.page_content for doc, _ in docs])
 
     prompt_template = ChatPromptTemplate.from_template(
         PROMPT_DETAILED if option == "Detailed Answer" else PROMPT_CONCISE
@@ -118,20 +117,17 @@ if query and option:
     with st.spinner("Generating answer..."):
         response = model.predict(prompt)
 
-    # Show answer
     st.markdown("### 📘 Answer")
     st.write(response)
 
-    # Show retrieved chunks in an expander
     with st.expander("📚 Show Supporting Context from Textbook"):
         if docs:
             for i, (doc, score) in enumerate(docs, 1):
                 st.markdown(f"**Chunk {i} — Score: {score:.2f}**")
-                st.write(doc.payload.get("text", "❌ Missing text"))
+                st.write(doc.page_content)
         else:
             st.info("No relevant context found.")
 
-# Optional debug section for standalone similarity check
 elif query:
     with st.spinner("Testing similarity scores..."):
         raw_docs = db.similarity_search_with_score(query, k=5)
@@ -139,6 +135,6 @@ elif query:
             st.markdown("### 🔍 Top Retrieved Chunks:")
             for i, (doc, score) in enumerate(raw_docs, 1):
                 st.markdown(f"**Chunk {i} — Score: {score:.2f}**")
-                st.write(doc.payload.get("text", "❌ Missing text"))
+                st.write(doc.page_content if doc.page_content else "❌ Empty Content")
         else:
             st.warning("No documents returned.")
