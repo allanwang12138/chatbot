@@ -122,11 +122,13 @@ if query and option:
 
     with st.expander("📚 Show Supporting Context from Textbook"):
         if docs:
-            for i, (doc, score) in enumerate(docs, 1):
-                st.markdown(f"**Chunk {i} — Score: {score:.2f}**")
-                st.write(doc.page_content)
+            # Sort by score descending and take top result
+            top_doc, top_score = sorted(docs, key=lambda x: x[1], reverse=True)[0]
+            st.markdown(f"**Most Relevant Chunk — Score: {top_score:.2f}**")
+            st.write(top_doc.page_content)
         else:
             st.info("No relevant context found.")
+
 
 elif query:
     with st.spinner("Testing similarity scores..."):
