@@ -105,8 +105,14 @@ elif voice_clicked:
 if query and option:
     with st.spinner("Searching context..."):
         raw_docs = db.similarity_search_with_score(query, k=5)
+        # Filter out empty chunks
         docs = [(doc, score) for doc, score in raw_docs if doc.page_content.strip()]
-        context_text = "\n\n".join([doc.page_content for doc, _ in docs])
+        # Use top-scoring chunk only
+        if docs:
+            top_doc, top_score = sorted(docs, key=lambda x: x[1], reverse=True)[0]
+            context_text = top_doc.page_content
+        else:
+            context_text = ""
 
     prompt_template = ChatPromptTemplate.from_template(
         PROMPT_DETAILED if option == "Detailed Answer" else PROMPT_CONCISE
@@ -117,26 +123,14 @@ if query and option:
     with st.spinner("Generating answer..."):
         response = model.predict(prompt)
 
+    # Show answer
     st.markdown("### 📘 Answer")
     st.write(response)
 
+    # Show only top relevant chunk
     with st.expander("📚 Show Supporting Context from Textbook"):
-        if docs:
-            # Sort by score descending and take top result
-            top_doc, top_score = sorted(docs, key=lambda x: x[1], reverse=True)[0]
+        if context_text:
             st.markdown(f"**Most Relevant Chunk — Score: {top_score:.2f}**")
-            st.write(top_doc.page_content)
+            st.write(context_text)
         else:
             st.info("No relevant context found.")
-
-
-elif query:
-    with st.spinner("Testing similarity scores..."):
-        raw_docs = db.similarity_search_with_score(query, k=5)
-        if raw_docs:
-            st.markdown("### 🔍 Top Retrieved Chunks:")
-            for i, (doc, score) in enumerate(raw_docs, 1):
-                st.markdown(f"**Chunk {i} — Score: {score:.2f}**")
-                st.write(doc.page_content if doc.page_content else "❌ Empty Content")
-        else:
-            st.warning("No documents returned.")
