@@ -112,24 +112,20 @@ if query and option:
         else:
             context_text = ""
 
-    # Select prompt template
+    # Choose prompt style
+    is_detailed = option == "Detailed Answer"
     prompt_template = ChatPromptTemplate.from_template(
-        PROMPT_DETAILED if option == "Detailed Answer" else PROMPT_CONCISE
+        PROMPT_DETAILED if is_detailed else PROMPT_CONCISE
     )
     prompt = prompt_template.format(context=context_text, question=query)
-
-    # Generate response
     model = ChatOpenAI(openai_api_key=OPENAI_API_KEY)
+
     with st.spinner("💬 Generating answer..."):
         response = model.predict(prompt)
 
-    # Display answer
-    st.markdown("### 📘 Answer")
-    st.write(response)
-
-    # Generate voice output if requested
+    # Voice option: generate only audio, no text
     if "Voice" in option:
-        voice_choice = st.session_state.get("voice", "alloy")  # Use user's assigned voice
+        voice_choice = st.session_state.get("voice", "alloy")
         with st.spinner(f"🎙️ Generating voice with '{voice_choice}'..."):
             speech_response = openai.audio.speech.create(
                 model="tts-1",
@@ -142,7 +138,12 @@ if query and option:
             audio_file = open(audio_path, "rb")
             st.audio(audio_file.read(), format="audio/mp3")
 
-    # Show supporting context in expander
+    else:
+        # Show text answer only if not Voice option
+        st.markdown("### 📘 Answer")
+        st.write(response)
+
+    # Show supporting context in both cases
     with st.expander("📚 Show Supporting Context from Textbook"):
         if context_text:
             st.markdown(f"**Most Relevant Chunk — Score: {top_score:.2f}**")
