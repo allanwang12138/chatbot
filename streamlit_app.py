@@ -103,31 +103,46 @@ elif voice_clicked:
     option = "Concise Answer + Voice"
 
 if query and option:
-    with st.spinner("Searching context..."):
+    with st.spinner("🔍 Searching for relevant context..."):
         raw_docs = db.similarity_search_with_score(query, k=5)
-        # Filter out empty chunks
         docs = [(doc, score) for doc, score in raw_docs if doc.page_content.strip()]
-        # Use top-scoring chunk only
         if docs:
             top_doc, top_score = sorted(docs, key=lambda x: x[1], reverse=True)[0]
             context_text = top_doc.page_content
         else:
             context_text = ""
 
+    # Select prompt template
     prompt_template = ChatPromptTemplate.from_template(
         PROMPT_DETAILED if option == "Detailed Answer" else PROMPT_CONCISE
     )
     prompt = prompt_template.format(context=context_text, question=query)
-    model = ChatOpenAI(openai_api_key=OPENAI_API_KEY)
 
-    with st.spinner("Generating answer..."):
+    # Generate response
+    model = ChatOpenAI(openai_api_key=OPENAI_API_KEY)
+    with st.spinner("💬 Generating answer..."):
         response = model.predict(prompt)
 
-    # Show answer
+    # Display answer
     st.markdown("### 📘 Answer")
     st.write(response)
 
-    # Show only top relevant chunk
+    # Generate voice output if requested
+    if "Voice" in option:
+        voice_choice = st.session_state.get("voice", "alloy")  # Use user's assigned voice
+        with st.spinner(f"🎙️ Generating voice with '{voice_choice}'..."):
+            speech_response = openai.audio.speech.create(
+                model="tts-1",
+                voice=voice_choice,
+                input=response
+            )
+            audio_path = "output.mp3"
+            with open(audio_path, "wb") as f:
+                f.write(speech_response.read())
+            audio_file = open(audio_path, "rb")
+            st.audio(audio_file.read(), format="audio/mp3")
+
+    # Show supporting context in expander
     with st.expander("📚 Show Supporting Context from Textbook"):
         if context_text:
             st.markdown(f"**Most Relevant Chunk — Score: {top_score:.2f}**")
