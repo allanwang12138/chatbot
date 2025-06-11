@@ -1,10 +1,11 @@
 import os
 from dotenv import load_dotenv
-from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_openai import OpenAIEmbeddings
+from langchain_community.vectorstores import Qdrant
 from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, VectorParams, PointStruct
+from qdrant_client.models import VectorParams, Distance
 
 
 # Load secrets
@@ -16,69 +17,35 @@ QDRANT_URL = os.getenv("QDRANT_URL")
 DOC_PATH = "macroeconomics_textbook.pdf" # change this
 COLLECTION_NAME = "macroecon_collection"
 
-# Set up embedding model
-embedding_model = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
-
-# Qdrant Cloud client
-client = QdrantClient(
-    url=QDRANT_URL,
-    api_key=QDRANT_API_KEY
-)
-
-# Create collection if not exists
-if not client.collection_exists(collection_name=COLLECTION_NAME):
-    print("Creating collection...")
-    client.create_collection(
-        collection_name=COLLECTION_NAME,
-        vectors_config=VectorParams(size=1536, distance=Distance.COSINE),
-    )
-else:
-    print("Collection already exists.")
-
-# Load and split the PDF
+# --------------------- Load and Chunk PDF ---------------------
 loader = PyPDFLoader(DOC_PATH)
 pages = loader.load()
+
 splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
 documents = splitter.split_documents(pages)
+documents = [doc for doc in documents if doc.page_content.strip()]
 
-# Prepare texts and metadata
-texts = [doc.page_content for doc in documents]
-metadatas = [doc.metadata for doc in documents]
+# --------------------- Initialize Qdrant ---------------------
+client = QdrantClient(url=QDRANT_URL, api_key=QDRANT_API_KEY)
 
-# Embed texts
-print("Embedding texts...")
-vectors = embedding_model.embed_documents(texts)
+if client.collection_exists(COLLECTION_NAME):
+    print(f"Collection '{COLLECTION_NAME}' exists. Deleting and recreating...")
+    client.delete_collection(collection_name=COLLECTION_NAME)
 
-# Convert to PointStruct list
-print("Uploading to Qdrant...")
-# Convert to PointStruct list
-# Convert to PointStruct list
-points = [
-    PointStruct.model_construct(
-        id=i,  # ← USE PURE INTEGER HERE ✅
-        vector=vectors[i],
-        payload={
-            "text": texts[i],
-            **(metadatas[i] if metadatas else {})
-        }
-    )
-    for i in range(len(vectors))
-]
+client.create_collection(
+    collection_name=COLLECTION_NAME,
+    vectors_config=VectorParams(size=1536, distance=Distance.COSINE),
+)
 
+# --------------------- Embed and Upload ---------------------
+embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
-# Chunking helper
-def chunked(iterable, size):
-    for i in range(0, len(iterable), size):
-        yield iterable[i:i + size]
+Qdrant.from_documents(
+    documents=documents,
+    embedding=embeddings,
+    url=QDRANT_URL,
+    api_key=QDRANT_API_KEY,
+    collection_name=COLLECTION_NAME,
+)
 
-# Upload in batches
-print("Uploading to Qdrant in batches...")
-batch_size = 100  # adjust to 50 if error persists
-for i, batch in enumerate(chunked(points, batch_size)):
-    print(f"Uploading batch {i+1} of {len(points) // batch_size + 1}...")
-    client.upsert(
-        collection_name=COLLECTION_NAME,
-        points=batch
-    )
-
-print("✅ Successfully uploaded all chunks to Qdrant Cloud.")
+print("✅ Successfully uploaded textbook to Qdrant.")
