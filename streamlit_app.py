@@ -108,7 +108,7 @@ if query and option:
         docs = [(doc, score) for doc, score in raw_docs if doc.page_content.strip()]
         
         # Define a minimum score threshold for relevance
-        MIN_SCORE = 0.75
+        MIN_SCORE = 0.8
         relevant_docs = [(doc, score) for doc, score in docs if score >= MIN_SCORE]
 
         if relevant_docs:
