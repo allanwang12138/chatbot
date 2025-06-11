@@ -106,47 +106,50 @@ if query and option:
     with st.spinner("🔍 Searching for relevant context..."):
         raw_docs = db.similarity_search_with_score(query, k=5)
         docs = [(doc, score) for doc, score in raw_docs if doc.page_content.strip()]
-        if docs:
-            top_doc, top_score = sorted(docs, key=lambda x: x[1], reverse=True)[0]
+        
+        # Define a minimum score threshold for relevance
+        MIN_SCORE = 0.75
+        relevant_docs = [(doc, score) for doc, score in docs if score >= MIN_SCORE]
+
+        if relevant_docs:
+            top_doc, top_score = sorted(relevant_docs, key=lambda x: x[1], reverse=True)[0]
             context_text = top_doc.page_content
         else:
             context_text = ""
+            top_score = None
 
-    # Choose prompt style
-    is_detailed = option == "Detailed Answer"
-    prompt_template = ChatPromptTemplate.from_template(
-        PROMPT_DETAILED if is_detailed else PROMPT_CONCISE
-    )
-    prompt = prompt_template.format(context=context_text, question=query)
-    model = ChatOpenAI(openai_api_key=OPENAI_API_KEY)
+    if context_text:
+        # Format prompt based on selected type
+        prompt_template = ChatPromptTemplate.from_template(
+            PROMPT_DETAILED if option == "Detailed Answer" else PROMPT_CONCISE
+        )
+        prompt = prompt_template.format(context=context_text, question=query)
 
-    with st.spinner("💬 Generating answer..."):
-        response = model.predict(prompt)
+        model = ChatOpenAI(openai_api_key=OPENAI_API_KEY)
+        with st.spinner("💬 Generating answer..."):
+            response = model.predict(prompt)
 
-    # Voice option: generate only audio, no text
-    if "Voice" in option:
-        voice_choice = st.session_state.get("voice", "alloy")
-        with st.spinner(f"🎙️ Generating voice with '{voice_choice}'..."):
-            speech_response = openai.audio.speech.create(
-                model="tts-1",
-                voice=voice_choice,
-                input=response
-            )
-            audio_path = "output.mp3"
-            with open(audio_path, "wb") as f:
-                f.write(speech_response.read())
-            audio_file = open(audio_path, "rb")
-            st.audio(audio_file.read(), format="audio/mp3")
+        # Voice only
+        if "Voice" in option:
+            voice_choice = st.session_state.get("voice", "alloy")
+            with st.spinner(f"🎙️ Generating voice with '{voice_choice}'..."):
+                speech_response = openai.audio.speech.create(
+                    model="tts-1",
+                    voice=voice_choice,
+                    input=response
+                )
+                audio_path = "output.mp3"
+                with open(audio_path, "wb") as f:
+                    f.write(speech_response.read())
+                audio_file = open(audio_path, "rb")
+                st.audio(audio_file.read(), format="audio/mp3")
+        else:
+            st.markdown("### 📘 Answer")
+            st.write(response)
 
-    else:
-        # Show text answer only if not Voice option
-        st.markdown("### 📘 Answer")
-        st.write(response)
-
-    # Show supporting context in both cases
-    with st.expander("📚 Show Supporting Context from Textbook"):
-        if context_text:
+        with st.expander("📚 Show Supporting Context from Textbook"):
             st.markdown(f"**Most Relevant Chunk — Score: {top_score:.2f}**")
             st.write(context_text)
-        else:
-            st.info("No relevant context found.")
+
+    else:
+        st.warning("⚠️ This question appears to be outside the scope of the textbook.")
