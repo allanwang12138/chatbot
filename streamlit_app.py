@@ -153,9 +153,28 @@ if query and option:
 
     else:
         st.warning("⚠️ This question appears to be outside the scope of the textbook.")
-    # ------------------- Exit Button -------------------
+# ------------------- Exit Button -------------------
 st.markdown("---")
-if st.button("🚪 Exit"):
-    st.session_state.clear()
-    st.rerun()
+
+# Create 3 columns and center the button in the middle one
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    # Custom style to make the button larger
+    custom_exit = """
+    <style>
+    div.stButton > button:first-child {
+        font-size: 18px;
+        padding: 0.6em 2em;
+        width: 100%;
+        border-radius: 10px;
+        background-color: #f44336;
+        color: white;
+    }
+    </style>
+    """
+    st.markdown(custom_exit, unsafe_allow_html=True)
+    if st.button("🚪 Exit"):
+        st.session_state.clear()
+        st.rerun()
+
 
