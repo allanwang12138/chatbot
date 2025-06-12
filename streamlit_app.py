@@ -167,7 +167,7 @@ with col2:
         padding: 0.6em 2em;
         width: 100%;
         border-radius: 10px;
-        background-color: #f44336;
+        background-color: #ffb47a;
         color: white;
     }
     </style>
