@@ -153,3 +153,9 @@ if query and option:
 
     else:
         st.warning("⚠️ This question appears to be outside the scope of the textbook.")
+    # ------------------- Exit Button -------------------
+st.markdown("---")
+if st.button("🚪 Exit"):
+    st.session_state.clear()
+    st.rerun()
+
