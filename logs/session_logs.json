@@ -52,5 +52,35 @@
         "score": null
       }
     ]
+  },
+  {
+    "username": "user10",
+    "login_time": "2025-06-13 02:30:37.150204",
+    "interactions": [
+      {
+        "timestamp": "2025-06-13 02:30:43.841276",
+        "question": "what is python",
+        "option": "Concise Answer",
+        "answer": "\u26a0\ufe0f This question appears to be outside the scope of the textbook.",
+        "context": "",
+        "score": null
+      },
+      {
+        "timestamp": "2025-06-13 02:30:56.545593",
+        "question": "who is professor rajiv garg",
+        "option": "Concise Answer",
+        "answer": "\u26a0\ufe0f This question appears to be outside the scope of the textbook.",
+        "context": "",
+        "score": null
+      },
+      {
+        "timestamp": "2025-06-13 02:31:09.461568",
+        "question": "what is government role in macroeconomics",
+        "option": "Concise Answer",
+        "answer": "The government's role in macroeconomics includes setting fiscal and monetary policies to influence economic performance, such as controlling inflation and unemployment rates.",
+        "context": "14.3PreliminariesfortheRamseyProblem 163\nforadiscussionofcommitmentinthecontextofaRamseyprobleminmonetarypolicy.\nInthatchapterweintroducethegame-theoreticconceptsrequiredtomodelthestrategic\ninteractionsoftheprivatesectorandthegovernment.\nSoourbenevolentgovernmentwilltakethepurchasingbehaviorofitscitizens(intheform\narepresentativehousehold)inresponsetoitsannouncedsetoftaxes /CU /AS\n/D8\n/CV\n/BD\n/D8 =0asgiven.Itwill\nseektoraisesomeexogenous,known,amountofmoneysuf\ufb01cient,inpresent-valueterms,",
+        "score": 0.8265276
+      }
+    ]
   }
 ]
