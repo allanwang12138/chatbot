@@ -7,6 +7,11 @@ from langchain_qdrant import Qdrant
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from qdrant_client import QdrantClient
+import json
+import base64
+import requests
+import datetime
+
 
 # ------------------- Load secrets -------------------
 load_dotenv()
@@ -16,6 +21,42 @@ QDRANT_URL = os.getenv("QDRANT_URL")
 
 openai.api_key = OPENAI_API_KEY
 COLLECTION_NAME = "macroecon_collection"
+
+
+# ------------------- Create a function to store log -------------------
+def append_log_to_github(log_entry):
+    token = os.getenv("GITHUB_TOKEN")
+    repo = os.getenv("GITHUB_REPO")  # e.g., "yourusername/yourrepo"
+    path = os.getenv("GITHUB_FILE_PATH")  # e.g., "logs/session_logs.json"
+
+    headers = {"Authorization": f"token {token}"}
+    api_url = f"https://api.github.com/repos/{repo}/contents/{path}"
+
+    # Get existing file content (if any)
+    response = requests.get(api_url, headers=headers)
+    if response.status_code == 200:
+        content = response.json()
+        existing_data = json.loads(base64.b64decode(content["content"]).decode())
+        sha = content["sha"]
+    else:
+        existing_data = []
+        sha = None
+
+    # Append the new log entry
+    existing_data.append(log_entry)
+    updated_content = base64.b64encode(json.dumps(existing_data, indent=2).encode()).decode()
+
+    payload = {
+        "message": f"Append log for {log_entry['username']}",
+        "content": updated_content,
+        "branch": "main",
+    }
+    if sha:
+        payload["sha"] = sha
+
+    put_response = requests.put(api_url, headers=headers, data=json.dumps(payload))
+    return put_response.status_code == 201 or put_response.status_code == 200
+
 
 # ------------------- Load credentials with voice assignment -------------------
 @st.cache_data
@@ -39,8 +80,14 @@ def login():
             st.session_state["authenticated"] = True
             st.session_state["username"] = username
             st.session_state["voice"] = user["voice"]
+            st.session_state["session_log"] = {
+                "username": username,
+                "login_time": str(datetime.datetime.now()),
+                "interactions": []
+            }
             st.success(f"✅ Login successful. Welcome, {username}!")
             st.rerun()
+
         else:
             st.error("❌ Invalid username or password. Please try again.")
 
@@ -128,6 +175,14 @@ if query and option:
         model = ChatOpenAI(openai_api_key=OPENAI_API_KEY)
         with st.spinner("💬 Generating answer..."):
             response = model.predict(prompt)
+            # Add to session log
+            st.session_state["session_log"]["interactions"].append({
+                "timestamp": str(datetime.datetime.now()),
+                "question": query,
+                "answer": response,
+                "context": context_text,
+                "score": top_score
+            })
 
         # Voice only
         if "Voice" in option:
@@ -154,12 +209,11 @@ if query and option:
     else:
         st.warning("⚠️ This question appears to be outside the scope of the textbook.")
 # ------------------- Exit Button -------------------
+
 st.markdown("---")
 
-# Create 3 columns and center the button in the middle one
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
-    # Custom style to make the button larger
     custom_exit = """
     <style>
     div.stButton > button:first-child {
@@ -173,7 +227,15 @@ with col2:
     </style>
     """
     st.markdown(custom_exit, unsafe_allow_html=True)
+    
     if st.button("🚪 Exit"):
+        # Push session log to GitHub
+        if "session_log" in st.session_state:
+            success = append_log_to_github(st.session_state["session_log"])
+            if success:
+                st.success("📤 Session log uploaded to GitHub.")
+            else:
+                st.warning("⚠️ Failed to upload session log.")
         st.session_state.clear()
         st.rerun()
 
