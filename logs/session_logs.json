@@ -1,0 +1,22 @@
+[
+  {
+    "username": "user02",
+    "login_time": "2025-06-13 02:06:40.168921",
+    "interactions": [
+      {
+        "timestamp": "2025-06-13 02:06:48.451503",
+        "question": "What is INFLATION?",
+        "answer": "Inflation is when the general level of prices for goods and services in an economy rises over a period of time. This means that your money buys less than it did before. For example, if a pack of gum costs $1 today and $1.10 next year, there is inflation. High inflation can be a problem because it can reduce the purchasing power of your money.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "score": 0.8326483
+      },
+      {
+        "timestamp": "2025-06-13 02:06:57.041121",
+        "question": "What is GDP?",
+        "answer": "GDP is the total value of goods and services produced in a country during a specific period of time.",
+        "context": "Chapter 11\nEconomic Growth\nThischapterexaminesthedeterminantsofeconomicgrowth. Astartlingfactabouteco-\nnomicgrowthisthelargevariationinthegrowthexperienceofdifferentcountriesinre-\ncenthistory. Somepartsoftheworld,liketheUnitedStatesorWesternEurope,experi-\nencedsustainedeconomicgrowthoveraperiodofmorethan100years,sobyhistorical\nstandardsthesecountriesarenowenormouslywealthy. Thisisnotonlytrueinabsolute\nterms(i.e.,GDP),butalsoifwemeasurewealthasincomepercapita(i.e.,GDPperperson).",
+        "score": 0.8184136
+      }
+    ]
+  }
+]
