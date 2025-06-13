@@ -82,5 +82,43 @@
         "score": 0.8265276
       }
     ]
+  },
+  {
+    "username": "user02",
+    "login_time": "2025-06-13 17:09:05.399499",
+    "interactions": [
+      {
+        "timestamp": "2025-06-13 17:09:15.988794",
+        "question": "What is inflation?",
+        "option": "Detailed Answer",
+        "answer": "Inflation is the general increase in prices of goods and services over time. This means that the purchasing power of money decreases, causing consumers to pay more for the same items. For example, if a loaf of bread costs $2 one year and $2.10 the next year, there is inflation. High inflation can lead to economic instability and reduced consumer spending.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "score": 0.8303213
+      },
+      {
+        "timestamp": "2025-06-13 17:17:50.318281",
+        "question": "What is macro economics and micro economics?",
+        "option": "Concise Answer",
+        "answer": "Macroeconomics is the study of the economy as a whole, focusing on factors like inflation, unemployment, and economic growth. Microeconomics, on the other hand, examines the behavior of individual agents such as households and firms in making decisions on resource allocation.",
+        "context": "iv Preface\nas\u201cModerate\u201d,unlesstheyhaveone-linesolutions,inwhichcaseweusuallyratedthem\nas\u201cEasy\u201d.\nWeteachthismaterialintwoten-weekcourses.Inthe\ufb01rstcoursewecoverChapters1,2,\n3,6,4,5,7,8,9,and11,inthatorder.Thisallowsustokeeptogetherallthematerialon\nmonetaryeconomics(Chapters4,5,7,and8).Inthesecondcourse,wecoverChapter10\n(unemployment);Chapters12,13,and14(\ufb01scalpolicy);Chapters15and16(international\nmacro);andChapters17,18and19(moneyandbanking).Sincethisisquitealottocover",
+        "score": 0.82126516
+      },
+      {
+        "timestamp": "2025-06-13 17:21:44.146492",
+        "question": "What is HADOOP?",
+        "option": "Concise Answer",
+        "answer": "\u26a0\ufe0f This question appears to be outside the scope of the textbook.",
+        "context": "",
+        "score": null
+      },
+      {
+        "timestamp": "2025-06-13 17:21:55.809652",
+        "question": "What is INFLATION?",
+        "option": "Detailed Answer",
+        "answer": "Inflation is when the overall prices of goods and services in an economy increase over time. This means that the purchasing power of money decreases, making it more expensive to buy things. For example, if a cup of coffee costs $2 today and $2.50 next year due to inflation, it means your money can buy less coffee. Inflation can impact people's savings, investment returns, and overall economic stability.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "score": 0.8326483
+      }
+    ]
   }
 ]
