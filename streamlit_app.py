@@ -29,33 +29,39 @@ def append_log_to_github(log_entry):
     repo = os.getenv("GITHUB_REPO")  # e.g., "yourusername/yourrepo"
     path = os.getenv("GITHUB_FILE_PATH")  # e.g., "logs/session_logs.json"
 
-    headers = {"Authorization": f"token {token}"}
+    headers = {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github+json"
+    }
     api_url = f"https://api.github.com/repos/{repo}/contents/{path}"
 
-    # Get existing file content (if any)
+    # Try to get existing file
     response = requests.get(api_url, headers=headers)
     if response.status_code == 200:
         content = response.json()
         existing_data = json.loads(base64.b64decode(content["content"]).decode())
         sha = content["sha"]
-    else:
+    elif response.status_code == 404:
         existing_data = []
         sha = None
+    else:
+        st.error(f"❌ GitHub error: {response.status_code} — {response.text}")
+        return False
 
-    # Append the new log entry
+    # Append the new log
     existing_data.append(log_entry)
     updated_content = base64.b64encode(json.dumps(existing_data, indent=2).encode()).decode()
 
     payload = {
         "message": f"Append log for {log_entry['username']}",
         "content": updated_content,
-        "branch": "main",
+        "branch": "main"
     }
     if sha:
-        payload["sha"] = sha
+        payload["sha"] = sha  # include only when updating
 
     put_response = requests.put(api_url, headers=headers, data=json.dumps(payload))
-    return put_response.status_code == 201 or put_response.status_code == 200
+    return put_response.status_code in [200, 201]
 
 
 # ------------------- Load credentials with voice assignment -------------------
