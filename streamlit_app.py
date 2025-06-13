@@ -181,10 +181,11 @@ if query and option:
         model = ChatOpenAI(openai_api_key=OPENAI_API_KEY)
         with st.spinner("💬 Generating answer..."):
             response = model.predict(prompt)
-            # Add to session log
+            # Add in-scope question log
             st.session_state["session_log"]["interactions"].append({
                 "timestamp": str(datetime.datetime.now()),
                 "question": query,
+                "option": option,
                 "answer": response,
                 "context": context_text,
                 "score": top_score
@@ -214,6 +215,16 @@ if query and option:
 
     else:
         st.warning("⚠️ This question appears to be outside the scope of the textbook.")
+        # Log out-of-scope question
+        st.session_state["session_log"]["interactions"].append({
+            "timestamp": str(datetime.datetime.now()),
+            "question": query,
+            "option": option,
+            "answer": "⚠️ This question appears to be outside the scope of the textbook.",
+            "context": "",
+            "score": None
+        })
+
 # ------------------- Exit Button -------------------
 
 st.markdown("---")
