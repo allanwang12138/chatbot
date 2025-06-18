@@ -256,7 +256,7 @@ if query and option:
                 prompt_template = ChatPromptTemplate.from_template(PROMPT_ADVANCED_DETAILED)
             else:
                 prompt_template = ChatPromptTemplate.from_template(PROMPT_INTERMEDIATE_DETAILED)
-
+        prompt = prompt_template.format(context=context_text, question=query)
         model = ChatOpenAI(openai_api_key=OPENAI_API_KEY)
         with st.spinner("💬 Generating answer..."):
             response = model.predict(prompt)
