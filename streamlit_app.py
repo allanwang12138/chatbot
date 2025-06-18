@@ -78,24 +78,33 @@ CREDENTIALS = load_credentials()
 def login():
     st.title("🔐 Login")
     st.write("Enter your username and password to access the app.")
+
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
+
+    level = st.selectbox(
+        "Select your macroeconomics experience level:",
+        ["Beginner", "Intermediate", "Advanced"]
+    )
+
     if st.button("Login"):
         user = CREDENTIALS.get(username)
         if user and user["password"] == password:
             st.session_state["authenticated"] = True
             st.session_state["username"] = username
             st.session_state["voice"] = user["voice"]
+            st.session_state["experience_level"] = level  # 👈 store selected level
             st.session_state["session_log"] = {
                 "username": username,
                 "login_time": str(datetime.datetime.now()),
+                "experience_level": level,
                 "interactions": []
             }
             st.success(f"✅ Login successful. Welcome, {username}!")
             st.rerun()
-
         else:
             st.error("❌ Invalid username or password. Please try again.")
+
 
 # ------------------- Authentication Gate -------------------
 if "authenticated" not in st.session_state or not st.session_state["authenticated"]:
@@ -108,10 +117,10 @@ client = QdrantClient(url=QDRANT_URL, api_key=QDRANT_API_KEY)
 db = Qdrant(client=client, collection_name=COLLECTION_NAME, embeddings=embeddings)
 
 # ------------------- Prompt Templates -------------------
-PROMPT_DETAILED = """
-You are an expert economics tutor. Your job is to answer questions in a clear, friendly, and educational way that is easy for students to follow.
+PROMPT_BEGINNER_DETAILED = """
+You are a patient and friendly macroeconomics tutor helping someone completely new to the subject.
 
-Based only on the context below, write a well-explained answer to the question in no more than 4 sentences. Use simple language, provide helpful examples where appropriate, and avoid excessive technical detail.
+Based only on the context below, explain the answer clearly in no more than 4 sentences. Avoid jargon and technical terms. Use simple language and real-world analogies (like shopping, school, or weather) to help the student understand.
 
 Context:
 {context}
@@ -122,8 +131,8 @@ Question:
 Answer:
 """
 
-PROMPT_CONCISE = """
-You are an expert economics tutor. Based only on the context below, provide a very concise answer to the question in no more than 2 sentences.
+PROMPT_BEGINNER_CONCISE = """
+You are helping a beginner understand macroeconomics. Give a short, friendly answer using very simple words — no jargon or equations and no more than 2 sentences.
 
 Context:
 {context}
@@ -131,8 +140,66 @@ Context:
 Question:
 {question}
 
-Concise Answer:
+Answer:
 """
+
+PROMPT_INTERMEDIATE_DETAILED = """
+You are an experienced tutor helping a student with some background in macroeconomics.
+
+Using only the context below, provide a clear and informative answer in no more than 4 sentences. Use standard macroeconomic terms and concepts, but keep explanations digestible and well-structured. Include examples if helpful.
+
+Context:
+{context}
+
+Question:
+{question}
+
+Answer:
+"""
+
+PROMPT_INTERMEDIATE_CONCISE = """
+You are an economics tutor providing a concise but clear explanation to a student with intermediate knowledge.
+
+Using the context below, answer the question in no more than 2 sentences. Focus on clarity, not detail.
+
+Context:
+{context}
+
+Question:
+{question}
+
+Answer:
+"""
+
+PROMPT_ADVANCED_DETAILED = """
+You are an expert academic tutor working with an advanced student who understands macroeconomic theory and math.
+
+Using only the context provided, write a focused and rigorous answer in no more than 4 sentences. Feel free to include concepts like equilibrium, derivatives, IS-LM, inflation expectations, or models if relevant.
+
+Context:
+{context}
+
+Question:
+{question}
+
+Answer:
+"""
+
+PROMPT_ADVANCED_CONCISE = """
+You're providing a concise response to an advanced macroeconomics student.
+
+Using the context below, answer the question in no more than 2 sentences, assuming the reader is familiar with key terms and theories.
+
+Context:
+{context}
+
+Question:
+{question}
+
+Answer:
+"""
+
+
 
 # ------------------- Streamlit UI -------------------
 st.title("📄 Macro Economics Q&A App")
@@ -173,10 +240,22 @@ if query and option:
 
     if context_text:
         # Format prompt based on selected type
-        prompt_template = ChatPromptTemplate.from_template(
-            PROMPT_DETAILED if option == "Detailed Answer" else PROMPT_CONCISE
-        )
-        prompt = prompt_template.format(context=context_text, question=query)
+        level = st.session_state.get("experience_level", "Intermediate")
+        
+        if option == "Concise Answer" or "Voice" in option:
+            if level == "Beginner":
+                prompt_template = ChatPromptTemplate.from_template(PROMPT_BEGINNER_CONCISE)
+            elif level == "Advanced":
+                prompt_template = ChatPromptTemplate.from_template(PROMPT_ADVANCED_CONCISE)
+            else:
+                prompt_template = ChatPromptTemplate.from_template(PROMPT_INTERMEDIATE_CONCISE)
+        else:
+            if level == "Beginner":
+                prompt_template = ChatPromptTemplate.from_template(PROMPT_BEGINNER_DETAILED)
+            elif level == "Advanced":
+                prompt_template = ChatPromptTemplate.from_template(PROMPT_ADVANCED_DETAILED)
+            else:
+                prompt_template = ChatPromptTemplate.from_template(PROMPT_INTERMEDIATE_DETAILED)
 
         model = ChatOpenAI(openai_api_key=OPENAI_API_KEY)
         with st.spinner("💬 Generating answer..."):
@@ -184,6 +263,7 @@ if query and option:
             # Add in-scope question log
             st.session_state["session_log"]["interactions"].append({
                 "timestamp": str(datetime.datetime.now()),
+                "experience_level": st.session_state.get("experience_level", "Intermediate"),
                 "question": query,
                 "option": option,
                 "answer": response,
@@ -218,6 +298,7 @@ if query and option:
         # Log out-of-scope question
         st.session_state["session_log"]["interactions"].append({
             "timestamp": str(datetime.datetime.now()),
+            "experience_level": st.session_state.get("experience_level", "Intermediate"),
             "question": query,
             "option": option,
             "answer": "⚠️ This question appears to be outside the scope of the textbook.",
