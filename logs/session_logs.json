@@ -120,5 +120,48 @@
         "score": 0.8326483
       }
     ]
+  },
+  {
+    "username": "user02",
+    "login_time": "2025-06-18 04:07:43.731491",
+    "experience_level": "Beginner",
+    "interactions": [
+      {
+        "timestamp": "2025-06-18 04:11:55.770453",
+        "experience_level": "Beginner",
+        "question": "What is INFLATION?",
+        "option": "Detailed Answer",
+        "answer": "Think of inflation like a price hike at your favorite store. When prices go up, you can't buy as much with your money as before. High inflation is bad because it makes things more expensive, which can hurt the economy. So, when we study inflation, we're trying to figure out how it affects things like how much stuff is being made and how much people are buying. The Quantity Theory can only take us so far in understanding this, so we need to look deeper to really get it.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "score": 0.8326483
+      },
+      {
+        "timestamp": "2025-06-18 04:12:01.859169",
+        "experience_level": "Beginner",
+        "question": "What is INFLATION?",
+        "option": "Concise Answer",
+        "answer": "Inflation is when prices for things like food, clothes, and toys go up over time. This can make it harder for people to buy the things they need.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "score": 0.8326483
+      },
+      {
+        "timestamp": "2025-06-18 04:12:13.765144",
+        "experience_level": "Beginner",
+        "question": "What is gdp?",
+        "option": "Concise Answer",
+        "answer": "GDP is how much money a country makes from all the things it produces and sells, like goods and services. It shows how well the economy is doing.",
+        "context": "Chapter 11\nEconomic Growth\nThischapterexaminesthedeterminantsofeconomicgrowth. Astartlingfactabouteco-\nnomicgrowthisthelargevariationinthegrowthexperienceofdifferentcountriesinre-\ncenthistory. Somepartsoftheworld,liketheUnitedStatesorWesternEurope,experi-\nencedsustainedeconomicgrowthoveraperiodofmorethan100years,sobyhistorical\nstandardsthesecountriesarenowenormouslywealthy. Thisisnotonlytrueinabsolute\nterms(i.e.,GDP),butalsoifwemeasurewealthasincomepercapita(i.e.,GDPperperson).",
+        "score": 0.815106
+      },
+      {
+        "timestamp": "2025-06-18 04:12:19.722249",
+        "experience_level": "Beginner",
+        "question": "What is gdp?",
+        "option": "Concise Answer + Voice",
+        "answer": " GDP stands for Gross Domestic Product, which is the total value of all goods and services produced in a country in a year. It measures how big a country's economy is.",
+        "context": "Chapter 11\nEconomic Growth\nThischapterexaminesthedeterminantsofeconomicgrowth. Astartlingfactabouteco-\nnomicgrowthisthelargevariationinthegrowthexperienceofdifferentcountriesinre-\ncenthistory. Somepartsoftheworld,liketheUnitedStatesorWesternEurope,experi-\nencedsustainedeconomicgrowthoveraperiodofmorethan100years,sobyhistorical\nstandardsthesecountriesarenowenormouslywealthy. Thisisnotonlytrueinabsolute\nterms(i.e.,GDP),butalsoifwemeasurewealthasincomepercapita(i.e.,GDPperperson).",
+        "score": 0.815106
+      }
+    ]
   }
 ]
