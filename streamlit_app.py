@@ -77,10 +77,12 @@ CREDENTIALS = load_credentials()
 
 def login():
     st.title("🔐 Login")
-    st.write("Enter your username and password to access the app.")
+
+    st.write("Enter your username, password, and select a textbook.")
 
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
+    textbook = st.selectbox("Select a textbook:", ["Macroeconomics", "Microeconomics"])
 
     level = st.selectbox(
         "Select your macroeconomics experience level:",
@@ -93,7 +95,8 @@ def login():
             st.session_state["authenticated"] = True
             st.session_state["username"] = username
             st.session_state["voice"] = user["voice"]
-            st.session_state["experience_level"] = level  # 👈 store selected level
+            st.session_state["textbook"] = textbook
+            st.session_state["experience_level"] = level   
             st.session_state["session_log"] = {
                 "username": username,
                 "login_time": str(datetime.datetime.now()),
@@ -114,6 +117,15 @@ if "authenticated" not in st.session_state or not st.session_state["authenticate
 # ------------------- Qdrant Setup -------------------
 embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 client = QdrantClient(url=QDRANT_URL, api_key=QDRANT_API_KEY)
+# Select collection based on textbook choice
+selected_textbook = st.session_state.get("textbook", "Macroeconomics")
+if selected_textbook == "Macroeconomics":
+    COLLECTION_NAME = "macroecon_collection"
+elif selected_textbook == "Microeconomics":
+    COLLECTION_NAME = "microecon_collection"
+else:
+    st.error("❌ Invalid textbook selection.")
+    st.stop()
 db = Qdrant(client=client, collection_name=COLLECTION_NAME, embeddings=embeddings)
 
 # ------------------- Prompt Templates -------------------
@@ -202,9 +214,9 @@ Answer:
 
 
 # ------------------- Streamlit UI -------------------
-st.title("📄 Macro Economics Q&A App")
+st.title("📄 Economics Q&A App")
 
-query = st.text_input("Ask a question about Macro Economics:")
+query = st.text_input("Ask a question about Economics:")
 
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -268,6 +280,7 @@ if query and option:
                 "option": option,
                 "answer": response,
                 "context": context_text,
+                "textbook": textbook,
                 "score": top_score
             })
 
@@ -303,6 +316,7 @@ if query and option:
             "option": option,
             "answer": "⚠️ This question appears to be outside the scope of the textbook.",
             "context": "",
+            "textbook": textbook,
             "score": None
         })
 
