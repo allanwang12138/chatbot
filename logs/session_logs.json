@@ -268,5 +268,72 @@
         "score": 0.8326483
       }
     ]
+  },
+  {
+    "username": "user10",
+    "login_time": "2025-06-19 03:34:09.917996",
+    "experience_level": "Intermediate",
+    "interactions": [
+      {
+        "timestamp": "2025-06-19 03:34:17.798153",
+        "experience_level": "Intermediate",
+        "question": "what is government role in macroeconomics",
+        "option": "Detailed Answer",
+        "answer": "In macroeconomics, the government plays a crucial role in addressing market failures such as externalities through interventions like taxes or subsidies. However, the effectiveness of government intervention relies on its ability to identify and implement appropriate public policies. It is important to understand the strengths and weaknesses of both markets and government in order to make informed decisions about economic policy. Striking a balance between market forces and government intervention is crucial to achieving efficient outcomes in the economy.",
+        "context": "externalities, a potential role exists for government intervention. However, in the real world, it is not enough to point\nout that government action might be a good idea. Instead, we must have some confidence that the government is\nlikely to identify and carry out the appropriate public policy. To make sensible judgments about economic policy,\nwe must see the strengths and weaknesses of both markets and government. We must not idealize or demonize",
+        "textbook": "Microeconomics",
+        "score": 0.85464567
+      },
+      {
+        "timestamp": "2025-06-19 03:34:33.748447",
+        "experience_level": "Intermediate",
+        "question": "what is hadoop",
+        "option": "Concise Answer",
+        "answer": "\u26a0\ufe0f This question appears to be outside the scope of the textbook.",
+        "context": "",
+        "textbook": "Microeconomics",
+        "score": null
+      },
+      {
+        "timestamp": "2025-06-19 03:34:43.498400",
+        "experience_level": "Intermediate",
+        "question": "what is government role in macroeconomics",
+        "option": "Concise Answer",
+        "answer": "The government plays a role in addressing externalities and potential market failures in the economy, but it is important to understand both the strengths and weaknesses of government intervention versus market mechanisms. It is crucial to avoid idealizing or demonizing either approach for effective economic policy-making.",
+        "context": "externalities, a potential role exists for government intervention. However, in the real world, it is not enough to point\nout that government action might be a good idea. Instead, we must have some confidence that the government is\nlikely to identify and carry out the appropriate public policy. To make sensible judgments about economic policy,\nwe must see the strengths and weaknesses of both markets and government. We must not idealize or demonize",
+        "textbook": "Microeconomics",
+        "score": 0.85464567
+      },
+      {
+        "timestamp": "2025-06-19 03:35:16.195809",
+        "experience_level": "Intermediate",
+        "question": "what is supply and demand",
+        "option": "Detailed Answer",
+        "answer": "Supply and demand are fundamental concepts in economics that determine the prices and quantities of goods and services in a market. Supply refers to the quantity of a product that sellers are willing and able to offer for sale at a given price, while demand refers to the quantity of a product that consumers are willing and able to purchase at a given price. When the supply of a product exceeds the demand, prices tend to decrease, and vice versa. For example, if there is a surplus of smartphones in the market, the price of smartphones may decrease as sellers compete to sell their products.",
+        "context": "influence supply and demand of products.\nChapter 3 | Demand and Supply 49",
+        "textbook": "Microeconomics",
+        "score": 0.8661461
+      },
+      {
+        "timestamp": "2025-06-19 03:35:23.634577",
+        "experience_level": "Intermediate",
+        "question": "what is supply and demand",
+        "option": "Concise Answer + Voice",
+        "answer": "Supply refers to the quantity of a product that producers are willing to provide in the market at a certain price, while demand refers to the quantity of a product that consumers are willing to buy at a certain price.",
+        "context": "influence supply and demand of products.\nChapter 3 | Demand and Supply 49",
+        "textbook": "Microeconomics",
+        "score": 0.8661461
+      },
+      {
+        "timestamp": "2025-06-19 03:35:42.728143",
+        "experience_level": "Intermediate",
+        "question": "what is physics",
+        "option": "Concise Answer",
+        "answer": "\u26a0\ufe0f This question appears to be outside the scope of the textbook.",
+        "context": "",
+        "textbook": "Microeconomics",
+        "score": null
+      }
+    ]
   }
 ]
