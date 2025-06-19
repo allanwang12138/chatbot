@@ -82,7 +82,7 @@ def login():
 
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
-    textbook = st.selectbox("Select a textbook:", ["Macroeconomics", "Microeconomics"])
+    textbook = st.selectbox("Select a textbook:", ["Macroeconomics", "Microeconomics", "Physics"])
 
     level = st.selectbox(
         "Select your macroeconomics experience level:",
@@ -123,6 +123,8 @@ if selected_textbook == "Macroeconomics":
     COLLECTION_NAME = "macroecon_collection"
 elif selected_textbook == "Microeconomics":
     COLLECTION_NAME = "microecon_collection"
+elif selected_textbook == "Physics":
+    COLLECTION_NAME = "physics_collection"
 else:
     st.error("❌ Invalid textbook selection.")
     st.stop()
@@ -214,9 +216,12 @@ Answer:
 
 
 # ------------------- Streamlit UI -------------------
-st.title("📄 Economics Q&A App")
+selected_textbook = st.session_state.get("textbook", "Textbook")
 
-query = st.text_input("Ask a question about Economics:")
+# Format dynamic title and input prompt
+st.title(f"📄 {selected_textbook} Q&A App")
+query = st.text_input(f"Ask a question about {selected_textbook}:")
+
 
 col1, col2, col3 = st.columns(3)
 with col1:
