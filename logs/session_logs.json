@@ -335,5 +335,42 @@
         "score": null
       }
     ]
+  },
+  {
+    "username": "user02",
+    "login_time": "2025-06-19 03:55:46.533374",
+    "experience_level": "Beginner",
+    "interactions": [
+      {
+        "timestamp": "2025-06-19 03:55:56.494038",
+        "experience_level": "Beginner",
+        "question": "what is physics",
+        "option": "Concise Answer",
+        "answer": "Physics is the study of how things move and interact in the world around us. It helps us understand the forces that make objects speed up, slow down, or change direction.",
+        "context": "part of physics!\n1.2: Dynamics\nPhysics is the study ofdynamics. Dynamics is the description of the actual forces of\nnature that, we believe, underlie the causal structure of the Univer se and are responsible\nfor its evolution in time . We are about to embark upon the intensive study of a simple\ndescription of nature that introduces the concept of a force, due to Isaac Newton. A force\nis considered to be the causal agent that produces the effect of acceleration in any massive",
+        "textbook": "Physics",
+        "score": 0.8607156
+      },
+      {
+        "timestamp": "2025-06-19 03:56:02.572376",
+        "experience_level": "Beginner",
+        "question": "what is economics",
+        "option": "Detailed Answer",
+        "answer": "\u26a0\ufe0f This question appears to be outside the scope of the textbook.",
+        "context": "",
+        "textbook": "Physics",
+        "score": null
+      },
+      {
+        "timestamp": "2025-06-19 03:56:19.552055",
+        "experience_level": "Beginner",
+        "question": "what are some main topics of physics",
+        "option": "Concise Answer",
+        "answer": "Some main topics of physics are motion, energy, forces, and electricity. Physics helps us understand how things work in the world around us.",
+        "context": "I: Getting Ready to Learn Physics\n1",
+        "textbook": "Physics",
+        "score": 0.8316901
+      }
+    ]
   }
 ]
