@@ -280,7 +280,7 @@ if query and option:
                 "option": option,
                 "answer": response,
                 "context": context_text,
-                "textbook": textbook,
+                "textbook": st.session_state.get("textbook", "Macroeconomics")
                 "score": top_score
             })
 
@@ -316,7 +316,7 @@ if query and option:
             "option": option,
             "answer": "⚠️ This question appears to be outside the scope of the textbook.",
             "context": "",
-            "textbook": textbook,
+            "textbook": st.session_state.get("textbook", "Macroeconomics")
             "score": None
         })
 
