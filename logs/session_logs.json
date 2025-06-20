@@ -399,5 +399,32 @@
         "score": 0.82642275
       }
     ]
+  },
+  {
+    "username": "user02",
+    "login_time": "2025-06-20 17:01:48.002110",
+    "experience_level": "Beginner",
+    "interactions": [
+      {
+        "timestamp": "2025-06-20 17:01:54.416500",
+        "experience_level": "Beginner",
+        "question": "How does the concept of inertia explain why passengers lurch forward when a car suddenly stops?",
+        "option": "Detailed Answer",
+        "answer": "When a car is moving at a constant speed, the wheels help it move smoothly without needing extra force. But when the car suddenly stops, the wheels stop turning and can't keep the passengers moving smoothly. This change makes the passengers want to keep moving forward, even though the car stopped, and that's why they lurch forward. It's like when you're on a swing and someone suddenly stops pushing you - you keep moving forward even though the swing stopped moving.",
+        "context": "If the car is travelling at a constant speed (and we neglect or arra nge for their to be\nno drag/friction) we expect that the road will exert no force along the direction of motion of\nthe car \u2013 the force exerted by static friction will be zero. Indeed, that\u2019 s why wheels were\ninvented \u2013 an object that is rolling at constant speed on frictionl ess bearings requires no\nforce to keep it going \u2013 wheels are a way to avoid kinetic/sliding fr iction altogether!",
+        "textbook": "Physics",
+        "score": 0.82642275
+      },
+      {
+        "timestamp": "2025-06-20 17:02:04.457215",
+        "experience_level": "Beginner",
+        "question": "How does the concept of inertia explain why passengers lurch forward when a car suddenly stops?",
+        "option": "Concise Answer",
+        "answer": "When the car suddenly stops, the passengers continue moving forward because of inertia. Their bodies want to keep moving at the same speed and in the same direction as the car was going.",
+        "context": "If the car is travelling at a constant speed (and we neglect or arra nge for their to be\nno drag/friction) we expect that the road will exert no force along the direction of motion of\nthe car \u2013 the force exerted by static friction will be zero. Indeed, that\u2019 s why wheels were\ninvented \u2013 an object that is rolling at constant speed on frictionl ess bearings requires no\nforce to keep it going \u2013 wheels are a way to avoid kinetic/sliding fr iction altogether!",
+        "textbook": "Physics",
+        "score": 0.82642275
+      }
+    ]
   }
 ]
