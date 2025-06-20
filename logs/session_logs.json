@@ -372,5 +372,32 @@
         "score": 0.8316901
       }
     ]
+  },
+  {
+    "username": "user02",
+    "login_time": "2025-06-20 16:56:02.382977",
+    "experience_level": "Advanced",
+    "interactions": [
+      {
+        "timestamp": "2025-06-20 17:01:24.614586",
+        "experience_level": "Advanced",
+        "question": "How does the concept of inertia explain why passengers lurch forward when a car suddenly stops?",
+        "option": "Concise Answer",
+        "answer": "The concept of inertia explains why passengers lurch forward when a car suddenly stops because the passengers tend to continue moving at the same speed and direction as the car before it stopped, due to their inertia.",
+        "context": "If the car is travelling at a constant speed (and we neglect or arra nge for their to be\nno drag/friction) we expect that the road will exert no force along the direction of motion of\nthe car \u2013 the force exerted by static friction will be zero. Indeed, that\u2019 s why wheels were\ninvented \u2013 an object that is rolling at constant speed on frictionl ess bearings requires no\nforce to keep it going \u2013 wheels are a way to avoid kinetic/sliding fr iction altogether!",
+        "textbook": "Physics",
+        "score": 0.82642275
+      },
+      {
+        "timestamp": "2025-06-20 17:01:29.630751",
+        "experience_level": "Advanced",
+        "question": "How does the concept of inertia explain why passengers lurch forward when a car suddenly stops?",
+        "option": "Detailed Answer",
+        "answer": "The concept of inertia, as described by Newton's first law of motion, states that an object in motion will stay in motion unless acted upon by an external force. When a car suddenly stops, the passengers inside continue moving forward due to their inertia. This is because their bodies want to maintain their state of motion, resulting in the lurching forward sensation. The force of this sudden stop acts as an external force that disrupts the passengers' inertia, causing them to move forward until another force (such as a seatbelt) stops their motion.",
+        "context": "If the car is travelling at a constant speed (and we neglect or arra nge for their to be\nno drag/friction) we expect that the road will exert no force along the direction of motion of\nthe car \u2013 the force exerted by static friction will be zero. Indeed, that\u2019 s why wheels were\ninvented \u2013 an object that is rolling at constant speed on frictionl ess bearings requires no\nforce to keep it going \u2013 wheels are a way to avoid kinetic/sliding fr iction altogether!",
+        "textbook": "Physics",
+        "score": 0.82642275
+      }
+    ]
   }
 ]
