@@ -443,5 +443,42 @@
         "score": 0.8388269
       }
     ]
+  },
+  {
+    "username": "user03",
+    "login_time": "2025-06-20 17:18:09.856859",
+    "experience_level": "Advanced",
+    "interactions": [
+      {
+        "timestamp": "2025-06-20 17:18:16.321870",
+        "experience_level": "Advanced",
+        "question": "If gravity pulls everything down, why don't orbiting satellites fall to Earth?",
+        "option": "Detailed Answer",
+        "answer": "Orbiting satellites do not fall to Earth because they are in a state of continuous free-fall around the planet due to the balance between their forward velocity and the gravitational force pulling them towards the center of the Earth. This results in a stable orbit where the gravitational force is constantly changing the direction of the satellite's velocity vector. This phenomenon is explained by the principles of Newtonian mechanics and helps satellites maintain their trajectory without crashing into Earth.",
+        "context": "drag forces which both slow down e.g. a golf ball and exert \u201clift\u201d o n it that can cause it to\nhook or slice, the fact that the earth is not really an inertial refe rence frame and is rotating\nout underneath the free \ufb02ight trajectory of a cannonball, creating an apparent de\ufb02ection of\nactual projectiles \ufb01red by e.g. naval cannons. That is, only gravity near the earth\u2019s surface\nwill act on our ideal particles for now.",
+        "textbook": "Physics",
+        "score": 0.838876
+      },
+      {
+        "timestamp": "2025-06-20 17:18:29.447397",
+        "experience_level": "Advanced",
+        "question": "If gravity pulls everything down, why don't orbiting satellites fall to Earth?",
+        "option": "Concise Answer",
+        "answer": "Orbiting satellites remain in stable orbit because they have sufficient velocity to balance the force of gravity pulling them downwards towards Earth. This results in a continuous state of free fall around the planet.",
+        "context": "drag forces which both slow down e.g. a golf ball and exert \u201clift\u201d o n it that can cause it to\nhook or slice, the fact that the earth is not really an inertial refe rence frame and is rotating\nout underneath the free \ufb02ight trajectory of a cannonball, creating an apparent de\ufb02ection of\nactual projectiles \ufb01red by e.g. naval cannons. That is, only gravity near the earth\u2019s surface\nwill act on our ideal particles for now.",
+        "textbook": "Physics",
+        "score": 0.838876
+      },
+      {
+        "timestamp": "2025-06-20 17:18:49.380067",
+        "experience_level": "Advanced",
+        "question": "If gravity pulls everything down, why don't orbiting satellites fall to Earth?",
+        "option": "Concise Answer + Voice",
+        "answer": "Orbiting satellites remain in a state of free fall due to their high velocity relative to Earth's gravitational pull, resulting in a balanced trajectory that keeps them in orbit without falling to Earth.",
+        "context": "drag forces which both slow down e.g. a golf ball and exert \u201clift\u201d o n it that can cause it to\nhook or slice, the fact that the earth is not really an inertial refe rence frame and is rotating\nout underneath the free \ufb02ight trajectory of a cannonball, creating an apparent de\ufb02ection of\nactual projectiles \ufb01red by e.g. naval cannons. That is, only gravity near the earth\u2019s surface\nwill act on our ideal particles for now.",
+        "textbook": "Physics",
+        "score": 0.8388269
+      }
+    ]
   }
 ]
