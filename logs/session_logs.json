@@ -426,5 +426,22 @@
         "score": 0.82642275
       }
     ]
+  },
+  {
+    "username": "user02",
+    "login_time": "2025-06-20 17:17:39.713002",
+    "experience_level": "Intermediate",
+    "interactions": [
+      {
+        "timestamp": "2025-06-20 17:17:46.796296",
+        "experience_level": "Intermediate",
+        "question": "If gravity pulls everything down, why don't orbiting satellites fall to Earth?",
+        "option": "Detailed Answer",
+        "answer": "Orbiting satellites do not fall to Earth because they are moving at a high enough velocity that the gravitational force pulling them towards Earth is balanced by the centrifugal force pulling them away. This equilibrium allows the satellites to continuously orbit the Earth without being pulled back down. This concept is known as centripetal force in the context of circular motion, where the gravitational force is the centripetal force keeping the satellites in orbit.",
+        "context": "drag forces which both slow down e.g. a golf ball and exert \u201clift\u201d o n it that can cause it to\nhook or slice, the fact that the earth is not really an inertial refe rence frame and is rotating\nout underneath the free \ufb02ight trajectory of a cannonball, creating an apparent de\ufb02ection of\nactual projectiles \ufb01red by e.g. naval cannons. That is, only gravity near the earth\u2019s surface\nwill act on our ideal particles for now.",
+        "textbook": "Physics",
+        "score": 0.8388269
+      }
+    ]
   }
 ]
