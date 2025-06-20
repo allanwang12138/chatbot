@@ -85,7 +85,7 @@ def login():
     textbook = st.selectbox("Select a textbook:", ["Macroeconomics", "Microeconomics", "Physics"])
 
     level = st.selectbox(
-        "Select your macroeconomics experience level:",
+        "Select your textbook experience level:",
         ["Beginner", "Intermediate", "Advanced"]
     )
 
