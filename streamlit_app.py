@@ -20,7 +20,6 @@ QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
 QDRANT_URL = os.getenv("QDRANT_URL")
 
 openai.api_key = OPENAI_API_KEY
-COLLECTION_NAME = "macroecon_collection"
 
 
 # ------------------- Create a function to store log -------------------
@@ -69,44 +68,48 @@ def append_log_to_github(log_entry):
 def load_credentials():
     df = pd.read_csv("sample_credentials_with_voices.csv")  # updated filename
     return {
-        row["username"]: {"password": row["password"], "voice": row["voice"]}
+        row["username"]: {
+            "password": row["password"],
+            "voice": row["voice"],
+            "macro_level": row["macro_level"],
+            "micro_level": row["micro_level"],
+            "physics_level": row["physics_level"]
+        }
         for _, row in df.iterrows()
     }
 
-CREDENTIALS = load_credentials()
 
 def login():
     st.title("🔐 Login")
-
     st.write("Enter your username, password, and select a textbook.")
 
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
     textbook = st.selectbox("Select a textbook:", ["Macroeconomics", "Microeconomics", "Physics"])
 
-    level = st.selectbox(
-        "Select your textbook experience level:",
-        ["Beginner", "Intermediate", "Advanced"]
-    )
-
     if st.button("Login"):
         user = CREDENTIALS.get(username)
         if user and user["password"] == password:
+            # Determine level based on textbook selection
+            level = user.get(f"{textbook.lower()}_level", "Intermediate")
+
             st.session_state["authenticated"] = True
             st.session_state["username"] = username
             st.session_state["voice"] = user["voice"]
             st.session_state["textbook"] = textbook
-            st.session_state["experience_level"] = level   
+            st.session_state["experience_level"] = level
             st.session_state["session_log"] = {
                 "username": username,
                 "login_time": str(datetime.datetime.now()),
                 "experience_level": level,
+                "textbook": textbook,
                 "interactions": []
             }
             st.success(f"✅ Login successful. Welcome, {username}!")
             st.rerun()
         else:
             st.error("❌ Invalid username or password. Please try again.")
+
 
 
 # ------------------- Authentication Gate -------------------
