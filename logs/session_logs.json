@@ -480,5 +480,33 @@
         "score": 0.8388269
       }
     ]
+  },
+  {
+    "username": "user002",
+    "login_time": "2025-06-22 18:57:59.515113",
+    "experience_level": "Intermediate",
+    "textbook": "Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-06-22 18:58:14.873050",
+        "experience_level": "Intermediate",
+        "question": "What is macro economics and micro economics?",
+        "option": "Concise Answer",
+        "answer": "Macroeconomics is the study of the economy as a whole, including factors such as inflation, unemployment, and economic growth. Microeconomics, on the other hand, focuses on individual economic agents, such as households and firms, and how they make decisions regarding the allocation of resources.",
+        "context": "iv Preface\nas\u201cModerate\u201d,unlesstheyhaveone-linesolutions,inwhichcaseweusuallyratedthem\nas\u201cEasy\u201d.\nWeteachthismaterialintwoten-weekcourses.Inthe\ufb01rstcoursewecoverChapters1,2,\n3,6,4,5,7,8,9,and11,inthatorder.Thisallowsustokeeptogetherallthematerialon\nmonetaryeconomics(Chapters4,5,7,and8).Inthesecondcourse,wecoverChapter10\n(unemployment);Chapters12,13,and14(\ufb01scalpolicy);Chapters15and16(international\nmacro);andChapters17,18and19(moneyandbanking).Sincethisisquitealottocover",
+        "textbook": "Macroeconomics",
+        "score": 0.82126516
+      },
+      {
+        "timestamp": "2025-06-22 18:58:21.830308",
+        "experience_level": "Intermediate",
+        "question": "What is macro economics and micro economics?",
+        "option": "Detailed Answer",
+        "answer": "Macroeconomics is the branch of economics that studies the economy as a whole, focusing on factors such as inflation, unemployment, economic growth, and government policies. It looks at aggregates such as GDP, national income, and overall price levels. Microeconomics, on the other hand, examines the behavior of individual economic agents, such as consumers, firms, and workers, and how their decisions impact market outcomes. For example, microeconomics would analyze how the price of a good is determined based on supply and demand, while macroeconomics would look at the overall impact of prices on the economy as a whole.",
+        "context": "iv Preface\nas\u201cModerate\u201d,unlesstheyhaveone-linesolutions,inwhichcaseweusuallyratedthem\nas\u201cEasy\u201d.\nWeteachthismaterialintwoten-weekcourses.Inthe\ufb01rstcoursewecoverChapters1,2,\n3,6,4,5,7,8,9,and11,inthatorder.Thisallowsustokeeptogetherallthematerialon\nmonetaryeconomics(Chapters4,5,7,and8).Inthesecondcourse,wecoverChapter10\n(unemployment);Chapters12,13,and14(\ufb01scalpolicy);Chapters15and16(international\nmacro);andChapters17,18and19(moneyandbanking).Sincethisisquitealottocover",
+        "textbook": "Macroeconomics",
+        "score": 0.82126516
+      }
+    ]
   }
 ]
