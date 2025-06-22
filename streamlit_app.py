@@ -77,7 +77,7 @@ def load_credentials():
         }
         for _, row in df.iterrows()
     }
-
+CREDENTIALS = load_credentials()
 
 def login():
     st.title("🔐 Login")
