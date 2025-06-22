@@ -66,7 +66,7 @@ def append_log_to_github(log_entry):
 # ------------------- Load credentials with voice assignment -------------------
 @st.cache_data
 def load_credentials():
-    df = pd.read_csv("sample_credentials_with_voices.csv")  # updated filename
+    df = pd.read_csv("sample_credentials_with_levels.csv")  # updated filename
     return {
         row["username"]: {
             "password": row["password"],
