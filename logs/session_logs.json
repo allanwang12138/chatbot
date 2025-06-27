@@ -160,5 +160,53 @@
         "score": 0.8169322
       }
     ]
+  },
+  {
+    "username": "user016",
+    "login_time": "2025-06-27 16:29:20.145263",
+    "experience_level": "Intermediate",
+    "textbook": "Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-06-27 16:29:25.826663",
+        "experience_level": "Intermediate",
+        "question": "What is inflation?",
+        "option": "Detailed Answer",
+        "answer": "Inflation is the sustained increase in the general price level of goods and services in an economy over a period of time. When inflation occurs, the purchasing power of money decreases, leading to a decrease in real income for consumers. High inflation can also lead to uncertainty and distortions in the economy, affecting investment decisions and overall economic growth. For example, if the inflation rate is 3%, it means that prices are, on average, 3% higher than they were a year ago.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "textbook": "Macroeconomics",
+        "score": 0.8303213
+      },
+      {
+        "timestamp": "2025-06-27 16:29:30.990244",
+        "experience_level": "Intermediate",
+        "question": "What is inflation?",
+        "option": "Concise Answer",
+        "answer": "Inflation is the sustained increase in the general price level of goods and services in an economy over a period of time.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "textbook": "Macroeconomics",
+        "score": 0.8303213
+      },
+      {
+        "timestamp": "2025-06-27 16:29:42.272622",
+        "experience_level": "Intermediate",
+        "question": "what is GDP?",
+        "option": "Detailed Answer",
+        "answer": "GDP, or Gross Domestic Product, is a measure of the total value of all goods and services produced within a country's borders in a specific period. It is a key indicator of a country's economic performance and is often used to gauge the overall health of an economy. For example, if a country's GDP is increasing, it is generally seen as a sign of economic growth and prosperity.",
+        "context": "ExercisesfromChapter10 257\n0\n0.2\n0.4\n0.6\n0.8\n1\n1.2\n1.4\n1.6\n1.8\n1 6 11 16 21 26 31 36 41\nPeriods\nGDP\nFigureS.6:SimulatedGDP\nwithtechnologies,andamarketsystemthatholdseverythingtogether.Realbusinesscycle\ntheorytakesthesimplestmodelsofthissortasapointofdeparturetoexplainbusiness\ncycles. Modeltestingismostoftendonewiththe\u201ccalibration\u201dmethod. Thismeansthat\n\ufb01rstthemodelparametersaredeterminedbymakingthemconsistentwithempiricalfacts",
+        "textbook": "Macroeconomics",
+        "score": 0.80917364
+      },
+      {
+        "timestamp": "2025-06-27 16:29:46.047508",
+        "experience_level": "Intermediate",
+        "question": "what is GDP?",
+        "option": "Concise Answer",
+        "answer": "GDP stands for Gross Domestic Product and it is a measure of the total value of all goods and services produced within a country's borders in a specific time period.",
+        "context": "ExercisesfromChapter10 257\n0\n0.2\n0.4\n0.6\n0.8\n1\n1.2\n1.4\n1.6\n1.8\n1 6 11 16 21 26 31 36 41\nPeriods\nGDP\nFigureS.6:SimulatedGDP\nwithtechnologies,andamarketsystemthatholdseverythingtogether.Realbusinesscycle\ntheorytakesthesimplestmodelsofthissortasapointofdeparturetoexplainbusiness\ncycles. Modeltestingismostoftendonewiththe\u201ccalibration\u201dmethod. Thismeansthat\n\ufb01rstthemodelparametersaredeterminedbymakingthemconsistentwithempiricalfacts",
+        "textbook": "Macroeconomics",
+        "score": 0.80917364
+      }
+    ]
   }
 ]
