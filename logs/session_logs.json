@@ -16,5 +16,33 @@
         "score": 0.8135013
       }
     ]
+  },
+  {
+    "username": "user002",
+    "login_time": "2025-06-27 16:25:35.725657",
+    "experience_level": "Intermediate",
+    "textbook": "Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-06-27 16:25:43.715846",
+        "experience_level": "Intermediate",
+        "question": "What is INFLATION?",
+        "option": "Detailed Answer",
+        "answer": "Inflation refers to the sustained increase in the general price level of goods and services in an economy over a period of time. High inflation can erode the purchasing power of consumers, leading to decreased consumption and potentially lower output. Inflation is typically measured by looking at the Consumer Price Index (CPI) or the Producer Price Index (PPI). For example, if the CPI shows a 2% increase from one year to the next, this would indicate a moderate level of inflation.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "textbook": "Macroeconomics",
+        "score": 0.8326483
+      },
+      {
+        "timestamp": "2025-06-27 16:25:46.391836",
+        "experience_level": "Intermediate",
+        "question": "What is INFLATION?",
+        "option": "Concise Answer",
+        "answer": "Inflation is the sustained increase in the general price level of goods and services in an economy over a period of time.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "textbook": "Macroeconomics",
+        "score": 0.8326483
+      }
+    ]
   }
 ]
