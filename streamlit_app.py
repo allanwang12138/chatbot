@@ -11,6 +11,9 @@ import json
 import base64
 import requests
 import datetime
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 
 
 # ------------------- Load secrets -------------------
@@ -20,6 +23,53 @@ QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
 QDRANT_URL = os.getenv("QDRANT_URL")
 
 openai.api_key = OPENAI_API_KEY
+
+# ------------------- Load session logs from GitHub -------------------
+@st.cache_data
+def load_existing_logs():
+    token = os.getenv("GITHUB_TOKEN")
+    repo = os.getenv("GITHUB_REPO")  # e.g., "yourusername/yourrepo"
+    path = os.getenv("GITHUB_FILE_PATH")  # e.g., "logs/session_logs.json"
+
+    headers = {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github+json"
+    }
+    api_url = f"https://api.github.com/repos/{repo}/contents/{path}"
+
+    response = requests.get(api_url, headers=headers)
+    if response.status_code == 200:
+        content = response.json()
+        return json.loads(base64.b64decode(content["content"]).decode())
+    else:
+        return []  # Return empty list if not found or failed
+
+SESSION_LOGS = load_existing_logs()
+# ------------------- Create a function to find similar question asked before -------------------
+def find_similar_answer(logs, query, level, textbook, threshold=0.85):
+    # Filter only matching textbook and level
+    relevant_logs = [
+        entry for session in logs
+        for entry in session.get("interactions", [])
+        if entry.get("experience_level") == level and entry.get("textbook") == textbook
+    ]
+
+    if not relevant_logs:
+        return None
+
+    questions = [entry["question"] for entry in relevant_logs]
+    if not questions:
+        return None
+
+    vectorizer = TfidfVectorizer().fit(questions + [query])
+    query_vec = vectorizer.transform([query])
+    question_vecs = vectorizer.transform(questions)
+
+    sims = cosine_similarity(query_vec, question_vecs)[0]
+    best_idx = np.argmax(sims)
+    if sims[best_idx] >= threshold:
+        return relevant_logs[best_idx]["answer"]
+    return None
 
 
 # ------------------- Create a function to store log -------------------
@@ -279,8 +329,13 @@ if query and option:
         prompt = prompt_template.format(context=context_text, question=query)
         model = ChatOpenAI(openai_api_key=OPENAI_API_KEY)
         with st.spinner("💬 Generating answer..."):
-            response = model.predict(prompt)
-            # Add in-scope question log
+            existing_answer = find_similar_answer(SESSION_LOGS, query, level, selected_textbook)
+            if existing_answer:
+                response = existing_answer
+                st.info("🔁 Reused answer from previous session.")
+            else:
+                response = model.predict(prompt)
+
             st.session_state["session_log"]["interactions"].append({
                 "timestamp": str(datetime.datetime.now()),
                 "experience_level": st.session_state.get("experience_level", "Intermediate"),
