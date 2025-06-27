@@ -264,5 +264,33 @@
         "score": 0.8326483
       }
     ]
+  },
+  {
+    "username": "user008",
+    "login_time": "2025-06-27 16:39:03.820534",
+    "experience_level": "Advanced",
+    "textbook": "Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-06-27 16:39:12.841144",
+        "experience_level": "Advanced",
+        "question": "what is inflation?",
+        "option": "Detailed Answer",
+        "answer": "Inflation refers to the general increase in prices of goods and services in an economy over a period of time, resulting in a decrease in the purchasing power of money. High inflation is considered undesirable as it can disrupt the equilibrium of the economy, leading to uncertainties in investment decisions and affecting real variables such as output and consumption. To understand the effects of inflation on the economy, we need to go beyond the quantity theory and consider factors like inflation expectations and their impact on macroeconomic variables.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "textbook": "Macroeconomics",
+        "score": 0.83443606
+      },
+      {
+        "timestamp": "2025-06-27 16:39:16.085007",
+        "experience_level": "Advanced",
+        "question": "what is inflation?",
+        "option": "Concise Answer",
+        "answer": "Inflation is a sustained increase in the general price level of goods and services in an economy over a period of time.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "textbook": "Macroeconomics",
+        "score": 0.83443606
+      }
+    ]
   }
 ]
