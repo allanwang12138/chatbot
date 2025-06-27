@@ -556,5 +556,33 @@
         "score": 0.86245906
       }
     ]
+  },
+  {
+    "username": "user002",
+    "login_time": "2025-06-27 02:49:17.268699",
+    "experience_level": "Intermediate",
+    "textbook": "Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-06-27 02:49:30.405400",
+        "experience_level": "Intermediate",
+        "question": "What is INFLATION?",
+        "option": "Detailed Answer",
+        "answer": "Inflation refers to a sustained increase in the general price level of goods and services in an economy. While inflation can be a sign of a growing economy, high inflation rates can erode the purchasing power of individuals and businesses, leading to reduced real incomes and lower consumption levels. Inflation can also have detrimental effects on output and economic growth by distorting resource allocation and leading to uncertainty in the economy. For example, if prices rise too rapidly, households may cut back on spending as their money buys less than before.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "textbook": "Macroeconomics",
+        "score": 0.8326483
+      },
+      {
+        "timestamp": "2025-06-27 02:50:15.747801",
+        "experience_level": "Intermediate",
+        "question": "can you explain the concept of inflation?",
+        "option": "Detailed Answer",
+        "answer": "Inflation refers to the sustained increase in the general price level of goods and services in an economy over a period of time. High inflation can lead to a decrease in purchasing power, as the cost of goods rises faster than incomes. This can have a negative impact on real variables such as output and consumption, as it distorts price signals and discourages investments. For example, if inflation is high, consumers may postpone purchases, leading to a decrease in overall economic activity.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "textbook": "Macroeconomics",
+        "score": 0.8474575
+      }
+    ]
   }
 ]
