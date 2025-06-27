@@ -236,5 +236,33 @@
         "score": 0.80917364
       }
     ]
+  },
+  {
+    "username": "user003",
+    "login_time": "2025-06-27 16:38:27.321209",
+    "experience_level": "Advanced",
+    "textbook": "Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-06-27 16:38:34.295123",
+        "experience_level": "Advanced",
+        "question": "What is INFLATION?",
+        "option": "Detailed Answer",
+        "answer": "Inflation refers to the rate at which the general level of prices for goods and services in an economy is rising. When inflation occurs, each dollar of income will buy fewer goods and services than before. This can have negative effects on consumer purchasing power, investment decisions, and overall economic stability. To fully understand the impact of inflation on real variables like output and consumption, more complex models beyond the quantity theory need to be considered, such as the IS-LM model which incorporates inflation expectations and interest rate dynamics.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "textbook": "Macroeconomics",
+        "score": 0.8326483
+      },
+      {
+        "timestamp": "2025-06-27 16:38:37.856157",
+        "experience_level": "Advanced",
+        "question": "What is INFLATION?",
+        "option": "Concise Answer",
+        "answer": "Inflation refers to the sustained increase in the general price level of goods and services in an economy over a period of time.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "textbook": "Macroeconomics",
+        "score": 0.8326483
+      }
+    ]
   }
 ]
