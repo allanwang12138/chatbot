@@ -151,8 +151,14 @@ def login():
     if st.button("Login"):
         user = CREDENTIALS.get(username)
         if user and user["password"] == password:
-            # Determine level based on textbook selection
-            level = user.get(f"{textbook.lower()}_level", "Intermediate")
+            # ✅ Correctly map textbook to experience level field
+            subject_key_map = {
+                "Macroeconomics": "macro_level",
+                "Microeconomics": "micro_level",
+                "Physics": "physics_level"
+            }
+            level_key = subject_key_map.get(textbook, "macro_level")
+            level = user.get(level_key, "Intermediate")
 
             st.session_state["authenticated"] = True
             st.session_state["username"] = username
@@ -170,7 +176,6 @@ def login():
             st.rerun()
         else:
             st.error("❌ Invalid username or password. Please try again.")
-
 
 
 # ------------------- Authentication Gate -------------------
