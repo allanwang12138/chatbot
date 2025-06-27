@@ -9,3 +9,6 @@ langchain-qdrant
 pydub
 pandas
 requests
+scikit-learn
+numpy
+
