@@ -584,5 +584,53 @@
         "score": 0.8474575
       }
     ]
+  },
+  {
+    "username": "user006",
+    "login_time": "2025-06-27 04:00:35.748187",
+    "experience_level": "Intermediate",
+    "textbook": "Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-06-27 04:00:49.150909",
+        "experience_level": "Intermediate",
+        "question": "what is inflation?",
+        "option": "Detailed Answer",
+        "answer": "Inflation refers to the general increase in prices of goods and services within an economy over a period of time. When inflation occurs, the purchasing power of a unit of currency decreases, leading to a decrease in the real value of money. This can have negative effects on consumers, as their money will not buy as much as before, resulting in a decrease in consumption levels. For example, if inflation is high, individuals may choose to save more and spend less, which can have implications for overall economic output.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "textbook": "Macroeconomics",
+        "score": 0.83443606
+      },
+      {
+        "timestamp": "2025-06-27 04:01:03.660557",
+        "experience_level": "Intermediate",
+        "question": "what is inflation?",
+        "option": "Concise Answer + Voice",
+        "answer": "Inflation is the sustained increase in the general price level of goods and services in an economy over a period of time.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "textbook": "Macroeconomics",
+        "score": 0.83443606
+      },
+      {
+        "timestamp": "2025-06-27 04:01:25.803995",
+        "experience_level": "Intermediate",
+        "question": "can you explain the concept of the inlation?",
+        "option": "Detailed Answer",
+        "answer": "Inflation refers to a sustained increase in the general price level of goods and services in an economy over time. High levels of inflation can erode purchasing power, reduce consumer confidence, and negatively impact real variables like output and consumption. It is generally considered undesirable as it can lead to uncertainty and distort resource allocation. For example, if the price of essential goods like food and fuel rises rapidly, households may have to allocate a larger portion of their budget to these items, reducing spending on other goods and services.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "textbook": "Macroeconomics",
+        "score": 0.81810504
+      },
+      {
+        "timestamp": "2025-06-27 04:01:34.513817",
+        "experience_level": "Intermediate",
+        "question": "can you explain the concept of the inlation?",
+        "option": "Concise Answer + Voice",
+        "answer": "Inflation refers to the general increase in prices of goods and services over time. It is usually considered undesirable as it can negatively impact real variables like output and consumption.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "textbook": "Macroeconomics",
+        "score": 0.81810504
+      }
+    ]
   }
 ]
