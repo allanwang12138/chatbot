@@ -44,5 +44,33 @@
         "score": 0.8326483
       }
     ]
+  },
+  {
+    "username": "user010",
+    "login_time": "2025-06-27 16:26:02.900543",
+    "experience_level": "Intermediate",
+    "textbook": "Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-06-27 16:26:12.387479",
+        "experience_level": "Intermediate",
+        "question": "what is inflation",
+        "option": "Detailed Answer",
+        "answer": "Inflation is the overall increase in prices of goods and services in an economy over a period of time. It is measured by the percentage change in the Consumer Price Index (CPI). For example, if the CPI increases by 3% in a year, it indicates there has been 3% inflation. Inflation can be caused by factors such as excessive growth in the money supply or high demand relative to supply.",
+        "context": "18.1AreGovernmentBudgetDe\ufb01citsIn\ufb02ationary? 215\nofdebtisgrowing,eventuallythebondceilingwillbereachedandtheFedwillnolonger\nbeabletopickanin\ufb02ationrate,itwillbeforcedtoprovideenoughseignioragerevenue\ntocoverthegovernment\u2019sreportedde\ufb01cit. Wecallthisthe catastrophe. Thecatastrophe\nhappensatdate /CC .T h ec a t a s t r o p h ed a t e/CC isitselfasafunctionofchoicemadebythe\ngovernment.\nGivenmoneysupplygrowth,thegrossin\ufb02ationrateinperiod /D8 is:\n/C8\n/D8\n/C8\n/D8 /A0 1\n=\n/C5\n/D8\n/C6\n/D8\n/C6\n/D8 /A0 1\n/C5",
+        "textbook": "Macroeconomics",
+        "score": 0.8135013
+      },
+      {
+        "timestamp": "2025-06-27 16:26:15.130582",
+        "experience_level": "Intermediate",
+        "question": "what is inflation",
+        "option": "Concise Answer",
+        "answer": "Inflation is the sustained increase in the general price level of goods and services in an economy over a period of time.",
+        "context": "18.1AreGovernmentBudgetDe\ufb01citsIn\ufb02ationary? 215\nofdebtisgrowing,eventuallythebondceilingwillbereachedandtheFedwillnolonger\nbeabletopickanin\ufb02ationrate,itwillbeforcedtoprovideenoughseignioragerevenue\ntocoverthegovernment\u2019sreportedde\ufb01cit. Wecallthisthe catastrophe. Thecatastrophe\nhappensatdate /CC .T h ec a t a s t r o p h ed a t e/CC isitselfasafunctionofchoicemadebythe\ngovernment.\nGivenmoneysupplygrowth,thegrossin\ufb02ationrateinperiod /D8 is:\n/C8\n/D8\n/C8\n/D8 /A0 1\n=\n/C5\n/D8\n/C6\n/D8\n/C6\n/D8 /A0 1\n/C5",
+        "textbook": "Macroeconomics",
+        "score": 0.8135013
+      }
+    ]
   }
 ]
