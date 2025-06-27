@@ -46,30 +46,40 @@ def load_existing_logs():
 
 SESSION_LOGS = load_existing_logs()
 # ------------------- Create a function to find similar question asked before -------------------
-def find_similar_answer(logs, query, level, textbook, threshold=0.75):
-    # Filter only matching textbook and level
-    relevant_logs = [
-        entry for session in logs
-        for entry in session.get("interactions", [])
-        if entry.get("experience_level") == level and entry.get("textbook") == textbook
-    ]
+def find_similar_answer(logs, new_question, level, textbook, answer_type, threshold=0.75):
+    def preprocess(text):
+        return re.sub(r"[^\w\s]", "", text.lower()).strip()
 
-    if not relevant_logs:
-        return None
+    new_question_clean = preprocess(new_question)
+    questions = []
+    answers = []
 
-    questions = [entry["question"] for entry in relevant_logs]
+    for session in logs:
+        for entry in session.get("interactions", []):
+            is_same_type = (
+                ("Concise" in entry.get("option", "") and answer_type == "Concise") or
+                ("Detailed" in entry.get("option", "") and answer_type == "Detailed")
+            )
+            if (
+                entry.get("experience_level") == level and
+                entry.get("textbook") == textbook and
+                is_same_type
+            ):
+                questions.append(preprocess(entry["question"]))
+                answers.append(entry["answer"])
+
     if not questions:
         return None
 
-    vectorizer = TfidfVectorizer().fit(questions + [query])
-    query_vec = vectorizer.transform([query])
-    question_vecs = vectorizer.transform(questions)
+    vectorizer = TfidfVectorizer().fit(questions + [new_question_clean])
+    vectors = vectorizer.transform(questions + [new_question_clean])
+    similarities = cosine_similarity(vectors[-1], vectors[:-1])[0]
 
-    sims = cosine_similarity(query_vec, question_vecs)[0]
-    best_idx = np.argmax(sims)
-    if sims[best_idx] >= threshold:
-        return relevant_logs[best_idx]["answer"]
+    best_idx = similarities.argmax()
+    if similarities[best_idx] >= threshold:
+        return answers[best_idx]
     return None
+
 
 
 # ------------------- Create a function to store log -------------------
@@ -329,7 +339,10 @@ if query and option:
         prompt = prompt_template.format(context=context_text, question=query)
         model = ChatOpenAI(openai_api_key=OPENAI_API_KEY)
         with st.spinner("💬 Generating answer..."):
-            existing_answer = find_similar_answer(SESSION_LOGS, query, level, selected_textbook)
+            answer_type = "Concise" if "Concise" in option or "Voice" in option else "Detailed"
+            existing_answer = find_similar_answer(
+                SESSION_LOGS, query, level, selected_textbook, answer_type
+            )
             if existing_answer:
                 response = existing_answer
                 st.info("🔁 Reused answer from previous session.")
