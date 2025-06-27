@@ -320,5 +320,63 @@
         "score": 0.8326483
       }
     ]
+  },
+  {
+    "username": "user001",
+    "login_time": "2025-06-27 17:10:37.956620",
+    "experience_level": "Intermediate",
+    "textbook": "Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-06-27 17:10:43.058475",
+        "experience_level": "Intermediate",
+        "question": "What is inflation?",
+        "option": "Detailed Answer",
+        "answer": "Inflation refers to the sustained increase in the general price level of goods and services in an economy over a period of time. High inflation can erode the purchasing power of consumers, leading to decreased consumption and potentially lower output. Inflation is typically measured by looking at the Consumer Price Index (CPI) or the Producer Price Index (PPI). For example, if the CPI shows a 2% increase from one year to the next, this would indicate a moderate level of inflation.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "textbook": "Macroeconomics",
+        "score": 0.8303213
+      },
+      {
+        "timestamp": "2025-06-27 17:11:03.282208",
+        "experience_level": "Intermediate",
+        "question": "can you explain what is the concept of inflation?",
+        "option": "Detailed Answer",
+        "answer": "Gross Domestic Product (GDP) is the total value of all goods and services produced within a country's borders over a specific period. It is used as a measure of the country's economic performance. GDP can be calculated using different approaches such as the production approach, income approach, or expenditure approach. For example, in the context of Figure S.6, GDP represents the total output of goods and services produced in the simulated economy over the periods shown.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "textbook": "Macroeconomics",
+        "score": 0.8433959
+      },
+      {
+        "timestamp": "2025-06-27 17:11:10.310973",
+        "experience_level": "Intermediate",
+        "question": "can you explain what is the concept of GDP?",
+        "option": "Detailed Answer",
+        "answer": "Gross Domestic Product (GDP) is the total value of all goods and services produced within a country's borders over a specific period. It is used as a measure of the country's economic performance. GDP can be calculated using different approaches such as the production approach, income approach, or expenditure approach. For example, in the context of Figure S.6, GDP represents the total output of goods and services produced in the simulated economy over the periods shown.",
+        "context": "spreadsheetformulas,etc.)\nExercise9.2(Moderate)\nNowwewanttoseethecyclicalcomponentofGDP.Thisissimplythedifferencebetween\nGDPanditstrend. Becauseweareinterestedinrelativechanges,asopposedtoabsolute\nchanges,itisbettertouselog-differencesinsteadofabsolutedifferences. Computethe\ncyclicalcomponentasln(GDP)/A0 ln(Trend). Plotthecyclicalcomponent. Youwillsee\nthebusinesscyclesforwhichwehavebeenlooking. (Documentyourwork,providing\nspreadsheetformulas,etc.)\nExercise9.3(Easy)",
+        "textbook": "Macroeconomics",
+        "score": 0.82199836
+      },
+      {
+        "timestamp": "2025-06-27 17:11:14.038782",
+        "experience_level": "Intermediate",
+        "question": "can you explain what is the concept of GDP?",
+        "option": "Concise Answer",
+        "answer": "GDP, or Gross Domestic Product, is the total value of all goods and services produced within a country's borders in a specific time period. It is used to measure the economic performance of a country.",
+        "context": "spreadsheetformulas,etc.)\nExercise9.2(Moderate)\nNowwewanttoseethecyclicalcomponentofGDP.Thisissimplythedifferencebetween\nGDPanditstrend. Becauseweareinterestedinrelativechanges,asopposedtoabsolute\nchanges,itisbettertouselog-differencesinsteadofabsolutedifferences. Computethe\ncyclicalcomponentasln(GDP)/A0 ln(Trend). Plotthecyclicalcomponent. Youwillsee\nthebusinesscyclesforwhichwehavebeenlooking. (Documentyourwork,providing\nspreadsheetformulas,etc.)\nExercise9.3(Easy)",
+        "textbook": "Macroeconomics",
+        "score": 0.82199836
+      },
+      {
+        "timestamp": "2025-06-27 17:11:20.207984",
+        "experience_level": "Intermediate",
+        "question": "can you explain what is the concept of inflation?",
+        "option": "Detailed Answer",
+        "answer": "Gross Domestic Product (GDP) is the total value of all goods and services produced within a country's borders over a specific period. It is used as a measure of the country's economic performance. GDP can be calculated using different approaches such as the production approach, income approach, or expenditure approach. For example, in the context of Figure S.6, GDP represents the total output of goods and services produced in the simulated economy over the periods shown.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "textbook": "Macroeconomics",
+        "score": 0.8433959
+      }
+    ]
   }
 ]
