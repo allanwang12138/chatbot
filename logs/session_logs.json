@@ -680,5 +680,23 @@
         "score": 0.8377631
       }
     ]
+  },
+  {
+    "username": "user003",
+    "login_time": "2025-06-27 12:43:17.114193",
+    "experience_level": "Intermediate",
+    "textbook": "Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-06-27 12:43:34.127451",
+        "experience_level": "Intermediate",
+        "question": "What is inflation?",
+        "option": "Concise Answer",
+        "answer": "Inflation refers to a sustained increase in the general price level of goods and services in an economy, which can lead to a decrease in the purchasing power of money.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "textbook": "Macroeconomics",
+        "score": 0.8303213
+      }
+    ]
   }
 ]
