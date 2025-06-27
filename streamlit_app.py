@@ -46,7 +46,7 @@ def load_existing_logs():
 
 SESSION_LOGS = load_existing_logs()
 # ------------------- Create a function to find similar question asked before -------------------
-def find_similar_answer(logs, query, level, textbook, threshold=0.85):
+def find_similar_answer(logs, query, level, textbook, threshold=0.75):
     # Filter only matching textbook and level
     relevant_logs = [
         entry for session in logs
