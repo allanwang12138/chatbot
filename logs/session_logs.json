@@ -208,5 +208,33 @@
         "score": 0.80917364
       }
     ]
+  },
+  {
+    "username": "user021",
+    "login_time": "2025-06-27 16:30:01.185713",
+    "experience_level": "Intermediate",
+    "textbook": "Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-06-27 16:30:06.178811",
+        "experience_level": "Intermediate",
+        "question": "what is GDP?",
+        "option": "Detailed Answer",
+        "answer": "GDP stands for Gross Domestic Product, which measures the total value of all goods and services produced within a country within a specific time period, typically a year. It is a key indicator of a country's economic performance and is often used to gauge the overall health of an economy. For example, if a country's GDP is increasing, it indicates that the economy is growing, while a decrease in GDP suggests economic contraction.",
+        "context": "ExercisesfromChapter10 257\n0\n0.2\n0.4\n0.6\n0.8\n1\n1.2\n1.4\n1.6\n1.8\n1 6 11 16 21 26 31 36 41\nPeriods\nGDP\nFigureS.6:SimulatedGDP\nwithtechnologies,andamarketsystemthatholdseverythingtogether.Realbusinesscycle\ntheorytakesthesimplestmodelsofthissortasapointofdeparturetoexplainbusiness\ncycles. Modeltestingismostoftendonewiththe\u201ccalibration\u201dmethod. Thismeansthat\n\ufb01rstthemodelparametersaredeterminedbymakingthemconsistentwithempiricalfacts",
+        "textbook": "Macroeconomics",
+        "score": 0.80917364
+      },
+      {
+        "timestamp": "2025-06-27 16:30:10.299179",
+        "experience_level": "Intermediate",
+        "question": "what is GDP?",
+        "option": "Concise Answer",
+        "answer": "GDP stands for Gross Domestic Product, which is the total value of all goods and services produced in a country within a specific time period.",
+        "context": "ExercisesfromChapter10 257\n0\n0.2\n0.4\n0.6\n0.8\n1\n1.2\n1.4\n1.6\n1.8\n1 6 11 16 21 26 31 36 41\nPeriods\nGDP\nFigureS.6:SimulatedGDP\nwithtechnologies,andamarketsystemthatholdseverythingtogether.Realbusinesscycle\ntheorytakesthesimplestmodelsofthissortasapointofdeparturetoexplainbusiness\ncycles. Modeltestingismostoftendonewiththe\u201ccalibration\u201dmethod. Thismeansthat\n\ufb01rstthemodelparametersaredeterminedbymakingthemconsistentwithempiricalfacts",
+        "textbook": "Macroeconomics",
+        "score": 0.80917364
+      }
+    ]
   }
 ]
