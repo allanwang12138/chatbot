@@ -406,5 +406,93 @@
         "score": 0.81463563
       }
     ]
+  },
+  {
+    "username": "user016",
+    "login_time": "2025-07-01 04:12:56.895295",
+    "experience_level": "Advanced",
+    "textbook": "Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-07-01 04:13:12.414814",
+        "experience_level": "Advanced",
+        "question": "What is GDP?",
+        "option": "Detailed Answer",
+        "answer": "Gross Domestic Product (GDP) is a measure of the total monetary value of all final goods and services produced within a country's borders in a specific time period. It serves as an essential indicator of a country's economic performance and overall wealth. GDP can be calculated using three different approaches - production approach, income approach, and expenditure approach - and is often used to compare the economic output of different countries.",
+        "context": "Chapter 11\nEconomic Growth\nThischapterexaminesthedeterminantsofeconomicgrowth. Astartlingfactabouteco-\nnomicgrowthisthelargevariationinthegrowthexperienceofdifferentcountriesinre-\ncenthistory. Somepartsoftheworld,liketheUnitedStatesorWesternEurope,experi-\nencedsustainedeconomicgrowthoveraperiodofmorethan100years,sobyhistorical\nstandardsthesecountriesarenowenormouslywealthy. Thisisnotonlytrueinabsolute\nterms(i.e.,GDP),butalsoifwemeasurewealthasincomepercapita(i.e.,GDPperperson).",
+        "textbook": "Macroeconomics",
+        "score": 0.8184136
+      },
+      {
+        "timestamp": "2025-07-01 04:13:18.895599",
+        "experience_level": "Advanced",
+        "question": "What is GDP?",
+        "option": "Concise Answer",
+        "answer": "GDP stands for Gross Domestic Product, which is the total value of goods and services produced within a country's borders in a specific time period.",
+        "context": "Chapter 11\nEconomic Growth\nThischapterexaminesthedeterminantsofeconomicgrowth. Astartlingfactabouteco-\nnomicgrowthisthelargevariationinthegrowthexperienceofdifferentcountriesinre-\ncenthistory. Somepartsoftheworld,liketheUnitedStatesorWesternEurope,experi-\nencedsustainedeconomicgrowthoveraperiodofmorethan100years,sobyhistorical\nstandardsthesecountriesarenowenormouslywealthy. Thisisnotonlytrueinabsolute\nterms(i.e.,GDP),butalsoifwemeasurewealthasincomepercapita(i.e.,GDPperperson).",
+        "textbook": "Macroeconomics",
+        "score": 0.8184136
+      },
+      {
+        "timestamp": "2025-07-01 04:13:30.545228",
+        "experience_level": "Advanced",
+        "question": "What is inflation?",
+        "option": "Detailed Answer",
+        "answer": "Inflation refers to the rate at which the general level of prices for goods and services in an economy is rising. When inflation occurs, each dollar of income will buy fewer goods and services than before. This can have negative effects on consumer purchasing power, investment decisions, and overall economic stability. To fully understand the impact of inflation on real variables like output and consumption, more complex models beyond the quantity theory need to be considered, such as the IS-LM model which incorporates inflation expectations and interest rate dynamics.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "textbook": "Macroeconomics",
+        "score": 0.83037454
+      },
+      {
+        "timestamp": "2025-07-01 04:13:34.363711",
+        "experience_level": "Advanced",
+        "question": "What is inflation?",
+        "option": "Concise Answer + Voice",
+        "answer": "Inflation refers to the sustained increase in the general price level of goods and services in an economy over a period of time.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "textbook": "Macroeconomics",
+        "score": 0.8303213
+      },
+      {
+        "timestamp": "2025-07-01 04:13:40.270280",
+        "experience_level": "Advanced",
+        "question": "What is inflation?",
+        "option": "Concise Answer",
+        "answer": "Inflation refers to the sustained increase in the general price level of goods and services in an economy over a period of time.",
+        "context": "Intherealworld,highin\ufb02ationisgenerallyconsideredtobeundesirable. Ifwewant\ntounderstandwhyin\ufb02ationmightbebad,wehavetodeterminetheeffectsofin\ufb02ation\nonrealvariableslikeoutputandconsumption. Thiscannotbedonewithinthequantity\ntheory,sinceitassumedfromtheoutsetthatsuchrealeffectsdidnotexist. Instead,we\nneedtogobeyondthesimplifyingassumptionsofthequantitytheory.\nTosomedegreewealreadydidthatinthediscussionofmoneydemandinChapter4,",
+        "textbook": "Macroeconomics",
+        "score": 0.8303213
+      },
+      {
+        "timestamp": "2025-07-01 04:13:53.892881",
+        "experience_level": "Advanced",
+        "question": "What is macro economics and micro economics?",
+        "option": "Concise Answer",
+        "answer": "Macroeconomics is the study of the overall economy, including factors like GDP, inflation, and unemployment, while microeconomics focuses on individual markets and behaviors of consumers and firms.",
+        "context": "iv Preface\nas\u201cModerate\u201d,unlesstheyhaveone-linesolutions,inwhichcaseweusuallyratedthem\nas\u201cEasy\u201d.\nWeteachthismaterialintwoten-weekcourses.Inthe\ufb01rstcoursewecoverChapters1,2,\n3,6,4,5,7,8,9,and11,inthatorder.Thisallowsustokeeptogetherallthematerialon\nmonetaryeconomics(Chapters4,5,7,and8).Inthesecondcourse,wecoverChapter10\n(unemployment);Chapters12,13,and14(\ufb01scalpolicy);Chapters15and16(international\nmacro);andChapters17,18and19(moneyandbanking).Sincethisisquitealottocover",
+        "textbook": "Macroeconomics",
+        "score": 0.82126516
+      },
+      {
+        "timestamp": "2025-07-01 04:13:59.185556",
+        "experience_level": "Advanced",
+        "question": "What is macro economics and micro economics?",
+        "option": "Detailed Answer",
+        "answer": "Macroeconomics deals with the overall performance and behavior of an economy as a whole, focusing on factors such as inflation, unemployment, economic growth, and monetary policy. On the other hand, microeconomics analyzes individual economic agents, such as households and firms, and their interactions in specific markets. Understanding both macro and microeconomics is essential for gaining a comprehensive understanding of how the economy functions.",
+        "context": "iv Preface\nas\u201cModerate\u201d,unlesstheyhaveone-linesolutions,inwhichcaseweusuallyratedthem\nas\u201cEasy\u201d.\nWeteachthismaterialintwoten-weekcourses.Inthe\ufb01rstcoursewecoverChapters1,2,\n3,6,4,5,7,8,9,and11,inthatorder.Thisallowsustokeeptogetherallthematerialon\nmonetaryeconomics(Chapters4,5,7,and8).Inthesecondcourse,wecoverChapter10\n(unemployment);Chapters12,13,and14(\ufb01scalpolicy);Chapters15and16(international\nmacro);andChapters17,18and19(moneyandbanking).Sincethisisquitealottocover",
+        "textbook": "Macroeconomics",
+        "score": 0.82126516
+      },
+      {
+        "timestamp": "2025-07-01 04:14:11.390575",
+        "experience_level": "Advanced",
+        "question": "can you explain the concept of macro economics and micro economics?",
+        "option": "Concise Answer",
+        "answer": "Macroeconomics focuses on the economy as a whole, including factors such as inflation, unemployment, and economic growth. Microeconomics, on the other hand, looks at individual economic agents and their interactions, examining how markets work and how individual choices impact the overall economy.",
+        "context": "iv Preface\nas\u201cModerate\u201d,unlesstheyhaveone-linesolutions,inwhichcaseweusuallyratedthem\nas\u201cEasy\u201d.\nWeteachthismaterialintwoten-weekcourses.Inthe\ufb01rstcoursewecoverChapters1,2,\n3,6,4,5,7,8,9,and11,inthatorder.Thisallowsustokeeptogetherallthematerialon\nmonetaryeconomics(Chapters4,5,7,and8).Inthesecondcourse,wecoverChapter10\n(unemployment);Chapters12,13,and14(\ufb01scalpolicy);Chapters15and16(international\nmacro);andChapters17,18and19(moneyandbanking).Sincethisisquitealottocover",
+        "textbook": "Macroeconomics",
+        "score": 0.8222599
+      }
+    ]
   }
 ]
