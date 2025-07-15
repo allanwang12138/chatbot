@@ -134,7 +134,7 @@ def load_credentials():
             "voice": row["voice"],
             "macro_level": row["macro_level"],
             "micro_level": row["micro_level"],
-            "physics_level": row["physics_level"]
+            "stats_level": row["stats_level"]
         }
         for _, row in df.iterrows()
     }
