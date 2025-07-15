@@ -15,8 +15,15 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import re
+import unicodedata
 
 
+# ------------------- Normalize Response -------------
+def normalize_text(text):
+    # Normalize full-width characters and remove excess spacing
+    text = unicodedata.normalize("NFKC", text)
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
 # ------------------- Load secrets -------------------
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -289,7 +296,9 @@ selected_textbook = st.session_state.get("textbook", "Textbook")
 
 # Format dynamic title and input prompt
 st.title(f"📄 {selected_textbook} Q&A App")
-query = st.text_input(f"Ask a question about {selected_textbook}:")
+raw_query = st.text_input(f"Ask a question about {selected_textbook}:")
+query = normalize_text(raw_query)
+
 
 
 col1, col2, col3 = st.columns(3)
