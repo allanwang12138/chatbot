@@ -1,0 +1,30 @@
+[
+  {
+    "username": "user002",
+    "login_time": "2025-07-15 03:56:33.307577",
+    "experience_level": "Intermediate",
+    "textbook": "Introductory Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-07-15 03:56:50.449418",
+        "experience_level": "Intermediate",
+        "question": "What is INFLATION?",
+        "option": "Concise Answer",
+        "answer": "Inflation is the general increase in prices of goods and services in an economy over time, often due to an increase in the money supply.",
+        "context": "the government through borrowing money from the central bank. Leads to increase in\nmoney supply in an economy and may r esult in inflation.\nDepreciation A decrease in the price of the domestic currency in terms of the foreign\ncurrency under floating exchange rates. It corresponds to an increase in the exchange\nrate.\nDepreciation Wear and tear or depletion which capital stock undergoes over a period\nof time.\nDevaluation The decrease in the price of domestic curr ency under pegged exchange",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.8002518
+      },
+      {
+        "timestamp": "2025-07-15 03:56:55.441800",
+        "experience_level": "Intermediate",
+        "question": "What is INFLATION?",
+        "option": "Detailed Answer",
+        "answer": "Inflation refers to the general increase in prices of goods and services in an economy over a period of time. This results in a decrease in the purchasing power of a unit of currency. For example, if the government borrows money from the central bank to increase the money supply, it may lead to inflation as too much money chases too few goods, driving up prices.",
+        "context": "the government through borrowing money from the central bank. Leads to increase in\nmoney supply in an economy and may r esult in inflation.\nDepreciation A decrease in the price of the domestic currency in terms of the foreign\ncurrency under floating exchange rates. It corresponds to an increase in the exchange\nrate.\nDepreciation Wear and tear or depletion which capital stock undergoes over a period\nof time.\nDevaluation The decrease in the price of domestic curr ency under pegged exchange",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.8003837
+      }
+    ]
+  }
+]
