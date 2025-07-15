@@ -146,7 +146,7 @@ def login():
 
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
-    textbook = st.selectbox("Select a textbook:", ["Macroeconomics", "Microeconomics", "Physics"])
+    textbook = st.selectbox("Select a textbook:", ["Introductory Macroeconomics", "Introductory Microeconomics", "Statistics For Economics"])
 
     if st.button("Login"):
         user = CREDENTIALS.get(username)
@@ -155,7 +155,7 @@ def login():
             subject_key_map = {
                 "Macroeconomics": "macro_level",
                 "Microeconomics": "micro_level",
-                "Physics": "physics_level"
+                "Stats": "stats_level"
             }
             level_key = subject_key_map.get(textbook, "macro_level")
             level = user.get(level_key, "Intermediate")
@@ -187,13 +187,13 @@ if "authenticated" not in st.session_state or not st.session_state["authenticate
 embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 client = QdrantClient(url=QDRANT_URL, api_key=QDRANT_API_KEY)
 # Select collection based on textbook choice
-selected_textbook = st.session_state.get("textbook", "Macroeconomics")
-if selected_textbook == "Macroeconomics":
-    COLLECTION_NAME = "macroecon_collection"
-elif selected_textbook == "Microeconomics":
-    COLLECTION_NAME = "microecon_collection"
-elif selected_textbook == "Physics":
-    COLLECTION_NAME = "physics_collection"
+selected_textbook = st.session_state.get("textbook", "Introductory Macroeconomics")
+if selected_textbook == "Introductory Macroeconomics":
+    COLLECTION_NAME = "intro_macro_collection"
+elif selected_textbook == "Introductory Microeconomics":
+    COLLECTION_NAME = "intro_micro_collection"
+elif selected_textbook == "Statistics For Economics":
+    COLLECTION_NAME = "stats_econ_collection"
 else:
     st.error("❌ Invalid textbook selection.")
     st.stop()
