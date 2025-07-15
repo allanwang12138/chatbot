@@ -26,5 +26,53 @@
         "score": 0.8003837
       }
     ]
+  },
+  {
+    "username": "user001",
+    "login_time": "2025-07-15 03:57:12.699450",
+    "experience_level": "Intermediate",
+    "textbook": "Introductory Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-07-15 03:57:20.169112",
+        "experience_level": "Intermediate",
+        "question": "what is inflation?",
+        "option": "Detailed Answer",
+        "answer": "Inflation is the sustained increase in the general price level of goods and services in an economy over a period of time. This means that consumers have to pay more for the same amount of goods and services. For example, if the government increases spending or cuts taxes, aggregate demand may exceed the economy's capacity to produce, leading to price increases. Inflation can erode purchasing power, redistribute income, and create uncertainty in the economy.",
+        "context": "Other Perspectives on Deficits and Debt : One of the main criticisms of\ndeficits is that they are inflationary. This is because when government\nincreases spending or cuts taxes, aggregate demand increases. Firms may\nnot be able to produce higher quantities that are being demanded at the\nongoing prices. Prices will, ther efore, have to rise. However , if ther e ar e\nunutilised resources, output is held back by lack of demand. A high fiscal",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.806104
+      },
+      {
+        "timestamp": "2025-07-15 03:57:23.550912",
+        "experience_level": "Intermediate",
+        "question": "what is inflation?",
+        "option": "Concise Answer",
+        "answer": "Inflation is the general increase in prices of goods and services in an economy, often caused by an increase in aggregate demand exceeding the ability of firms to produce at current prices.",
+        "context": "Other Perspectives on Deficits and Debt : One of the main criticisms of\ndeficits is that they are inflationary. This is because when government\nincreases spending or cuts taxes, aggregate demand increases. Firms may\nnot be able to produce higher quantities that are being demanded at the\nongoing prices. Prices will, ther efore, have to rise. However , if ther e ar e\nunutilised resources, output is held back by lack of demand. A high fiscal",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.806104
+      },
+      {
+        "timestamp": "2025-07-15 03:57:31.156232",
+        "experience_level": "Intermediate",
+        "question": "what is INFLATION?",
+        "option": "Detailed Answer",
+        "answer": "\u26a0\ufe0f This question appears to be outside the scope of the textbook.",
+        "context": "",
+        "textbook": "Introductory Macroeconomics",
+        "score": null
+      },
+      {
+        "timestamp": "2025-07-15 03:57:34.203790",
+        "experience_level": "Intermediate",
+        "question": "what is INFLATION?",
+        "option": "Concise Answer",
+        "answer": "\u26a0\ufe0f This question appears to be outside the scope of the textbook.",
+        "context": "",
+        "textbook": "Introductory Macroeconomics",
+        "score": null
+      }
+    ]
   }
 ]
