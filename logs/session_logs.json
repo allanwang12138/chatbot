@@ -560,5 +560,53 @@
         "score": 0.8003837
       }
     ]
+  },
+  {
+    "username": "user001",
+    "login_time": "2025-07-15 03:41:05.383323",
+    "experience_level": "Intermediate",
+    "textbook": "Introductory Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-07-15 03:41:10.483447",
+        "experience_level": "Intermediate",
+        "question": "what is inflation\uff1f",
+        "option": "Detailed Answer",
+        "answer": "\u26a0\ufe0f This question appears to be outside the scope of the textbook.",
+        "context": "",
+        "textbook": "Introductory Macroeconomics",
+        "score": null
+      },
+      {
+        "timestamp": "2025-07-15 03:41:17.499902",
+        "experience_level": "Intermediate",
+        "question": "what is inflation\uff1f",
+        "option": "Concise Answer",
+        "answer": "\u26a0\ufe0f This question appears to be outside the scope of the textbook.",
+        "context": "",
+        "textbook": "Introductory Macroeconomics",
+        "score": null
+      },
+      {
+        "timestamp": "2025-07-15 03:41:20.620152",
+        "experience_level": "Intermediate",
+        "question": "what is inflation\uff1f",
+        "option": "Detailed Answer",
+        "answer": "\u26a0\ufe0f This question appears to be outside the scope of the textbook.",
+        "context": "",
+        "textbook": "Introductory Macroeconomics",
+        "score": null
+      },
+      {
+        "timestamp": "2025-07-15 03:41:31.976452",
+        "experience_level": "Intermediate",
+        "question": "what is INFLATION?",
+        "option": "Concise Answer",
+        "answer": "\u26a0\ufe0f This question appears to be outside the scope of the textbook.",
+        "context": "",
+        "textbook": "Introductory Macroeconomics",
+        "score": null
+      }
+    ]
   }
 ]
