@@ -608,5 +608,23 @@
         "score": null
       }
     ]
+  },
+  {
+    "username": "user011",
+    "login_time": "2025-07-15 03:42:11.372917",
+    "experience_level": "Beginner",
+    "textbook": "Introductory Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-07-15 03:42:17.435105",
+        "experience_level": "Beginner",
+        "question": "what is inflation\uff1f",
+        "option": "Detailed Answer",
+        "answer": "\u26a0\ufe0f This question appears to be outside the scope of the textbook.",
+        "context": "",
+        "textbook": "Introductory Macroeconomics",
+        "score": null
+      }
+    ]
   }
 ]
