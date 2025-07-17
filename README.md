@@ -35,3 +35,31 @@ This project is a fully functional **Retrieval-Augmented Generation (RAG)** chat
 ```bash
 git clone https://github.com/allanwang12138/chatbot.git
 cd chatbot
+```
+
+### 2. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Upload Textbook PDFs to Qdrant
+Run the script below after placing your textbook PDFs in the correct location and setting up your Qdrant instance.
+```bash
+python upload_embeddings_to_qdrant.py
+```
+
+### 4. Create Sample User Credentials (Optional)
+To generate a sample list of users with usernames, passwords, and experience levels:
+```bash
+python create credentials with experience levels.py
+```
+
+### 5. Run the Streamlit App
+```bash
+streamlit run streamlit_app.py
+```
+
+
+
+
+
