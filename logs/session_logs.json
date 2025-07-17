@@ -168,5 +168,83 @@
         "score": 0.78795576
       }
     ]
+  },
+  {
+    "username": "user003",
+    "login_time": "2025-07-17 04:12:28.604443",
+    "experience_level": "Advanced",
+    "textbook": "Statistics For Economics",
+    "interactions": [
+      {
+        "timestamp": "2025-07-17 04:12:42.768802",
+        "experience_level": "Advanced",
+        "question": "what are the main topics of this textbook",
+        "option": "Detailed Answer",
+        "answer": "The main topics of this textbook likely focus on restructuring curricular knowledge to align with child psychology and teaching time constraints. This may involve discussions on equilibrium in education, the use of derivatives to analyze educational outcomes, and models such as IS-LM to address inflation expectations in the education system. Additionally, the textbook may emphasize the importance of hands-on experiences and group discussions to enhance learning outcomes.",
+        "context": "address the problem of curricular burden by restructuring and reorienting\nknowledge at different stages with greater consideration for child\npsychology and the time available for teaching. The textbook attempts to\nenhance this endeavour by giving higher priority and space to\nopportunities for contemplation and wondering, discussion in small\ngroups, and activities requiring hands-on experience.\nThe National Council of Educational Research and Training (NCERT)",
+        "textbook": "Statistics For Economics",
+        "score": 0.8232552
+      },
+      {
+        "timestamp": "2025-07-17 04:12:59.660084",
+        "experience_level": "Advanced",
+        "question": "what are the main topics of this textbook",
+        "option": "Concise Answer",
+        "answer": "The main topics of this textbook likely focus on restructuring curriculum to consider child psychology and time constraints, with an emphasis on opportunities for contemplation, discussion, and hands-on activities.",
+        "context": "address the problem of curricular burden by restructuring and reorienting\nknowledge at different stages with greater consideration for child\npsychology and the time available for teaching. The textbook attempts to\nenhance this endeavour by giving higher priority and space to\nopportunities for contemplation and wondering, discussion in small\ngroups, and activities requiring hands-on experience.\nThe National Council of Educational Research and Training (NCERT)",
+        "textbook": "Statistics For Economics",
+        "score": 0.8232552
+      },
+      {
+        "timestamp": "2025-07-17 04:13:43.985130",
+        "experience_level": "Advanced",
+        "question": "what is economics?",
+        "option": "Concise Answer",
+        "answer": "Economics is the study of how individuals, households, businesses, and governments make choices in allocating scarce resources to satisfy their unlimited wants and needs, often analyzed through the lenses of consumption, production, and distribution.",
+        "context": "have realised that Economics involves\nthe study of man engaged in economic\nactivities of various kinds. For this, you\nneed to know reliable facts about all\nthe diverse economic activities like\nproduction, consumption and\ndistribution. Economics is often\ndiscussed in three parts: consumption,\nproduction and distribution.\nWe want to know how the consumer\ndecides, given his income and many\nalternative goods to choose from, what\nto buy when he knows the prices. This\nis the study of Consumption.",
+        "textbook": "Statistics For Economics",
+        "score": 0.8380685
+      },
+      {
+        "timestamp": "2025-07-17 04:13:48.135745",
+        "experience_level": "Advanced",
+        "question": "what is economics?",
+        "option": "Detailed Answer",
+        "answer": "Economics is the study of human behavior and decision-making regarding economic activities, including production, consumption, and distribution. It involves analyzing how consumers make choices based on their income, prices, and the availability of goods. Understanding economics also involves examining factors such as equilibrium, inflation expectations, and models like the IS-LM model to predict outcomes in the market. Economics is a multifaceted discipline that encompasses various theories and principles to explain and predict economic phenomena.",
+        "context": "have realised that Economics involves\nthe study of man engaged in economic\nactivities of various kinds. For this, you\nneed to know reliable facts about all\nthe diverse economic activities like\nproduction, consumption and\ndistribution. Economics is often\ndiscussed in three parts: consumption,\nproduction and distribution.\nWe want to know how the consumer\ndecides, given his income and many\nalternative goods to choose from, what\nto buy when he knows the prices. This\nis the study of Consumption.",
+        "textbook": "Statistics For Economics",
+        "score": 0.83800787
+      },
+      {
+        "timestamp": "2025-07-17 04:14:09.124196",
+        "experience_level": "Advanced",
+        "question": "how do we collect data?",
+        "option": "Concise Answer",
+        "answer": "Data is typically collected through methods such as surveys or observations, which allow researchers to gather information related to a specific topic or research question. Secondary data, which is data collected by someone else for a different purpose, can also be used for analysis.",
+        "context": "saves time and cost. For example, after\ncollecting the data on the popularity of\nthe filmstar among students, you\npublish a report. If somebody uses the\ndata collected by you for a similar\nstudy, it becomes secondary data.\n3. HOW DO WE COLLECT THE DATA?\nDo you know how a manufacturer\ndecides about a product or how a\npolitical party decides about a\ncandidate? They conduct a survey by\nReprint 2025-26",
+        "textbook": "Statistics For Economics",
+        "score": 0.8597225
+      },
+      {
+        "timestamp": "2025-07-17 04:14:15.326918",
+        "experience_level": "Advanced",
+        "question": "how do we collect data?",
+        "option": "Detailed Answer",
+        "answer": "Data collection methods such as surveys, interviews, and observations are commonly used to gather information on various subjects, including consumer preferences and political trends. The data collected can then be analyzed using statistical techniques to draw conclusions and make informed decisions. It is important to ensure that the data collected is reliable and valid in order to accurately assess the topic of interest. Utilizing primary data through direct collection methods can provide more accurate results compared to secondary data sources.",
+        "context": "saves time and cost. For example, after\ncollecting the data on the popularity of\nthe filmstar among students, you\npublish a report. If somebody uses the\ndata collected by you for a similar\nstudy, it becomes secondary data.\n3. HOW DO WE COLLECT THE DATA?\nDo you know how a manufacturer\ndecides about a product or how a\npolitical party decides about a\ncandidate? They conduct a survey by\nReprint 2025-26",
+        "textbook": "Statistics For Economics",
+        "score": 0.8597225
+      },
+      {
+        "timestamp": "2025-07-17 04:14:19.755640",
+        "experience_level": "Advanced",
+        "question": "how do we collect data?",
+        "option": "Concise Answer + Voice",
+        "answer": "Data collection methods include surveys, interviews, observations, and experiments, which are commonly used by manufacturers, political parties, and researchers to gather information for analysis.",
+        "context": "saves time and cost. For example, after\ncollecting the data on the popularity of\nthe filmstar among students, you\npublish a report. If somebody uses the\ndata collected by you for a similar\nstudy, it becomes secondary data.\n3. HOW DO WE COLLECT THE DATA?\nDo you know how a manufacturer\ndecides about a product or how a\npolitical party decides about a\ncandidate? They conduct a survey by\nReprint 2025-26",
+        "textbook": "Statistics For Economics",
+        "score": 0.8597225
+      }
+    ]
   }
 ]
