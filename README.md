@@ -51,7 +51,7 @@ python upload_embeddings_to_qdrant.py
 ### 4. Create Sample User Credentials (Optional)
 To generate a sample list of users with usernames, passwords, and experience levels:
 ```bash
-python create credentials with experience levels.py
+python create_credentials_with_experience_levels.py
 ```
 
 ### 5. Run the Streamlit App
