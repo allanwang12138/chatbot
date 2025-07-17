@@ -112,5 +112,33 @@
         "score": 0.7878283
       }
     ]
+  },
+  {
+    "username": "user011",
+    "login_time": "2025-07-17 04:11:40.243647",
+    "experience_level": "Beginner",
+    "textbook": "Introductory Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-07-17 04:11:45.722369",
+        "experience_level": "Beginner",
+        "question": "what is INFLATION?",
+        "option": "Detailed Answer",
+        "answer": "Inflation is when prices for things like groceries, clothes, and other goods go up. This happens when people have more money to spend, and demand for stuff goes up too fast for companies to keep up. So, companies start charging more for things. However, if there are plenty of resources available but not enough people buying stuff, prices can stay the same or even go down.",
+        "context": "Other Perspectives on Deficits and Debt : One of the main criticisms of\ndeficits is that they are inflationary. This is because when government\nincreases spending or cuts taxes, aggregate demand increases. Firms may\nnot be able to produce higher quantities that are being demanded at the\nongoing prices. Prices will, ther efore, have to rise. However , if ther e ar e\nunutilised resources, output is held back by lack of demand. A high fiscal",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.78795576
+      },
+      {
+        "timestamp": "2025-07-17 04:11:56.348834",
+        "experience_level": "Beginner",
+        "question": "what is inflation?",
+        "option": "Concise Answer",
+        "answer": "Inflation is when prices go up, so your money doesn't buy as much as before. It happens when there's more demand for things than there are things available to buy.",
+        "context": "Other Perspectives on Deficits and Debt : One of the main criticisms of\ndeficits is that they are inflationary. This is because when government\nincreases spending or cuts taxes, aggregate demand increases. Firms may\nnot be able to produce higher quantities that are being demanded at the\nongoing prices. Prices will, ther efore, have to rise. However , if ther e ar e\nunutilised resources, output is held back by lack of demand. A high fiscal",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.7878283
+      }
+    ]
   }
 ]
