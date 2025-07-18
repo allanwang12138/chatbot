@@ -253,5 +253,23 @@
     "experience_level": "Advanced",
     "textbook": "Introductory Macroeconomics",
     "interactions": []
+  },
+  {
+    "username": "user021",
+    "login_time": "2025-07-18 17:34:45.134580",
+    "experience_level": "Advanced",
+    "textbook": "Introductory Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-07-18 17:35:01.149301",
+        "experience_level": "Advanced",
+        "question": "what is macro economics?",
+        "option": "Concise Answer",
+        "answer": "Macroeconomics is the study of aggregate economic variables and interlinkages between sectors of an economy, distinguishing it from microeconomics which focuses on individual sectors assuming other factors remain constant.",
+        "context": "Macroeconomics deals with the aggregate economic variables of an\neconomy. It also takes into account various interlinkages which may\nexist between the different sectors of an economy. This is what\ndistinguishes it from microeconomics; which mostly examines the\nfunctioning of the particular sectors of the economy, assuming that\nthe rest of the economy remains the same. Macroeconomics emerged\nas a separate subject in the 1930s due to Keynes. The Great Depression,",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.8536094
+      }
+    ]
   }
 ]
