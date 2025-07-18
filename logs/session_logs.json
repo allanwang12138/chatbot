@@ -299,5 +299,143 @@
         "score": 0.7878283
       }
     ]
+  },
+  {
+    "username": "user002",
+    "login_time": "2025-07-18 17:46:03.862255",
+    "experience_level": "Intermediate",
+    "textbook": "Statistics For Economics",
+    "interactions": [
+      {
+        "timestamp": "2025-07-18 17:46:34.403170",
+        "experience_level": "Intermediate",
+        "question": "what content are about in this subject?",
+        "option": "Detailed Answer",
+        "answer": "In the subject of Statistics for Economics, the content typically covers the analysis and interpretation of data related to economic phenomena. This includes topics such as regression analysis, hypothesis testing, and correlation. Students will usually learn how to apply statistical tools to real-world economic data to make informed decisions and predictions. For example, they may analyze the relationship between GDP growth and inflation rates to understand the overall health of an economy.",
+        "context": "been taken into consideration in this exercise.\nContents of the textbooks have been rationalised in view of the\nfollowing:\n\u2022 Overlapping with similar content included in other subject areas in\nthe same class\n\u2022 Similar content included in the lower or higher class in the same\nsubject\n\u2022 Difficulty level\n\u2022 Content, which is easily accessible to students without much\ninterventions from teachers and can be learned by children through\nself-learning or peer-learning",
+        "textbook": "Statistics For Economics",
+        "score": 0.81425846
+      },
+      {
+        "timestamp": "2025-07-18 17:47:10.486078",
+        "experience_level": "Intermediate",
+        "question": "do you know endogeneity",
+        "option": "Concise Answer",
+        "answer": "Endogeneity refers to when a variable is correlated with the error term in a regression analysis.",
+        "context": "example, she/he might be inter ested\nin knowing the impact of today\u2019s\ninvestment on the national income in\nfuture. Such an exer cise cannot be\nundertaken without the knowledge of\nStatistics.\nSometimes, formulation of plans\nand policies requires the knowledge of\nfuture trends. For example, an\neconomic planner has to decide in 2017\nhow much the economy should\nproduce in 2020. In other words, one\nmust know what could be the expected\nlevel of consumption in 2020 in order",
+        "textbook": "Statistics For Economics",
+        "score": 0.76258475
+      },
+      {
+        "timestamp": "2025-07-18 17:47:20.980108",
+        "experience_level": "Intermediate",
+        "question": "do you know endogeneity",
+        "option": "Detailed Answer",
+        "answer": "Endogeneity in economics refers to a situation where a variable is determined by factors within the system being analyzed, rather than being influenced by external forces. This can lead to biased estimates in statistical models if not properly accounted for. For example, in the context of statistics for economics, endogeneity could arise if changes in national income are influenced by factors not explicitly included in the model, such as government policies or technological advancements. To address endogeneity, researchers often use instrumental variables or other econometric techniques to ensure the accuracy of their results.",
+        "context": "example, she/he might be inter ested\nin knowing the impact of today\u2019s\ninvestment on the national income in\nfuture. Such an exer cise cannot be\nundertaken without the knowledge of\nStatistics.\nSometimes, formulation of plans\nand policies requires the knowledge of\nfuture trends. For example, an\neconomic planner has to decide in 2017\nhow much the economy should\nproduce in 2020. In other words, one\nmust know what could be the expected\nlevel of consumption in 2020 in order",
+        "textbook": "Statistics For Economics",
+        "score": 0.76258475
+      },
+      {
+        "timestamp": "2025-07-18 17:47:49.786605",
+        "experience_level": "Intermediate",
+        "question": "do you know endogeneity",
+        "option": "Concise Answer + Voice",
+        "answer": "Endogeneity refers to the situation where a variable is correlated with the error term in a regression model, which can lead to biased estimates.",
+        "context": "example, she/he might be inter ested\nin knowing the impact of today\u2019s\ninvestment on the national income in\nfuture. Such an exer cise cannot be\nundertaken without the knowledge of\nStatistics.\nSometimes, formulation of plans\nand policies requires the knowledge of\nfuture trends. For example, an\neconomic planner has to decide in 2017\nhow much the economy should\nproduce in 2020. In other words, one\nmust know what could be the expected\nlevel of consumption in 2020 in order",
+        "textbook": "Statistics For Economics",
+        "score": 0.76258475
+      },
+      {
+        "timestamp": "2025-07-18 17:48:33.940987",
+        "experience_level": "Intermediate",
+        "question": "give me details about endogeneity",
+        "option": "Concise Answer",
+        "answer": "Endogeneity refers to a situation where a variable is correlated with the error term in a regression model, causing bias in the estimated coefficients. It is a common issue in economic studies and can lead to unreliable results if not properly addressed.",
+        "context": "of being selected for providing information.\n\u2022 Sampling error is due to the difference between the value of the\nsample estimate and the value of the corresponding population\nparameter .\n\u2022 Non-sampling errors can arise in data acquisition, by non-response\nor by bias in selection.\n\u2022 Census of India and National Sample Survey are two\nimportant agencies at the national level, which collect,\nprocess and tabulate data on many important economic\nand social issues.\nEXERCISES",
+        "textbook": "Statistics For Economics",
+        "score": 0.75739384
+      },
+      {
+        "timestamp": "2025-07-18 17:48:52.965050",
+        "experience_level": "Intermediate",
+        "question": "give me details about endogeneity",
+        "option": "Detailed Answer",
+        "answer": "Endogeneity refers to the situation where a variable is correlated with the error term in a regression model. This can lead to biased estimates and violate the assumption of exogeneity. An example of endogeneity in economics could be the relationship between education level and income, where unobserved factors may affect both variables simultaneously. To address endogeneity, researchers often use instrumental variables or control for potential confounding variables.",
+        "context": "of being selected for providing information.\n\u2022 Sampling error is due to the difference between the value of the\nsample estimate and the value of the corresponding population\nparameter .\n\u2022 Non-sampling errors can arise in data acquisition, by non-response\nor by bias in selection.\n\u2022 Census of India and National Sample Survey are two\nimportant agencies at the national level, which collect,\nprocess and tabulate data on many important economic\nand social issues.\nEXERCISES",
+        "textbook": "Statistics For Economics",
+        "score": 0.757522
+      },
+      {
+        "timestamp": "2025-07-18 17:49:58.242023",
+        "experience_level": "Intermediate",
+        "question": "what are the pitfalls for R 2",
+        "option": "Detailed Answer",
+        "answer": "One pitfall for r^2 in a regression analysis is the presence of outliers or influential data points that can skew the relationship between variables. Another pitfall is multicollinearity, where independent variables are highly correlated, leading to unreliable results. Additionally, overfitting the model to the data can result in a high r^2 value that does not generalize well to new data. Lastly, not accounting for omitted variable bias can lead to an incorrect interpretation of the relationship between variables.",
+        "context": "terminal cases where the doctors could\ndo little. Mor eover, the benefit of the\npresence of doctors becomes visible\nonly after some time. It is also possible\nthat the reported deaths are not due to\nthe epidemic. A tsunami suddenly hits\nthe state and death toll rises.\nLet us illustrate the calculation of  r\nby examining the relationship between\nyears of schooling of farmers and the\nannual yield per acre.\nReprint 2025-26",
+        "textbook": "Statistics For Economics",
+        "score": 0.75645775
+      },
+      {
+        "timestamp": "2025-07-18 17:50:19.763538",
+        "experience_level": "Intermediate",
+        "question": "what are the pitfalls for R 2",
+        "option": "Concise Answer",
+        "answer": "The pitfalls for r 2 include potential confounding variables that are not accounted for, the presence of outliers that may skew the results, and the assumption of a linear relationship between the variables.",
+        "context": "terminal cases where the doctors could\ndo little. Mor eover, the benefit of the\npresence of doctors becomes visible\nonly after some time. It is also possible\nthat the reported deaths are not due to\nthe epidemic. A tsunami suddenly hits\nthe state and death toll rises.\nLet us illustrate the calculation of  r\nby examining the relationship between\nyears of schooling of farmers and the\nannual yield per acre.\nReprint 2025-26",
+        "textbook": "Statistics For Economics",
+        "score": 0.75645775
+      },
+      {
+        "timestamp": "2025-07-18 17:50:48.730273",
+        "experience_level": "Intermediate",
+        "question": "what are the pitfalls for R 2",
+        "option": "Concise Answer + Voice",
+        "answer": "Pitfalls for r^2 include potential confounding variables, sample size limitations, and assumptions of linearity and independence. It is important to interpret the coefficient carefully and consider other factors that may influence the relationship between variables.",
+        "context": "terminal cases where the doctors could\ndo little. Mor eover, the benefit of the\npresence of doctors becomes visible\nonly after some time. It is also possible\nthat the reported deaths are not due to\nthe epidemic. A tsunami suddenly hits\nthe state and death toll rises.\nLet us illustrate the calculation of  r\nby examining the relationship between\nyears of schooling of farmers and the\nannual yield per acre.\nReprint 2025-26",
+        "textbook": "Statistics For Economics",
+        "score": 0.75645775
+      },
+      {
+        "timestamp": "2025-07-18 17:52:38.677657",
+        "experience_level": "Intermediate",
+        "question": "what are main topics in this textbook?",
+        "option": "Concise Answer",
+        "answer": "The main topics in this textbook have been carefully chosen to avoid overlapping with other subject areas, ensure appropriate difficulty levels, and facilitate self-learning and peer-learning for students.",
+        "context": "been taken into consideration in this exercise.\nContents of the textbooks have been rationalised in view of the\nfollowing:\n\u2022 Overlapping with similar content included in other subject areas in\nthe same class\n\u2022 Similar content included in the lower or higher class in the same\nsubject\n\u2022 Difficulty level\n\u2022 Content, which is easily accessible to students without much\ninterventions from teachers and can be learned by children through\nself-learning or peer-learning",
+        "textbook": "Statistics For Economics",
+        "score": 0.8189376
+      },
+      {
+        "timestamp": "2025-07-18 17:52:46.501328",
+        "experience_level": "Intermediate",
+        "question": "what main topics in this textbook?",
+        "option": "Concise Answer",
+        "answer": "The main topics in this textbook have been rationalised by considering overlapping content, difficulty level, and accessibility for self-learning or peer-learning.",
+        "context": "been taken into consideration in this exercise.\nContents of the textbooks have been rationalised in view of the\nfollowing:\n\u2022 Overlapping with similar content included in other subject areas in\nthe same class\n\u2022 Similar content included in the lower or higher class in the same\nsubject\n\u2022 Difficulty level\n\u2022 Content, which is easily accessible to students without much\ninterventions from teachers and can be learned by children through\nself-learning or peer-learning",
+        "textbook": "Statistics For Economics",
+        "score": 0.81837696
+      },
+      {
+        "timestamp": "2025-07-18 17:53:10.326499",
+        "experience_level": "Intermediate",
+        "question": "what are the main topics in this textbook?",
+        "option": "Concise Answer",
+        "answer": "The main topics in this textbook have been carefully selected to avoid overlapping with similar content in other subject areas, include content appropriate for the class level, and be easily accessible for self-learning or peer-learning.",
+        "context": "been taken into consideration in this exercise.\nContents of the textbooks have been rationalised in view of the\nfollowing:\n\u2022 Overlapping with similar content included in other subject areas in\nthe same class\n\u2022 Similar content included in the lower or higher class in the same\nsubject\n\u2022 Difficulty level\n\u2022 Content, which is easily accessible to students without much\ninterventions from teachers and can be learned by children through\nself-learning or peer-learning",
+        "textbook": "Statistics For Economics",
+        "score": 0.81993145
+      },
+      {
+        "timestamp": "2025-07-18 17:53:16.810047",
+        "experience_level": "Intermediate",
+        "question": "what are main topics in this textbook?",
+        "option": "Concise Answer",
+        "answer": "The main topics in this textbook have been rationalized based on overlapping content, difficulty level, and accessibility for self-learning or peer-learning.",
+        "context": "been taken into consideration in this exercise.\nContents of the textbooks have been rationalised in view of the\nfollowing:\n\u2022 Overlapping with similar content included in other subject areas in\nthe same class\n\u2022 Similar content included in the lower or higher class in the same\nsubject\n\u2022 Difficulty level\n\u2022 Content, which is easily accessible to students without much\ninterventions from teachers and can be learned by children through\nself-learning or peer-learning",
+        "textbook": "Statistics For Economics",
+        "score": 0.8189376
+      }
+    ]
   }
 ]
