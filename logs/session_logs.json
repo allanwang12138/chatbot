@@ -271,5 +271,33 @@
         "score": 0.8536094
       }
     ]
+  },
+  {
+    "username": "user002",
+    "login_time": "2025-07-18 17:39:22.495619",
+    "experience_level": "Intermediate",
+    "textbook": "Introductory Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-07-18 17:39:32.919648",
+        "experience_level": "Intermediate",
+        "question": "what is macro econoimcs?",
+        "option": "Concise Answer",
+        "answer": "Macroeconomics studies the overall economic variables of an economy and explores the interconnections between different sectors, distinguishing it from microeconomics which examines individual sectors in isolation. It emerged as a separate subject in the 1930s, largely due to Keynes and the Great Depression.",
+        "context": "Macroeconomics deals with the aggregate economic variables of an\neconomy. It also takes into account various interlinkages which may\nexist between the different sectors of an economy. This is what\ndistinguishes it from microeconomics; which mostly examines the\nfunctioning of the particular sectors of the economy, assuming that\nthe rest of the economy remains the same. Macroeconomics emerged\nas a separate subject in the 1930s due to Keynes. The Great Depression,",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.7995299
+      },
+      {
+        "timestamp": "2025-07-18 17:39:42.490184",
+        "experience_level": "Intermediate",
+        "question": "what is inflation?",
+        "option": "Detailed Answer",
+        "answer": "Inflation refers to the general increase in prices of goods and services in an economy over a period of time. This results in a decrease in the purchasing power of a unit of currency. For example, if the government borrows money from the central bank to increase the money supply, it may lead to inflation as too much money chases too few goods, driving up prices.",
+        "context": "Other Perspectives on Deficits and Debt : One of the main criticisms of\ndeficits is that they are inflationary. This is because when government\nincreases spending or cuts taxes, aggregate demand increases. Firms may\nnot be able to produce higher quantities that are being demanded at the\nongoing prices. Prices will, ther efore, have to rise. However , if ther e ar e\nunutilised resources, output is held back by lack of demand. A high fiscal",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.7878283
+      }
+    ]
   }
 ]
