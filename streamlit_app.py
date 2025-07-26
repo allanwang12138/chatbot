@@ -210,7 +210,7 @@ db = Qdrant(client=client, collection_name=COLLECTION_NAME, embeddings=embedding
 PROMPT_BEGINNER_DETAILED = """
 You are a patient and friendly tutor helping someone completely new to the subject {textbook}.
 
-Based only on the context below, explain the answer clearly in no more than 4 sentences. Avoid jargon and technical terms. Use simple language and real-world analogies (like shopping, school, or weather) to help the student understand.
+Based only on the context below, explain the answer clearly in no more than 20 sentences. Avoid jargon and technical terms. Use simple language and real-world analogies (like shopping, school, or weather) to help the student understand.
 
 Context:
 {context}
@@ -222,7 +222,7 @@ Answer:
 """
 
 PROMPT_BEGINNER_CONCISE = """
-You are helping a beginner understand subject {textbook}. Give a short, friendly answer using very simple words — no jargon or equations and no more than 2 sentences.
+You are helping a beginner understand subject {textbook}. Give a short, friendly answer using very simple words — no jargon or equations and no more than 4 sentences.
 
 Context:
 {context}
@@ -236,7 +236,7 @@ Answer:
 PROMPT_INTERMEDIATE_DETAILED = """
 You are an experienced tutor helping a student with some background in subject {textbook}.
 
-Using only the context below, provide a clear and informative answer in no more than 4 sentences. Use standard macroeconomic terms and concepts, but keep explanations digestible and well-structured. Include examples if helpful.
+Using only the context below, provide a clear and informative answer in no more than 20 sentences. Use standard macroeconomic terms and concepts, but keep explanations digestible and well-structured. Include examples if helpful.
 
 Context:
 {context}
@@ -250,7 +250,7 @@ Answer:
 PROMPT_INTERMEDIATE_CONCISE = """
 You are a tutor providing a concise but clear explanation to a student with intermediate knowledge in subject {textbook}.
 
-Using the context below, answer the question in no more than 2 sentences. Focus on clarity, not detail.
+Using the context below, answer the question in no more than 4 sentences. Focus on clarity, not detail.
 
 Context:
 {context}
@@ -264,7 +264,7 @@ Answer:
 PROMPT_ADVANCED_DETAILED = """
 You are an expert academic tutor working with an advanced student who understands subkect {textbook} theory.
 
-Using only the context provided, write a focused and rigorous answer in no more than 4 sentences. Feel free to include concepts like equilibrium, derivatives, IS-LM, inflation expectations, or models if relevant.
+Using only the context provided, write a focused and rigorous answer in no more than 20 sentences. Feel free to include concepts like equilibrium, derivatives, IS-LM, inflation expectations, or models if relevant.
 
 Context:
 {context}
@@ -278,7 +278,7 @@ Answer:
 PROMPT_ADVANCED_CONCISE = """
 You're providing a concise response to a student with advanced knowledge in {textbook}.
 
-Using the context below, answer the question in no more than 2 sentences, assuming the reader is familiar with key terms and theories.
+Using the context below, answer the question in no more than 4 sentences, assuming the reader is familiar with key terms and theories.
 
 Context:
 {context}
