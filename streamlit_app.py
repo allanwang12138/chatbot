@@ -309,23 +309,20 @@ selected_textbook = st.session_state.get("textbook", "Textbook")
 # Format dynamic title and input prompt
 st.title(f"📄 {selected_textbook} Q&A App")
 
-# Create layout: left spacer, right for chat history
-left_col, right_col = st.columns([3, 1])  # Adjust width ratio if needed
+# ------------------- Display Chat History in Sidebar -------------------
+with st.sidebar.expander("📜 Show Chat History", expanded=False):
+    history = get_user_chat_history(
+        SESSION_LOGS,
+        st.session_state.get("username"),
+        st.session_state.get("textbook")
+    )
 
-with right_col:
-    with st.expander("📜 Show Chat History", expanded=False):
-        history = get_user_chat_history(
-            SESSION_LOGS,
-            st.session_state.get("username"),
-            st.session_state.get("textbook")
-        )
-
-        if not history:
-            st.info("No previous interactions found for this textbook.")
-        else:
-            for item in reversed(history[-10:]):
-                with st.expander(f"Q: {item['question']} — {item['timestamp']}"):
-                    st.markdown(f"**Answer ({item['option']}):** {item['answer']}")
+    if not history:
+        st.info("No previous interactions found for this textbook.")
+    else:
+        for item in reversed(history[-10:]):
+            with st.expander(f"Q: {item['question']} — {item['timestamp']}"):
+                st.markdown(f"**Answer ({item['option']}):** {item['answer']}")
 
 
 
