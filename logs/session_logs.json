@@ -475,5 +475,23 @@
         "score": 0.8536094
       }
     ]
+  },
+  {
+    "username": "user002",
+    "login_time": "2025-07-27 15:13:13.879752",
+    "experience_level": "Intermediate",
+    "textbook": "Introductory Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-07-27 15:42:57.843181",
+        "experience_level": "Intermediate",
+        "question": "What is GDP?",
+        "option": "Detailed Answer",
+        "answer": "Gross Domestic Product (GDP) is a key measure of a country's economic performance and overall level of economic activity. It represents the total value of all goods and services produced within a country's borders in a specific period, typically annually or quarterly. GDP serves as an indicator of a country's economic health and growth. \n\nThere are three primary methods of calculating GDP: the production approach, the expenditure approach, and the income approach. The production approach sums up the value of all goods and services produced in the economy. The expenditure approach calculates GDP by adding up all expenditures on final goods and services. The income approach measures GDP by summing up all incomes earned in the production of goods and services. \n\nGDP can be broken down into components such as personal consumption expenditures, investment, government spending, and net exports (exports minus imports). These components provide insight into different aspects of the economy's performance. \n\nFor example, a country with a high GDP generally indicates a strong and growing economy, with more goods and services being produced and consumed. Conversely, a low GDP may suggest economic challenges or a downturn. \n\nOverall, GDP is a crucial metric for policymakers, businesses, and individuals to gauge the economic health and well-being of a country. It helps assess living standards, income distribution, and overall economic performance.",
+        "context": "that country? If a person has more income he or she can buy more goods and\nservices and his or her material well-being improves. So it may seem reasonable\nto treat his or her income level as his or her level of well-being. GDP is the sum\ntotal of value of goods and services created within the geographical boundary of\na country in a particular year. It gets distributed among the people as incomes\n(except for retained earnings). So we may be tempted to treat higher level of GDP",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.83233714
+      }
+    ]
   }
 ]
