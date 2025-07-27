@@ -53,6 +53,18 @@ def load_existing_logs():
         return []  # Return empty list if not found or failed
 
 SESSION_LOGS = load_existing_logs()
+# ------------------- Create a function to retrieve chat history -------------------
+def get_user_chat_history(logs, username, textbook):
+    """
+    Filter full session logs to return only past Q&A entries 
+    for the specified user and textbook.
+    """
+    history = []
+    for session in logs:
+        if session.get("username") == username and session.get("textbook") == textbook:
+            history.extend(session.get("interactions", []))
+    return history
+
 # ------------------- Create a function to find similar question asked before -------------------
 def find_similar_answer(logs, new_question, level, textbook, answer_type, threshold=0.75):
     def preprocess(text):
@@ -296,6 +308,25 @@ selected_textbook = st.session_state.get("textbook", "Textbook")
 
 # Format dynamic title and input prompt
 st.title(f"📄 {selected_textbook} Q&A App")
+
+# ------------------- Display Chat History -------------------
+with st.expander("📜 Show Chat History", expanded=False):
+    history = get_user_chat_history(
+        SESSION_LOGS,
+        st.session_state.get("username"),
+        st.session_state.get("textbook")
+    )
+
+    if not history:
+        st.info("No previous interactions found for this textbook.")
+    else:
+        # Show the 10 most recent Q&A pairs
+        for item in reversed(history[-10:]):
+            with st.expander(f"Q: {item['question']} — {item['timestamp']}"):
+                st.markdown(f"**Answer ({item['option']}):** {item['answer']}")
+                if item.get("score") is not None:
+                    st.markdown(f"**Similarity Score:** {item['score']:.2f}")
+
 raw_query = st.text_input(f"Ask a question about {selected_textbook}:")
 query = normalize_text(raw_query)
 
