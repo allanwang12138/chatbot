@@ -180,6 +180,8 @@ def login():
             level = user.get(level_key, "Intermediate")
 
             st.session_state["authenticated"] = True
+            st.cache_data.clear()  # Clears old logs
+            SESSION_LOGS = load_existing_logs()  # Reload from GitHub
             st.session_state["username"] = username
             st.session_state["voice"] = user["voice"]
             st.session_state["textbook"] = textbook
@@ -323,6 +325,13 @@ if not history:
 else:
     for item in reversed(history[-10:]):  # show more recent 10 questions
         st.sidebar.markdown(f"**Q:** {item['question']}")
+        
+        # Format timestamp to MM/DD/YYYY HH:MM (24-hour)
+        timestamp = item['timestamp']
+        dt = datetime.datetime.fromisoformat(timestamp)
+        formatted_time = dt.strftime("%m/%d/%Y %H:%M")
+        st.sidebar.markdown(f"**Q:** {item['question']} {formatted_time}")
+        
         st.sidebar.markdown(f"**A ({item['option']}):** {item['answer']}")
         st.sidebar.markdown("---")
 
