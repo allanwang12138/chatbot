@@ -324,8 +324,6 @@ if not history:
     st.sidebar.info("No previous interactions found.")
 else:
     for item in reversed(history[-10:]):  # show more recent 10 questions
-        st.sidebar.markdown(f"**Q:** {item['question']}")
-        
         # Format timestamp to MM/DD/YYYY HH:MM (24-hour)
         timestamp = item['timestamp']
         dt = datetime.datetime.fromisoformat(timestamp)
