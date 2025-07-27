@@ -500,5 +500,23 @@
     "experience_level": "Intermediate",
     "textbook": "Introductory Macroeconomics",
     "interactions": []
+  },
+  {
+    "username": "user002",
+    "login_time": "2025-07-27 16:28:33.753059",
+    "experience_level": "Intermediate",
+    "textbook": "Introductory Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-07-27 16:30:10.181819",
+        "experience_level": "Intermediate",
+        "question": "What is GDP?",
+        "option": "Concise Answer",
+        "answer": "GDP (Gross Domestic Product) is the total value of goods and services produced within a country in a specific year. It represents the economic output of a country and is distributed among the population as incomes, excluding retained earnings. It is used as a measure of the country's economic well-being and growth.",
+        "context": "that country? If a person has more income he or she can buy more goods and\nservices and his or her material well-being improves. So it may seem reasonable\nto treat his or her income level as his or her level of well-being. GDP is the sum\ntotal of value of goods and services created within the geographical boundary of\na country in a particular year. It gets distributed among the people as incomes\n(except for retained earnings). So we may be tempted to treat higher level of GDP",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.83233714
+      }
+    ]
   }
 ]
