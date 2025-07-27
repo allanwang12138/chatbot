@@ -518,5 +518,23 @@
         "score": 0.83233714
       }
     ]
+  },
+  {
+    "username": "user006",
+    "login_time": "2025-07-27 16:30:20.856951",
+    "experience_level": "Beginner",
+    "textbook": "Introductory Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-07-27 16:30:26.633188",
+        "experience_level": "Beginner",
+        "question": "what is inflation",
+        "option": "Concise Answer",
+        "answer": "Inflation is when prices go up, so your money doesn't buy as much as before. It happens when there's more demand for things than there are things available to buy.",
+        "context": "Other Perspectives on Deficits and Debt : One of the main criticisms of\ndeficits is that they are inflationary. This is because when government\nincreases spending or cuts taxes, aggregate demand increases. Firms may\nnot be able to produce higher quantities that are being demanded at the\nongoing prices. Prices will, ther efore, have to rise. However , if ther e ar e\nunutilised resources, output is held back by lack of demand. A high fiscal",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.78795576
+      }
+    ]
   }
 ]
