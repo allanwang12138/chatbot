@@ -328,7 +328,7 @@ else:
         timestamp = item['timestamp']
         dt = datetime.datetime.fromisoformat(timestamp)
         formatted_time = dt.strftime("%m/%d/%Y %H:%M")
-        st.sidebar.markdown(f"**Q:** {item['question']} {formatted_time}")
+        st.sidebar.markdown(f"**Q:** {item['question']}      {formatted_time}")
         
         st.sidebar.markdown(f"**A ({item['option']}):** {item['answer']}")
         st.sidebar.markdown("---")
