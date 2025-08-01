@@ -536,5 +536,33 @@
         "score": 0.78795576
       }
     ]
+  },
+  {
+    "username": "user002",
+    "login_time": "2025-08-01 16:26:21.010666",
+    "experience_level": "Intermediate",
+    "textbook": "Introductory Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-08-01 16:26:45.974962",
+        "experience_level": "Intermediate",
+        "question": "what is micro economics?",
+        "option": "Concise Answer",
+        "answer": "Microeconomics is the study of individual markets in terms of demand and supply, focusing on the decisions made by individuals (buyers, sellers, or companies) to maximize profits or personal satisfaction. It explores how goods are produced efficiently and sold at the highest possible price in the market. Essentially, microeconomics analyzes the behavior of individual economic agents and their interactions within specific markets.",
+        "context": "goods keeping their costs as low as possible and selling at a price as\nhigh as they could get in the markets. In other words, microeconomics\nwas a study of individual markets of demand and supply and the \u2018players\u2019,\nor the decision-makers, were also individuals (buyers or sellers, even\ncompanies) who were seen as trying to maximise their profits (as\nproducers or sellers) and their personal satisfaction or welfare levels\n(as consumers). Even a large company was \u2018micro\u2019 in the sense that it",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.84253335
+      },
+      {
+        "timestamp": "2025-08-01 16:26:51.748106",
+        "experience_level": "Intermediate",
+        "question": "what is micro economics?",
+        "option": "Detailed Answer",
+        "answer": "Microeconomics is a branch of economics that focuses on the study of individual markets and the behavior of individual economic agents such as consumers, firms, and workers. It analyzes how these agents make decisions regarding the allocation of scarce resources to maximize their own utility or profit. Microeconomics examines the interactions between buyers and sellers in specific markets, looking at how prices are determined and how quantities of goods and services are exchanged.\n\nIn microeconomics, factors such as supply and demand, market equilibrium, elasticity, consumer preferences, production costs, and competition are key concepts. For example, a company might use microeconomic principles to determine the optimal level of production to maximize profits, while a consumer might use these principles to make decisions about how to allocate their budget among different goods and services.\n\nOverall, microeconomics provides a framework for understanding the behavior of individual economic agents and the outcomes of their interactions in specific markets. It helps explain how prices are determined, how resources are allocated, and how individuals and firms make decisions in response to changing economic conditions.",
+        "context": "goods keeping their costs as low as possible and selling at a price as\nhigh as they could get in the markets. In other words, microeconomics\nwas a study of individual markets of demand and supply and the \u2018players\u2019,\nor the decision-makers, were also individuals (buyers or sellers, even\ncompanies) who were seen as trying to maximise their profits (as\nproducers or sellers) and their personal satisfaction or welfare levels\n(as consumers). Even a large company was \u2018micro\u2019 in the sense that it",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.84253335
+      }
+    ]
   }
 ]
