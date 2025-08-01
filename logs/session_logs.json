@@ -564,5 +564,43 @@
         "score": 0.84253335
       }
     ]
+  },
+  {
+    "username": "user002",
+    "login_time": "2025-08-01 17:44:10.951861",
+    "experience_level": "Intermediate",
+    "textbook": "Introductory Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-08-01 17:44:27.560204",
+        "experience_level": "Intermediate",
+        "question": "what are some main topics of this textbook",
+        "option": "Detailed Answer",
+        "answer": "The main topics covered in the textbook of Introductory Macroeconomics include:\n\n1. Basic concepts of macroeconomics such as GDP (Gross Domestic Product), inflation, unemployment, and economic growth.\n2. Aggregate demand and aggregate supply, which play a crucial role in determining the overall level of economic activity.\n3. Fiscal policy, which involves government spending, taxation, and budget deficits or surpluses.\n4. Monetary policy, which focuses on the actions of central banks to control the money supply and interest rates.\n5. Exchange rates and the balance of payments, which are important in understanding international trade and finance.\n6. Economic indicators such as the Consumer Price Index (CPI) and the unemployment rate, which help in analyzing the health of the economy.\n7. Economic growth theories, including the Solow growth model and endogenous growth theory.\n8. Business cycles and economic fluctuations, which explain the ups and downs in the economy over time.\n9. Macroeconomic models such as the Keynesian model, the Classical model, and the Neoclassical model, which are used to analyze and predict economic outcomes.\n10. Globalization and its impact on national economies, including issues related to free trade, capital flows, and economic development.\n\nOverall, the textbook covers a wide range of topics that are essential for understanding the functioning of the economy at a macroeconomic level. By studying these topics, students can gain insights into key economic principles and policies that shape the economic landscape of a country.",
+        "context": "have been taken into consideration in this exercise.\nContents of the textbooks have been rationalised in view of the\nfollowing:\n\u2022 Overlapping with similar content included in other subject areas in\nthe same class\n\u2022 Similar content included in the lower or higher class in the same\nsubject\n\u2022 Difficulty level\n\u2022 Content, which is easily accessible to students without much\ninterventions from teachers and can be learned by children through\nself-learning or peer -learning",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.824004
+      },
+      {
+        "timestamp": "2025-08-01 17:45:04.283730",
+        "experience_level": "Intermediate",
+        "question": "what are some main topics of this textbook",
+        "option": "Concise Answer",
+        "answer": "The main topics covered in this textbook are likely to include basic principles of economics, macroeconomic concepts such as GDP, inflation, unemployment, fiscal policy, monetary policy, and international trade. Additionally, the textbook may also cover topics related to economic indicators, economic growth, and government intervention in the economy.",
+        "context": "have been taken into consideration in this exercise.\nContents of the textbooks have been rationalised in view of the\nfollowing:\n\u2022 Overlapping with similar content included in other subject areas in\nthe same class\n\u2022 Similar content included in the lower or higher class in the same\nsubject\n\u2022 Difficulty level\n\u2022 Content, which is easily accessible to students without much\ninterventions from teachers and can be learned by children through\nself-learning or peer -learning",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.824004
+      },
+      {
+        "timestamp": "2025-08-01 17:45:24.530055",
+        "experience_level": "Intermediate",
+        "question": "what are some main topics of this course",
+        "option": "Concise Answer",
+        "answer": "The main topics of this course include analyzing the overall state of the economy, understanding the factors that influence economic growth, exploring government policies to improve the economy, and studying the relationships between different economic variables.",
+        "context": "for, in order to improve the state of the economy? These\nare the kind of questions that make us think about the\nhealth of the country\u2019s economy as a whole. These\nquestions are dealt within macroeconomics at different\nlevels of complexity.\nIn this book you will be introduced to some of the basic\nprinciples of macroeconomic analysis. The principles will\nbe stated, as far as possible, in simple language.\nSometimes elementary algebra will be used in the",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.795282
+      }
+    ]
   }
 ]
