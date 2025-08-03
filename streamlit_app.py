@@ -153,7 +153,8 @@ def load_credentials():
             "voice": row["voice"],
             "macro_level": row["macro_level"],
             "micro_level": row["micro_level"],
-            "stats_level": row["stats_level"]
+            "stats_level": row["stats_level"],
+            "chat_history": row["chat_history"]
         }
         for _, row in df.iterrows()
     }
@@ -186,6 +187,7 @@ def login():
             st.session_state["voice"] = user["voice"]
             st.session_state["textbook"] = textbook
             st.session_state["experience_level"] = level
+            st.session_state["chat_history_enabled"] = user.get("chat_history", False)
             st.session_state["session_log"] = {
                 "username": username,
                 "login_time": str(datetime.datetime.now()),
@@ -311,6 +313,12 @@ selected_textbook = st.session_state.get("textbook", "Textbook")
 # Initialize toggle state
 if "show_chat_history" not in st.session_state:
     st.session_state["show_chat_history"] = False
+
+# ✅ Only show button if user has permission
+if st.session_state.get("chat_history_enabled", False):
+    if st.button("📜 Show Chat History"):
+        st.session_state["show_chat_history"] = not st.session_state["show_chat_history"]
+
 
 # Display button on top-left
 if st.button("📜 Show Chat History"):
