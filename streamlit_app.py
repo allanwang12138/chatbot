@@ -314,15 +314,11 @@ selected_textbook = st.session_state.get("textbook", "Textbook")
 if "show_chat_history" not in st.session_state:
     st.session_state["show_chat_history"] = False
 
-# ✅ Only show button if user has permission
+# Only show button if user has permission
 if st.session_state.get("chat_history_enabled", False):
-    if st.button("📜 Show Chat History"):
+    label = "📕 Hide Chat History" if st.session_state["show_chat_history"] else "📜 Show Chat History"
+    if st.button(label, key="toggle_chat_history"):
         st.session_state["show_chat_history"] = not st.session_state["show_chat_history"]
-
-
-# Display button on top-left
-if st.button("📜 Show Chat History"):
-    st.session_state["show_chat_history"] = not st.session_state["show_chat_history"]
 
 # Format dynamic title and input prompt
 st.title(f"📄 {selected_textbook} Q&A App")
