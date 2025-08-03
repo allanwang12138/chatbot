@@ -308,32 +308,38 @@ Answer:
 # ------------------- Streamlit UI -------------------
 selected_textbook = st.session_state.get("textbook", "Textbook")
 
+# Initialize toggle state
+if "show_chat_history" not in st.session_state:
+    st.session_state["show_chat_history"] = False
+
+# Display button on top-left
+if st.button("📜 Show Chat History"):
+    st.session_state["show_chat_history"] = not st.session_state["show_chat_history"]
+
 # Format dynamic title and input prompt
 st.title(f"📄 {selected_textbook} Q&A App")
 
-# ------------------- Always-visible Chat History in Sidebar -------------------
-st.sidebar.title("📜 Chat History")
+# ------------------- Chat history showed when clicked the button -------------------
+if st.session_state["show_chat_history"]:
+    st.sidebar.title("📜 Chat History")
 
-history = get_user_chat_history(
-    SESSION_LOGS,
-    st.session_state.get("username"),
-    st.session_state.get("textbook")
-)
+    history = get_user_chat_history(
+        SESSION_LOGS,
+        st.session_state.get("username"),
+        st.session_state.get("textbook")
+    )
 
-if not history:
-    st.sidebar.info("No previous interactions found.")
-else:
-    for item in reversed(history[-10:]):  # show more recent 10 questions
-        # Format timestamp to MM/DD/YYYY HH:MM (24-hour)
-        timestamp = item['timestamp']
-        dt = datetime.datetime.fromisoformat(timestamp)
-        formatted_time = dt.strftime("%m/%d/%Y %H:%M")
-        st.sidebar.markdown(f"**Q:** {item['question']}      {formatted_time}")
-        
-        st.sidebar.markdown(f"**A ({item['option']}):** {item['answer']}")
-        st.sidebar.markdown("---")
-
-
+    if not history:
+        st.sidebar.info("No previous interactions found.")
+    else:
+        for item in reversed(history[-10:]):  # show more recent 10 questions
+            timestamp = item['timestamp']
+            dt = datetime.datetime.fromisoformat(timestamp)
+            formatted_time = dt.strftime("%m/%d/%Y %H:%M")
+            
+            st.sidebar.markdown(f"**Q:** {item['question']}  \n🕒 {formatted_time}")
+            st.sidebar.markdown(f"**A ({item['option']}):** {item['answer']}")
+            st.sidebar.markdown("---")
 
 
 raw_query = st.text_input(f"Ask a question about {selected_textbook}:")
