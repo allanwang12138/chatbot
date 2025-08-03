@@ -5,7 +5,7 @@ def generate_sample_credentials_csv(output_path="sample_credentials_with_levels.
     voices = ["alloy", "echo", "fable", "onyx", "nova", "shimmer"]
     levels = ["Beginner", "Intermediate", "Advanced"]
     subject = ["Introductory Macroeconomics", "Introductory Microeconomics", "Statistics For Economics"]
-    chathistory_flag = ['Yes','No']
+    chathistory_flag = ['yes','no']
 
     data = []
     for i in range(1, 31):
