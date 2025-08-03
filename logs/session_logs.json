@@ -602,5 +602,12 @@
         "score": 0.795282
       }
     ]
+  },
+  {
+    "username": "user002",
+    "login_time": "2025-08-03 22:09:37.966632",
+    "experience_level": "Advanced",
+    "textbook": "Introductory Macroeconomics",
+    "interactions": []
   }
 ]
