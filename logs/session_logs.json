@@ -658,5 +658,12 @@
     "experience_level": "Intermediate",
     "textbook": "Introductory Macroeconomics",
     "interactions": []
+  },
+  {
+    "username": "user001",
+    "login_time": "2025-08-04 03:39:24.587761",
+    "experience_level": "Advanced",
+    "textbook": "Introductory Macroeconomics",
+    "interactions": []
   }
 ]
