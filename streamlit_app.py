@@ -316,7 +316,7 @@ if "show_chat_history" not in st.session_state:
 
 # Only show button if user has permission
 if st.session_state.get("chat_history_enabled", False):
-    if st.button("📜 Show Chat History", key="toggle_chat_history"):
+    if st.button("📜 Show/Hide Chat History", key="toggle_chat_history"):
         st.session_state["show_chat_history"] = not st.session_state["show_chat_history"]
 
 # Format dynamic title and input prompt
