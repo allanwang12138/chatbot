@@ -154,7 +154,8 @@ def load_credentials():
             "macro_level": row["macro_level"],
             "micro_level": row["micro_level"],
             "stats_level": row["stats_level"],
-            "chat_history": str(row["chat_history"]).strip().lower() == "yes"
+            "chat_history": str(row["chat_history"]).strip().lower() == "yes",
+            "assigned_subject": str(row["assigned_subject"]).strip()
         }
         for _, row in df.iterrows()
     }
@@ -162,37 +163,40 @@ CREDENTIALS = load_credentials()
 
 def login():
     st.title("🔐 Login")
-    st.write("Enter your username, password, and select a textbook.")
+    st.write("Enter your username and password.")
 
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
     textbook = st.selectbox("Select a textbook:", ["Introductory Macroeconomics", "Introductory Microeconomics", "Statistics For Economics"])
+    assigned_subject = user.get("assigned_subject", "Introductory Macroeconomics")
+    st.markdown(f"**Assigned Textbook:** `{assigned_subject}`")
 
     if st.button("Login"):
         user = CREDENTIALS.get(username)
         if user and user["password"] == password:
-            # ✅ Correctly map textbook to experience level field
+
             subject_key_map = {
-                "Macroeconomics": "macro_level",
-                "Microeconomics": "micro_level",
-                "Stats": "stats_level"
+            "Introductory Macroeconomics": "macro_level",
+            "Introductory Microeconomics": "micro_level",
+            "Statistics For Economics": "stats_level"
             }
-            level_key = subject_key_map.get(textbook, "macro_level")
+            level_key = subject_key_map.get(assigned_subject, "macro_level")
             level = user.get(level_key, "Intermediate")
+    
 
             st.session_state["authenticated"] = True
             st.cache_data.clear()  # Clears old logs
             SESSION_LOGS = load_existing_logs()  # Reload from GitHub
             st.session_state["username"] = username
             st.session_state["voice"] = user["voice"]
-            st.session_state["textbook"] = textbook
+            st.session_state["textbook"] = assigned_subject
             st.session_state["experience_level"] = level
             st.session_state["chat_history_enabled"] = user.get("chat_history", False)
             st.session_state["session_log"] = {
                 "username": username,
                 "login_time": str(datetime.datetime.now()),
                 "experience_level": level,
-                "textbook": textbook,
+                "textbook": assigned_subject,
                 "interactions": []
             }
             st.success(f"✅ Login successful. Welcome, {username}!")
@@ -211,15 +215,17 @@ embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 client = QdrantClient(url=QDRANT_URL, api_key=QDRANT_API_KEY)
 # Select collection based on textbook choice
 selected_textbook = st.session_state.get("textbook", "Introductory Macroeconomics")
-if selected_textbook == "Introductory Macroeconomics":
-    COLLECTION_NAME = "intro_macro_collection"
-elif selected_textbook == "Introductory Microeconomics":
-    COLLECTION_NAME = "intro_micro_collection"
-elif selected_textbook == "Statistics For Economics":
-    COLLECTION_NAME = "stats_econ_collection"
-else:
-    st.error("❌ Invalid textbook selection.")
+collection_map = {
+    "Introductory Macroeconomics": "intro_macro_collection",
+    "Introductory Microeconomics": "intro_micro_collection",
+    "Statistics For Economics": "stats_econ_collection"
+}
+
+COLLECTION_NAME = collection_map.get(selected_textbook)
+if not COLLECTION_NAME:
+    st.error(f"❌ Invalid textbook selection: {selected_textbook}")
     st.stop()
+
 db = Qdrant(client=client, collection_name=COLLECTION_NAME, embeddings=embeddings)
 
 # ------------------- Prompt Templates -------------------
@@ -386,7 +392,7 @@ if query and option:
         # Format prompt based on selected type
         level = st.session_state.get("experience_level", "Intermediate")
         
-        if option == "Concise Answer" or "Voice" in option:
+        if option == "Concise Answer" or option == "Concise Answer + Voice":
             if level == "Beginner":
                 prompt_template = ChatPromptTemplate.from_template(PROMPT_BEGINNER_CONCISE)
             elif level == "Advanced":
@@ -424,7 +430,7 @@ if query and option:
                 "option": option,
                 "answer": response,
                 "context": context_text,
-                "textbook": st.session_state.get("textbook", "Introductory Macroeconomics"),
+                "textbook": selected_textbook,
                 "score": top_score
             })
 
