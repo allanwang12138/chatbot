@@ -154,7 +154,7 @@ def load_credentials():
             "macro_level": row["macro_level"],
             "micro_level": row["micro_level"],
             "stats_level": row["stats_level"],
-            "chat_history": row["chat_history"]
+            "chat_history": str(row["chat_history"]).strip().lower() == "yes"
         }
         for _, row in df.iterrows()
     }
