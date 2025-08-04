@@ -168,13 +168,14 @@ def login():
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
     textbook = st.selectbox("Select a textbook:", ["Introductory Macroeconomics", "Introductory Microeconomics", "Statistics For Economics"])
-    assigned_subject = user.get("assigned_subject", "Introductory Macroeconomics")
+
     st.markdown(f"**Assigned Textbook:** `{assigned_subject}`")
 
     if st.button("Login"):
         user = CREDENTIALS.get(username)
         if user and user["password"] == password:
-
+            assigned_subject = user.get("assigned_subject", "Introductory Macroeconomics")
+            st.session_state["assigned_subject_display"] = assigned_subject
             subject_key_map = {
             "Introductory Macroeconomics": "macro_level",
             "Introductory Microeconomics": "micro_level",
