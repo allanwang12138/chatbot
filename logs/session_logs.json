@@ -721,5 +721,33 @@
     "experience_level": "Intermediate",
     "textbook": "Statistics For Economics",
     "interactions": []
+  },
+  {
+    "username": "user006",
+    "login_time": "2025-08-05 01:26:24.792995",
+    "experience_level": "Advanced",
+    "textbook": "Introductory Microeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-08-05 01:26:41.864373",
+        "experience_level": "Advanced",
+        "question": "what are some main topics of this textbook",
+        "option": "Detailed Answer",
+        "answer": "The main topics covered in this textbook for Class XII Introductory Microeconomics theory may include but are not limited to: \n1. Fundamental concepts of Microeconomics such as supply and demand, price determination, elasticity, and consumer behavior.\n2. Market structures like perfect competition, monopolistic competition, oligopoly, and monopoly.\n3. Production and cost theory, including factors of production, production functions, and profit maximization.\n4. Theory of distribution, covering wages, rent, interest, and profits.\n5. Market failures and government intervention, including externalities, public goods, and regulation.\n6. International trade and globalization, discussing comparative advantage, trade barriers, and exchange rates.\n7. Macroeconomic principles, such as national income accounting, inflation, unemployment, and economic growth.\n8. Fiscal policy, monetary policy, and the IS-LM model for analyzing macroeconomic equilibrium.\n9. Economic fluctuations and business cycles, including theories of aggregate demand and aggregate supply.\n10. International economic issues like balance of payments, trade deficits, and currency exchange rates.\nOverall, the textbook aims to provide a comprehensive understanding of Microeconomics principles and their applications in real-world contexts, preparing students for advanced studies and practical applications in the field.",
+        "context": "Textbook for Class XII ISBN ISBNISBNISBNISBN 81-7450-678-081-7450-678-081-7450-678-081-7450-678-081-7450-678-0\nReprint 2025-26",
+        "textbook": "Introductory Microeconomics",
+        "score": 0.83089185
+      },
+      {
+        "timestamp": "2025-08-05 01:26:53.416286",
+        "experience_level": "Advanced",
+        "question": "what are some main topics of this textbook",
+        "option": "Concise Answer",
+        "answer": "The main topics covered in this textbook would include basic economic concepts such as supply and demand, market structures, elasticity, consumer behavior, production costs, and economic efficiency. Additionally, it may delve into topics related to macroeconomic concepts like fiscal policy, monetary policy, inflation, and unemployment. Advanced topics such as game theory, externalities, public goods, and international trade may also be covered in this textbook.",
+        "context": "Textbook for Class XII ISBN ISBNISBNISBNISBN 81-7450-678-081-7450-678-081-7450-678-081-7450-678-081-7450-678-0\nReprint 2025-26",
+        "textbook": "Introductory Microeconomics",
+        "score": 0.83103806
+      }
+    ]
   }
 ]
