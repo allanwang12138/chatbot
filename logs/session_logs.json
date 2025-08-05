@@ -700,5 +700,12 @@
         "score": 0.8035763
       }
     ]
+  },
+  {
+    "username": "user003",
+    "login_time": "2025-08-05 01:00:54.583850",
+    "experience_level": "Intermediate",
+    "textbook": "Introductory Macroeconomics",
+    "interactions": []
   }
 ]
