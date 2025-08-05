@@ -672,5 +672,33 @@
     "experience_level": "Intermediate",
     "textbook": "Introductory Macroeconomics",
     "interactions": []
+  },
+  {
+    "username": "user002",
+    "login_time": "2025-08-05 01:00:13.510575",
+    "experience_level": "Intermediate",
+    "textbook": "Introductory Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-08-05 01:00:26.766373",
+        "experience_level": "Intermediate",
+        "question": "can you explain the concept of inflation?",
+        "option": "Concise Answer",
+        "answer": "Inflation occurs when there is a general increase in prices, leading to a decrease in the purchasing power of money. It is typically caused by an increase in aggregate demand in an economy, often due to factors like government spending or tax cuts. Inflation can also be influenced by the availability of resources and the level of demand in the economy. If there are unutilised resources and demand increases, prices are likely to rise, resulting in inflation.",
+        "context": "Other Perspectives on Deficits and Debt : One of the main criticisms of\ndeficits is that they are inflationary. This is because when government\nincreases spending or cuts taxes, aggregate demand increases. Firms may\nnot be able to produce higher quantities that are being demanded at the\nongoing prices. Prices will, ther efore, have to rise. However , if ther e ar e\nunutilised resources, output is held back by lack of demand. A high fiscal",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.8035763
+      },
+      {
+        "timestamp": "2025-08-05 01:00:33.035655",
+        "experience_level": "Intermediate",
+        "question": "can you explain the concept of inflation?",
+        "option": "Concise Answer + Voice",
+        "answer": "Inflation is the general increase in prices of goods and services in an economy over time. It occurs when there is excessive demand compared to the available supply of goods and services. This can happen when government spending or tax cuts lead to an increase in aggregate demand, causing firms to raise prices. On the other hand, if there are unused resources in the economy, inflation may be limited as output is constrained by lack of demand.",
+        "context": "Other Perspectives on Deficits and Debt : One of the main criticisms of\ndeficits is that they are inflationary. This is because when government\nincreases spending or cuts taxes, aggregate demand increases. Firms may\nnot be able to produce higher quantities that are being demanded at the\nongoing prices. Prices will, ther efore, have to rise. However , if ther e ar e\nunutilised resources, output is held back by lack of demand. A high fiscal",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.8035763
+      }
+    ]
   }
 ]
