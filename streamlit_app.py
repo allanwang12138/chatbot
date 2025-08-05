@@ -167,13 +167,14 @@ def login():
 
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
-    assigned_subject = user.get("assigned_subject", "Introductory Macroeconomics")
-    st.markdown(f"**Assigned Textbook:** {assigned_subject}")
 
 
     if st.button("Login"):
         user = CREDENTIALS.get(username)
         if user and user["password"] == password:
+                assigned_subject = user.get("assigned_subject", "Introductory Macroeconomics")
+                st.markdown(f"**Assigned Textbook:** {assigned_subject}")
+
             # ✅ Correctly map textbook to experience level field
             subject_key_map = {
                 "Macroeconomics": "macro_level",
