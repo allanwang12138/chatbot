@@ -154,7 +154,8 @@ def load_credentials():
             "macro_level": row["macro_level"],
             "micro_level": row["micro_level"],
             "stats_level": row["stats_level"],
-            "chat_history": str(row["chat_history"]).strip().lower() == "yes"
+            "chat_history": str(row["chat_history"]).strip().lower() == "yes",
+            "assigned_subject": row["assigned_subject"].strip()
         }
         for _, row in df.iterrows()
     }
@@ -162,11 +163,13 @@ CREDENTIALS = load_credentials()
 
 def login():
     st.title("🔐 Login")
-    st.write("Enter your username, password, and select a textbook.")
+    st.write("Enter your username and password")
 
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
-    textbook = st.selectbox("Select a textbook:", ["Introductory Macroeconomics", "Introductory Microeconomics", "Statistics For Economics"])
+    assigned_subject = user.get("assigned_subject", "Introductory Macroeconomics")
+    st.markdown(f"**Assigned Textbook:** {assigned_subject}")
+
 
     if st.button("Login"):
         user = CREDENTIALS.get(username)
@@ -177,7 +180,7 @@ def login():
                 "Microeconomics": "micro_level",
                 "Stats": "stats_level"
             }
-            level_key = subject_key_map.get(textbook, "macro_level")
+            level_key = subject_key_map.get(assigned_subject.replace("Introductory ", "").split()[0], "macro_level")
             level = user.get(level_key, "Intermediate")
 
             st.session_state["authenticated"] = True
@@ -185,14 +188,14 @@ def login():
             SESSION_LOGS = load_existing_logs()  # Reload from GitHub
             st.session_state["username"] = username
             st.session_state["voice"] = user["voice"]
-            st.session_state["textbook"] = textbook
+            st.session_state["textbook"] = assigned_subject
             st.session_state["experience_level"] = level
             st.session_state["chat_history_enabled"] = user.get("chat_history", False)
             st.session_state["session_log"] = {
                 "username": username,
                 "login_time": str(datetime.datetime.now()),
                 "experience_level": level,
-                "textbook": textbook,
+                "textbook": assigned_subject,
                 "interactions": []
             }
             st.success(f"✅ Login successful. Welcome, {username}!")
@@ -460,7 +463,7 @@ if query and option:
             "option": option,
             "answer": "⚠️ This question appears to be outside the scope of the textbook.",
             "context": "",
-            "textbook": st.session_state.get("textbook", "Introductory Macroeconomics"),
+            "textbook": selected_textbook,
             "score": None
         })
 
