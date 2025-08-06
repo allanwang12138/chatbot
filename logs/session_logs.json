@@ -749,5 +749,23 @@
         "score": 0.83103806
       }
     ]
+  },
+  {
+    "username": "user002",
+    "login_time": "2025-08-06 01:33:58.750665",
+    "experience_level": "Intermediate",
+    "textbook": "Introductory Microeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-08-06 01:34:13.452206",
+        "experience_level": "Intermediate",
+        "question": "What is GDP?",
+        "option": "Concise Answer",
+        "answer": "GDP stands for Gross Domestic Product. It is a measure of the total value of all goods and services produced in a country within a specific period of time, usually annually or quarterly. It is used as an indicator of the economic health and size of a country's economy.",
+        "context": "particular combination of different goods and services. Given the total amount\nof resources, it is possible to allocate the resources in many different ways\nand, thereby achieving different mixes of all possible goods and services. The\ncollection of all possible combinations of the goods and services that can be\nproduced from a given amount of resources and a given stock of technological\nknowledge is called the production possibility set of the economy.\nEXAMPLE \n 1\nConsider an economy which",
+        "textbook": "Introductory Microeconomics",
+        "score": 0.75383425
+      }
+    ]
   }
 ]
