@@ -906,5 +906,33 @@
         "score": 0.824004
       }
     ]
+  },
+  {
+    "username": "user001",
+    "login_time": "2025-08-06 02:18:07.836091",
+    "experience_level": "Advanced",
+    "textbook": "Introductory Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-08-06 02:18:16.887569",
+        "experience_level": "Advanced",
+        "question": "what is inflation?",
+        "option": "Concise Answer",
+        "answer": "Inflation is the general increase in prices of goods and services in an economy over a period of time. When inflation occurs, each unit of currency buys fewer goods and services, leading to a decrease in the purchasing power of money.",
+        "context": "Other Perspectives on Deficits and Debt : One of the main criticisms of\ndeficits is that they are inflationary. This is because when government\nincreases spending or cuts taxes, aggregate demand increases. Firms may\nnot be able to produce higher quantities that are being demanded at the\nongoing prices. Prices will, ther efore, have to rise. However , if ther e ar e\nunutilised resources, output is held back by lack of demand. A high fiscal",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.78795576
+      },
+      {
+        "timestamp": "2025-08-06 02:18:41.961336",
+        "experience_level": "Advanced",
+        "question": "Can you more examples on that?",
+        "option": "Detailed Answer",
+        "answer": "I'm sorry, the context provided does not include specific examples of inflation.",
+        "context": "overlooking some vital distinctive characteristics of individual goods.\nFor example, production conditions of agricultural and industrial\ncommodities are of a different nature. Or, if we treat a single category\nof labour as a representative of all kinds of labours, we may be unable\nto distinguish the labour of the manager of a firm from the labour of the\naccountant of the firm. So, in many cases, instead of a single\nrepresentative category of good (or labour, or production technology),",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.7601009
+      }
+    ]
   }
 ]
