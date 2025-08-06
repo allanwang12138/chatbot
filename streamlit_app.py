@@ -16,13 +16,21 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import re
 import unicodedata
-
+from langchain.memory import ConversationBufferMemory
+from langchain.chains import ConversationalRetrievalChain
 
 # ------------------- Normalize Response -------------
 def normalize_text(text):
     text = unicodedata.normalize("NFKC", text)  # handles full-width characters
     text = re.sub(r"[^\w\s]", "", text.lower()).strip()  # lowercasing + remove punctuation
     return text
+     
+# Initialize memory buffer per session (store in session_state)
+if "buffer_memory" not in st.session_state:
+    st.session_state.buffer_memory = ConversationBufferMemory(
+        memory_key="chat_history",
+        return_messages=True
+    )
 
 # ------------------- Load secrets -------------------
 load_dotenv()
@@ -419,7 +427,14 @@ if query and option:
                 response = existing_answer
                 st.info("🔁 Reused answer from previous session.")
             else:
-                response = model.predict(prompt)
+                retriever = db.as_retriever(search_type="similarity", search_kwargs={"k": 5})
+                qa_chain = ConversationalRetrievalChain.from_llm(
+                    llm=model,
+                    retriever=retriever,
+                    memory=st.session_state.buffer_memory
+                )
+                
+                response = qa_chain.run(query)
 
             st.session_state["session_log"]["interactions"].append({
                 "timestamp": str(datetime.datetime.now()),
@@ -469,9 +484,31 @@ if query and option:
         })
 
 # ------------------- Exit Button -------------------
+# ------------------- Exit Button -------------------
+def embed_and_upload_logs_on_exit(session_log):
+    """
+    After a session ends, take all Q&A pairs and upload to Qdrant with metadata
+    """
+    from langchain.schema import Document
+
+    new_docs = []
+    for entry in session_log.get("interactions", []):
+        q = entry["question"]
+        a = entry["answer"]
+        metadata = {
+            "username": session_log["username"],
+            "textbook": session_log["textbook"],
+            "experience_level": entry["experience_level"],
+            "option": entry["option"],
+            "timestamp": entry["timestamp"]
+        }
+        content = f"Q: {q}\nA: {a}"
+        new_docs.append(Document(page_content=content, metadata=metadata))
+
+    if new_docs:
+        db.add_documents(new_docs)
 
 st.markdown("---")
-
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     custom_exit = """
@@ -487,14 +524,18 @@ with col2:
     </style>
     """
     st.markdown(custom_exit, unsafe_allow_html=True)
-    
+
     if st.button("🚪 Exit"):
-        # Push session log to GitHub
+        # ✅ Embed Q&A into vector DB
         if "session_log" in st.session_state:
+            embed_and_upload_logs_on_exit(st.session_state["session_log"])
+
+            # ✅ Push session log to GitHub
             success = append_log_to_github(st.session_state["session_log"])
             if success:
                 st.success("📤 Session log uploaded to GitHub.")
             else:
                 st.warning("⚠️ Failed to upload session log.")
+
         st.session_state.clear()
         st.rerun()
