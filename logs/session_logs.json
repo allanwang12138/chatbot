@@ -934,5 +934,23 @@
         "score": 0.7601009
       }
     ]
+  },
+  {
+    "username": "user001",
+    "login_time": "2025-08-06 02:19:03.658179",
+    "experience_level": "Advanced",
+    "textbook": "Introductory Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-08-06 02:19:30.892943",
+        "experience_level": "Advanced",
+        "question": "Can you give me more examples in simple terms",
+        "option": "Detailed Answer",
+        "answer": "I'm sorry, the context provided does not include more examples that can be simplified into basic terms.",
+        "context": "Q: Can you more examples on that?\nA: I'm sorry, the context provided does not include specific examples of inflation.",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.815408
+      }
+    ]
   }
 ]
