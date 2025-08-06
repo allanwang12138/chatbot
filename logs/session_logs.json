@@ -767,5 +767,43 @@
         "score": 0.75383425
       }
     ]
+  },
+  {
+    "username": "user002",
+    "login_time": "2025-08-06 02:09:51.953963",
+    "experience_level": "Intermediate",
+    "textbook": "Introductory Microeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-08-06 02:10:34.029581",
+        "experience_level": "Intermediate",
+        "question": "what are main contentes of this text book",
+        "option": "Detailed Answer",
+        "answer": "The main contents of the textbook for Class XII have been rationalized to reduce content load on students. The restructuring considers overlapping content, difficulty levels, and making content more accessible for self-learning or peer-learning. The textbook focuses on enhancing learning through contemplation, group discussions, and hands-on activities. It aligns with the National Education Policy 2020's emphasis on reducing content load and promoting experiential learning with a creative mindset. However, specific details of the content within the textbook are not listed in the provided context.",
+        "context": "have been taken into consideration in this exercise.\nContents of the textbooks have been rationalised in view of the\nfollowing:\n\u2022 Overlapping with similar content included in other subject areas in\nthe same class\n\u2022 Similar content included in the lower or higher class in the same\nsubject\n\u2022 Difficulty level\n\u2022 Content, which is easily accessible to students without much\ninterventions from teachers and can be learned by children through\nself-learning or peer-learning",
+        "textbook": "Introductory Microeconomics",
+        "score": 0.84051263
+      },
+      {
+        "timestamp": "2025-08-06 02:11:22.193363",
+        "experience_level": "Intermediate",
+        "question": "what are main topics of this textbook",
+        "option": "Detailed Answer",
+        "answer": "The main topics covered in the textbook for Class XII are not explicitly mentioned in the given context. The context provided mainly discusses the rationalization of contents in the textbook, the considerations taken during restructuring, and the focus on child psychology and teaching methods. It does not list the specific topics covered in the textbook for Class XII.",
+        "context": "Textbook for Class XII ISBN ISBNISBNISBNISBN 81-7450-678-081-7450-678-081-7450-678-081-7450-678-081-7450-678-0\nReprint 2025-26",
+        "textbook": "Introductory Microeconomics",
+        "score": 0.8273702
+      },
+      {
+        "timestamp": "2025-08-06 02:11:48.628591",
+        "experience_level": "Intermediate",
+        "question": "what is micro economics?",
+        "option": "Concise Answer",
+        "answer": "Microeconomics is the branch of economics that focuses on the behavior of individual economic agents, such as consumers and producers, in markets for goods and services. It analyzes how prices and quantities of goods and services are determined through the interactions of individuals in these markets.",
+        "context": "economic analysis is not a very sharp one. The positive and the normative\nissues involved in the study of the central economic problems are very closely\nrelated to each other and a proper understanding of one is not possible in\nisolation to the other.\n1.5  MICROECONOMICS AND MACROECONOMICS\nTraditionally, the subject matter of economics has been studied under two broad\nbranches: Microeconomics and Macroeconomics. In microeconomics, we study",
+        "textbook": "Introductory Microeconomics",
+        "score": 0.8336636
+      }
+    ]
   }
 ]
