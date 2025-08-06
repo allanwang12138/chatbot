@@ -264,7 +264,7 @@ Answer:
 PROMPT_INTERMEDIATE_DETAILED = """
 You are an experienced tutor helping a student with some background in subject {textbook}.
 
-Using only the context below, provide a clear and informative answer in no more than 20 sentences. Use standard macroeconomic terms and concepts, but keep explanations digestible and well-structured. Include examples if helpful.
+Using only the context below, provide a clear and informative answer in no more than 20 sentences. Use standard terms and concepts, but keep explanations digestible and well-structured. Include examples if helpful.
 
 Context:
 {context}
@@ -292,7 +292,7 @@ Answer:
 PROMPT_ADVANCED_DETAILED = """
 You are an expert academic tutor working with an advanced student who understands subkect {textbook} theory.
 
-Using only the context provided, write a focused and rigorous answer in no more than 20 sentences. Feel free to include concepts like equilibrium, derivatives, IS-LM, inflation expectations, or models if relevant.
+Using only the context provided, write a focused and rigorous answer in no more than 20 sentences. Feel free to include more complex concepts such as math if relevant.
 
 Context:
 {context}
