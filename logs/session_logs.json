@@ -805,5 +805,43 @@
         "score": 0.8336636
       }
     ]
+  },
+  {
+    "username": "user001",
+    "login_time": "2025-08-06 02:12:16.546010",
+    "experience_level": "Advanced",
+    "textbook": "Introductory Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-08-06 02:12:30.029352",
+        "experience_level": "Advanced",
+        "question": "what is GDP?",
+        "option": "Detailed Answer",
+        "answer": "GDP stands for Gross Domestic Product. It is the total monetary or market value of all the finished goods and services produced within a country's borders in a specific time period, usually annually. It includes all production by residents and non-residents regardless of whether the production is owned by local companies or foreign entities.",
+        "context": "that country? If a person has more income he or she can buy more goods and\nservices and his or her material well-being improves. So it may seem reasonable\nto treat his or her income level as his or her level of well-being. GDP is the sum\ntotal of value of goods and services created within the geographical boundary of\na country in a particular year. It gets distributed among the people as incomes\n(except for retained earnings). So we may be tempted to treat higher level of GDP",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.83231777
+      },
+      {
+        "timestamp": "2025-08-06 02:12:49.679858",
+        "experience_level": "Advanced",
+        "question": "Can you give me an example of that?",
+        "option": "Detailed Answer",
+        "answer": "In the provided example, GDP can be calculated in three ways based on the transactions between firms A and B:\n\n1. GDP in the phase of production or the value-added method:\n- Value Added by A (VAA): Rs. 50\n- Value Added by B (VAB): Rs. 150\n- GDP = VAA + VAB = Rs. 50 + Rs. 150 = Rs. 200\n\n2. GDP in the phase of distribution or Income method:\n- Wages paid by A: Rs. 20\n- Profits kept by A: Rs. 30\n- Wages paid by B: Rs. 60\n- Profits kept by B: Rs. 90\n- GDP = Total income distributed = Rs. 20 + Rs. 30 + Rs. 60 + Rs. 90 = Rs. 200\n\n3. Expenditure Method:\n- Final Expenditure by consumers on cloth: Rs. 200\n- GDP = Final Expenditure = Rs. 200\n\nTherefore, in this example, based on the transactions between firms A and B, GDP is calculated as Rs. 200 using all three methods.",
+        "context": "Sometimes elementary algebra will be used in the\ntreatment for introducing the reader to some rigour.\nIf we observe the economy of a country as a whole it will\nappear that the output levels of all the goods and services\nin the economy have a tendency to move together. For\nexample, if output of food grain is experiencing a growth, it\nis generally accompanied by a rise in the output level of\nindustrial goods. Within the category of industrial goods",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.7676825
+      },
+      {
+        "timestamp": "2025-08-06 02:13:21.097808",
+        "experience_level": "Advanced",
+        "question": "How does that impact unemployment?",
+        "option": "Detailed Answer",
+        "answer": "The calculation of GDP doesn't directly impact unemployment. GDP is a measure of the total economic output of a country and is calculated based on various factors like consumption, investment, government spending, and net exports. Unemployment, on the other hand, is a measure of the number of people who are willing and able to work but cannot find employment. While changes in GDP can sometimes be correlated with changes in unemployment rates (for example, a decrease in GDP may lead to an increase in unemployment), the calculation of GDP itself does not influence unemployment directly.",
+        "context": "people who are not working and are looking for jobs divided by the\ntotal number of people who are working or looking for jobs). Over the\nsame period aggregate output in USA fell by about 33 per cent. These\nevents made economists think about the functioning of the economy\nin a new way. The fact that the economy may have long lasting\nunemployment had to be theorised about and explained. Keynes\u2019 book\nwas an attempt in this direction. Unlike his predecessors, his approach",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.81440693
+      }
+    ]
   }
 ]
