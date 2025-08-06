@@ -427,7 +427,18 @@ if query and option:
                 response = existing_answer
                 st.info("🔁 Reused answer from previous session.")
             else:
-                retriever = db.as_retriever(search_type="similarity", search_kwargs={"k": 5})
+                retriever = db.as_retriever(
+                    search_type="similarity",
+                    search_kwargs={
+                        "k": 5,
+                        "filter": {
+                            "username": st.session_state.get("username"),
+                            "textbook": st.session_state.get("textbook"),
+                            "experience_level": st.session_state.get("experience_level")
+                        }
+                    }
+                )
+
                 qa_chain = ConversationalRetrievalChain.from_llm(
                     llm=model,
                     retriever=retriever,
@@ -483,8 +494,7 @@ if query and option:
             "score": None
         })
 
-# ------------------- Exit Button -------------------
-# ------------------- Exit Button -------------------
+# ------------------- Exit Button -------------------    
 def embed_and_upload_logs_on_exit(session_log):
     """
     After a session ends, take all Q&A pairs and upload to Qdrant with metadata
