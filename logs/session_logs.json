@@ -888,5 +888,23 @@
         "score": 0.83482116
       }
     ]
+  },
+  {
+    "username": "user004",
+    "login_time": "2025-08-06 02:15:46.342191",
+    "experience_level": "Advanced",
+    "textbook": "Introductory Macroeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-08-06 02:16:00.177819",
+        "experience_level": "Advanced",
+        "question": "what are some main topics of this textbook",
+        "option": "Detailed Answer",
+        "answer": "The main topics of this textbook appear to be related to macroeconomics, economic principles, and analyzing the state of the country's economy. It also seems to focus on restructuring and rationalizing the content of textbooks to reduce curricular burden and make learning more accessible for students.",
+        "context": "have been taken into consideration in this exercise.\nContents of the textbooks have been rationalised in view of the\nfollowing:\n\u2022 Overlapping with similar content included in other subject areas in\nthe same class\n\u2022 Similar content included in the lower or higher class in the same\nsubject\n\u2022 Difficulty level\n\u2022 Content, which is easily accessible to students without much\ninterventions from teachers and can be learned by children through\nself-learning or peer -learning",
+        "textbook": "Introductory Macroeconomics",
+        "score": 0.824004
+      }
+    ]
   }
 ]
