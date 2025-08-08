@@ -952,5 +952,53 @@
         "score": 0.815408
       }
     ]
+  },
+  {
+    "username": "user002",
+    "login_time": "2025-08-08 15:38:09.363325",
+    "experience_level": "Intermediate",
+    "textbook": "Introductory Microeconomics",
+    "interactions": [
+      {
+        "timestamp": "2025-08-08 15:38:30.513758",
+        "experience_level": "Intermediate",
+        "question": "what is micro economics?",
+        "option": "Detailed Answer",
+        "answer": "Microeconomics is the branch of economics that focuses on the behaviors of individual economic agents, such as consumers and producers, in markets for goods and services. It analyzes how prices and quantities of goods and services are determined through the interactions of individuals in these markets. Additionally, microeconomics studies how individual decision-making impacts resource allocation and market outcomes.",
+        "context": "",
+        "textbook": "Introductory Microeconomics",
+        "score": null
+      },
+      {
+        "timestamp": "2025-08-08 15:39:17.030557",
+        "experience_level": "Intermediate",
+        "question": "can you explain more?",
+        "option": "Detailed Answer",
+        "answer": "Microeconomics is a branch of economics that focuses on the behavior of individual economic agents such as consumers, producers, and firms in markets for goods and services. It examines how these individual agents make decisions on what to buy or produce based on factors like prices, preferences, and constraints. Microeconomics also looks at how prices and quantities of goods and services are determined through the interaction of these individuals in markets. The goal of microeconomics is to understand how individuals make choices to maximize their utility or profits and how these choices impact market outcomes.",
+        "context": "",
+        "textbook": "Introductory Microeconomics",
+        "score": null
+      },
+      {
+        "timestamp": "2025-08-08 15:40:43.071226",
+        "experience_level": "Intermediate",
+        "question": "What is opportunity cost?",
+        "option": "Detailed Answer",
+        "answer": "Opportunity cost refers to the benefit or value of the next best alternative forgone when a decision is made. In simpler terms, it is the value of what you give up or sacrifice when you choose one option over another.",
+        "context": "",
+        "textbook": "Introductory Microeconomics",
+        "score": null
+      },
+      {
+        "timestamp": "2025-08-08 15:41:02.960196",
+        "experience_level": "Intermediate",
+        "question": "Can you give me another example like the one you just mentioned?",
+        "option": "Detailed Answer",
+        "answer": "I'm sorry, but I believe there was a misunderstanding. The previous context was not related to examples, so I cannot provide another similar example.",
+        "context": "",
+        "textbook": "Introductory Microeconomics",
+        "score": null
+      }
+    ]
   }
 ]
