@@ -241,6 +241,9 @@ else:
     st.error("❌ Invalid textbook selection.")
     st.stop()
 db = Qdrant(client=client, collection_name=COLLECTION_NAME, embeddings=embeddings)
+# New: a separate vector store for user-specific Q&A memory
+USER_MEMORY_COLLECTION = "user_memory"  # you've already created this
+memory_db = Qdrant(client=client, collection_name=USER_MEMORY_COLLECTION, embeddings=embeddings)
 
 # ------------------- Prompt Templates -------------------
 PROMPT_BEGINNER_DETAILED = """
@@ -410,29 +413,32 @@ if query and option:
             st.session_state.buffer_memory.chat_memory.add_ai_message(response)
 
         else:
-            # 2) Build two retrievers: user-memory first, then textbook
-            # --- memory retriever (filtered by user context) ---
+            # 2) Build two retrievers: user-memory first (memory_db), then textbook (db)
+
+            # --- memory retriever (on user_memory collection) ---
             user_filter = {
                 "username": st.session_state.get("username"),
                 "textbook": st.session_state.get("textbook"),
                 "experience_level": st.session_state.get("experience_level"),
-                # If you later add a metadata flag for user Q&A embeddings:
-                # "source": "user_memory"
+                # "source": "user_memory",  # uncomment if you indexed this metadata
             }
-            memory_retriever = db.as_retriever(
+            memory_retriever = memory_db.as_retriever(
                 search_type="similarity",
                 search_kwargs={"k": 3, "filter": user_filter}
             )
 
-            # Quick probe: does memory have any hit at all?
-            memory_hits = db.similarity_search_with_score(query, k=1, filter=user_filter)
-            has_memory_match = len(memory_hits) > 0
+            # Quick probe: does user_memory have any hit at all?
+            try:
+                memory_hits = memory_db.similarity_search_with_score(query, k=1, filter=user_filter)
+                has_memory_match = len(memory_hits) > 0
+            except Exception:
+                # If index missing / empty collection, just fall back to textbook
+                has_memory_match = False
 
-            # --- textbook retriever (subject-only) ---
+            # --- textbook retriever (on subject collection), no username filter ---
             textbook_filter = {
                 "textbook": st.session_state.get("textbook"),
-                # If you later add a metadata flag on textbook chunks:
-                # "source": "textbook"
+                # "source": "textbook",  # uncomment if you added this during upload
             }
             textbook_retriever = db.as_retriever(
                 search_type="similarity",
@@ -459,7 +465,6 @@ if query and option:
 
         # 4) Post-process for Concise/Voice option
         if "Concise" in option or "Voice" in option:
-            # Simple compression step based on level & subject
             compress_prompt = (
                 f"You are a tutor for {selected_textbook} with a(n) {level} learner. "
                 f"Rewrite the answer below in no more than 2 sentences, clear and direct, no equations or jargon.\n\n"
@@ -504,20 +509,17 @@ if query and option:
         else:
             for i, d in enumerate(source_docs, 1):
                 meta = d.metadata or {}
-                # 'source' will show as 'unknown' until you add this field in your uploads
-                origin = meta.get("source", "unknown")
-                st.markdown(
-                    f"**[{i}] Source:** `{origin}` — **Textbook:** {meta.get('textbook', 'N/A')}"
-                )
+                origin = meta.get("source", "unknown")  # 'textbook' / 'user_memory' if you set it
+                st.markdown(f"**[{i}] Source:** `{origin}` — **Textbook:** {meta.get('textbook', 'N/A')}")
                 st.write(d.page_content[:800] + ("..." if len(d.page_content) > 800 else ""))
                 st.markdown("---")
+
 
 # ------------------- Exit Button -------------------    
 def embed_and_upload_logs_on_exit(session_log):
     """
-    After a session ends, take all Q&A pairs and upload to Qdrant with metadata
-    that matches your retrieval filters (username, textbook, experience_level).
-    Mark these as user memory so you can route cleanly later.
+    After a session ends, take all Q&A pairs and upload to the *user_memory* collection
+    with metadata that matches your retrieval filters (username, textbook, experience_level).
     """
     from langchain.schema import Document
 
@@ -527,30 +529,29 @@ def embed_and_upload_logs_on_exit(session_log):
 
     new_docs = []
     for entry in interactions:
-        q = entry.get("question", "").strip()
-        a = entry.get("answer", "").strip()
+        q = (entry.get("question") or "").strip()
+        a = (entry.get("answer") or "").strip()
         if not q or not a:
             continue  # skip empty rows
 
-        # Ensure these match the keys you filter on in retrieval
         metadata = {
             "username": session_log.get("username"),
             "textbook": session_log.get("textbook"),
             "experience_level": entry.get("experience_level"),
             "option": entry.get("option"),
-            "timestamp": entry.get("timestamp"),   # you’re now logging UTC upstream
-            "source": "user_memory",               # 🔑 mark these as user memory
+            "timestamp": entry.get("timestamp"),   # upstream should be UTC
+            "source": "user_memory",               # mark as user memory
         }
 
-        # Keep payload reasonable; you can also trim super long answers if needed
         content = f"Q: {q}\nA: {a}"
         new_docs.append(Document(page_content=content, metadata=metadata))
 
     if new_docs:
         try:
-            db.add_documents(new_docs)
+            # 🚨 IMPORTANT: write to the user_memory collection, not the textbook collection
+            memory_db.add_documents(new_docs)
         except Exception as e:
-            st.warning(f"⚠️ Failed to embed session Q&A to Qdrant: {e}")
+            st.warning(f"⚠️ Failed to embed session Q&A to Qdrant user_memory: {e}")
 
 st.markdown("---")
 col1, col2, col3 = st.columns([1, 2, 1])
@@ -569,7 +570,7 @@ with col2:
     """
     st.markdown(custom_exit, unsafe_allow_html=True)
 
-    if st.button("🚪 Exit"):
+    if st.button("🚪 Exit", key="exit_session"):
         # ✅ Embed Q&A into vector DB (user memory)
         if "session_log" in st.session_state:
             embed_and_upload_logs_on_exit(st.session_state["session_log"])
@@ -581,8 +582,9 @@ with col2:
             else:
                 st.warning("⚠️ Failed to upload session log to GitHub.")
 
-        # Optional: clear in-session buffer explicitly
+        # Optional: clear in-session buffer explicitly (fresh start next login)
         # st.session_state.buffer_memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 
         st.session_state.clear()
         st.rerun()
+
