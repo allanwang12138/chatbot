@@ -18,6 +18,7 @@ import re
 import unicodedata
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
+from langchain.schema import BaseMessage
 
 # ------------------- Normalize Response -------------
 def normalize_text(text):
@@ -389,9 +390,21 @@ elif concise_clicked:
 elif voice_clicked:
     option = "Concise Answer + Voice"
 
+# ------------------- MAIN Q&A BLOCK -------------------
+from langchain.schema import BaseMessage  # for robust response -> string handling
+
+def _to_text(x):
+    """Coerce LangChain outputs (dict/AIMessage/str) into a clean string."""
+    if isinstance(x, BaseMessage):
+        return x.content or ""
+    if isinstance(x, dict):
+        return x.get("answer") or x.get("result") or x.get("output_text") or str(x)
+    return str(x)
+
 if query and option:
     level = st.session_state.get("experience_level", "Intermediate")
     selected_textbook = st.session_state.get("textbook", "Introductory Macroeconomics")
+    username = st.session_state.get("username")
 
     model = ChatOpenAI(openai_api_key=OPENAI_API_KEY)
 
@@ -405,20 +418,20 @@ if query and option:
 
         source_docs = []
         if existing_answer:
-            response = existing_answer
+            response_text = existing_answer
             st.info("🔁 Reused answer from previous session.")
 
             # Keep in-session memory coherent for follow-ups
             st.session_state.buffer_memory.chat_memory.add_user_message(raw_query)
-            st.session_state.buffer_memory.chat_memory.add_ai_message(response)
+            st.session_state.buffer_memory.chat_memory.add_ai_message(response_text)
 
         else:
             # 2) Build two retrievers: user_memory first, then textbook
-            # --- memory retriever (on user_memory), STRICT: never unfiltered fallback here ---
+            # --- memory retriever (on user_memory), STRICT filter ---
             user_filter = {
-                "username": st.session_state.get("username"),
-                "textbook": st.session_state.get("textbook"),
-                "experience_level": st.session_state.get("experience_level"),
+                "username": username,
+                "textbook": selected_textbook,
+                "experience_level": level,
                 # "source": "user_memory",  # uncomment if you set this when uploading
             }
             memory_retriever = memory_db.as_retriever(
@@ -429,37 +442,29 @@ if query and option:
             # Probe user_memory. If filter/index is missing or no hits, route to textbook.
             has_memory_match = False
             try:
-                memory_hits = memory_db.similarity_search_with_score(
-                    query, k=1, filter=user_filter
-                )
+                memory_hits = memory_db.similarity_search_with_score(query, k=1, filter=user_filter)
                 has_memory_match = len(memory_hits) > 0
             except Exception as e:
-                # Don’t crash, just route to textbook
                 has_memory_match = False
                 st.info("ℹ️ No personal memory available yet. Using textbook context.")
+                # Optional: print debug
+                # st.caption(f"[debug] memory probe exception: {e}")
 
             # --- textbook retriever (on subject collection) ---
             # Try filtered by textbook; if the collection has zero points with that payload yet,
             # gracefully retry without a filter.
-            textbook_retriever = None
-            used_textbook_filter = True
             try:
-                # quick probe to ensure filtered retrieval works
-                _ = db.similarity_search_with_score(
-                    query, k=1, filter={"textbook": selected_textbook}
-                )
+                _ = db.similarity_search_with_score(query, k=1, filter={"textbook": selected_textbook})
                 textbook_retriever = db.as_retriever(
                     search_type="similarity",
                     search_kwargs={"k": 5, "filter": {"textbook": selected_textbook}},
                 )
             except Exception:
-                # fallback: no filter (first-time upload / missing payload on chunks)
-                used_textbook_filter = False
+                st.info("ℹ️ Textbook filter not ready; falling back to unfiltered textbook search.")
                 textbook_retriever = db.as_retriever(
                     search_type="similarity",
                     search_kwargs={"k": 5},
                 )
-                st.info("ℹ️ Textbook filter not ready; falling back to unfiltered textbook search.")
 
             # 3) Route: prefer user memory if there’s any hit; otherwise textbook
             chosen_retriever = memory_retriever if has_memory_match else textbook_retriever
@@ -470,33 +475,33 @@ if query and option:
                 memory=st.session_state.buffer_memory
             )
 
-            # Use invoke to get sources for UI (predict is deprecated)
+            # Use invoke to get sources for UI
             result = qa_chain.invoke({"question": query})
-            # LangChain returns dict with "answer" and "source_documents"
-            response = result["answer"] if isinstance(result, dict) else str(result)
-            source_docs = (result.get("source_documents", []) if isinstance(result, dict) else []) or []
+            response_text = _to_text(result)
+            if isinstance(result, dict):
+                source_docs = result.get("source_documents", []) or []
 
             # Keep buffer memory updated
             st.session_state.buffer_memory.chat_memory.add_user_message(raw_query)
-            st.session_state.buffer_memory.chat_memory.add_ai_message(response)
+            st.session_state.buffer_memory.chat_memory.add_ai_message(response_text)
 
         # 4) Post-process for Concise/Voice option
         if "Concise" in option or "Voice" in option:
             compress_prompt = (
                 f"You are a tutor for {selected_textbook} with a(n) {level} learner. "
-                f"Rewrite the answer below in no more than 2 sentences, clear and direct, no equations or jargon.\n\n"
-                f"Answer:\n{response}"
+                f"Rewrite the answer below in no more than 2 sentences, clear and direct, "
+                f"no equations or jargon.\n\nAnswer:\n{response_text}"
             )
-            # use invoke instead of predict (predict is deprecated)
-            response = model.invoke(compress_prompt)
+            compressed = model.invoke(compress_prompt)
+            response_text = _to_text(compressed)
 
         # 5) Log interaction (use UTC for consistency)
         st.session_state["session_log"]["interactions"].append({
             "timestamp": str(datetime.datetime.utcnow()),
-            "experience_level": st.session_state.get("experience_level", "Intermediate"),
+            "experience_level": level,
             "question": raw_query,
             "option": option,
-            "answer": response,
+            "answer": response_text,
             "context": "",  # we rely on source_docs now
             "textbook": selected_textbook,
             "score": None
@@ -509,7 +514,7 @@ if query and option:
             speech_response = openai.audio.speech.create(
                 model="tts-1",
                 voice=voice_choice,
-                input=response
+                input=response_text
             )
             audio_path = "output.mp3"
             with open(audio_path, "wb") as f:
@@ -518,7 +523,7 @@ if query and option:
             st.audio(audio_file.read(), format="audio/mp3")
     else:
         st.markdown("### 📘 Answer")
-        st.write(response)
+        st.write(response_text)
 
     # 7) Show supporting context that the chain actually used
     with st.expander("📚 Show Supporting Context"):
@@ -528,9 +533,7 @@ if query and option:
             for i, d in enumerate(source_docs, 1):
                 meta = d.metadata or {}
                 origin = meta.get("source", "unknown")  # 'textbook' / 'user_memory' if you set it
-                st.markdown(
-                    f"**[{i}] Source:** `{origin}` — **Textbook:** {meta.get('textbook', 'N/A')}"
-                )
+                st.markdown(f"**[{i}] Source:** `{origin}` — **Textbook:** {meta.get('textbook', 'N/A')}")
                 st.write(d.page_content[:800] + ("..." if len(d.page_content) > 800 else ""))
                 st.markdown("---")
 
