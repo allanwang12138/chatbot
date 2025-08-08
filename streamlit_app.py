@@ -408,44 +408,60 @@ if query and option:
             response = existing_answer
             st.info("🔁 Reused answer from previous session.")
 
-            # Add to in-session memory so follow-ups reference it
+            # Keep in-session memory coherent for follow-ups
             st.session_state.buffer_memory.chat_memory.add_user_message(raw_query)
             st.session_state.buffer_memory.chat_memory.add_ai_message(response)
 
         else:
-            # 2) Build two retrievers: user-memory first (memory_db), then textbook (db)
-
-            # --- memory retriever (on user_memory collection) ---
+            # 2) Build two retrievers: user_memory first, then textbook
+            # --- memory retriever (on user_memory), STRICT: never unfiltered fallback here ---
             user_filter = {
                 "username": st.session_state.get("username"),
                 "textbook": st.session_state.get("textbook"),
                 "experience_level": st.session_state.get("experience_level"),
-                # "source": "user_memory",  # uncomment if you indexed this metadata
+                # "source": "user_memory",  # uncomment if you set this when uploading
             }
             memory_retriever = memory_db.as_retriever(
                 search_type="similarity",
                 search_kwargs={"k": 3, "filter": user_filter}
             )
 
-            # Quick probe: does user_memory have any hit at all?
+            # Probe user_memory. If filter/index is missing or no hits, route to textbook.
+            has_memory_match = False
             try:
-                memory_hits = memory_db.similarity_search_with_score(query, k=1, filter=user_filter)
+                memory_hits = memory_db.similarity_search_with_score(
+                    query, k=1, filter=user_filter
+                )
                 has_memory_match = len(memory_hits) > 0
-            except Exception:
-                # If index missing / empty collection, just fall back to textbook
+            except Exception as e:
+                # Don’t crash, just route to textbook
                 has_memory_match = False
+                st.info("ℹ️ No personal memory available yet. Using textbook context.")
 
-            # --- textbook retriever (on subject collection), no username filter ---
-            textbook_filter = {
-                "textbook": st.session_state.get("textbook"),
-                # "source": "textbook",  # uncomment if you added this during upload
-            }
-            textbook_retriever = db.as_retriever(
-                search_type="similarity",
-                search_kwargs={"k": 5, "filter": textbook_filter}
-            )
+            # --- textbook retriever (on subject collection) ---
+            # Try filtered by textbook; if the collection has zero points with that payload yet,
+            # gracefully retry without a filter.
+            textbook_retriever = None
+            used_textbook_filter = True
+            try:
+                # quick probe to ensure filtered retrieval works
+                _ = db.similarity_search_with_score(
+                    query, k=1, filter={"textbook": selected_textbook}
+                )
+                textbook_retriever = db.as_retriever(
+                    search_type="similarity",
+                    search_kwargs={"k": 5, "filter": {"textbook": selected_textbook}},
+                )
+            except Exception:
+                # fallback: no filter (first-time upload / missing payload on chunks)
+                used_textbook_filter = False
+                textbook_retriever = db.as_retriever(
+                    search_type="similarity",
+                    search_kwargs={"k": 5},
+                )
+                st.info("ℹ️ Textbook filter not ready; falling back to unfiltered textbook search.")
 
-            # 3) Route: user memory if any hit; otherwise textbook
+            # 3) Route: prefer user memory if there’s any hit; otherwise textbook
             chosen_retriever = memory_retriever if has_memory_match else textbook_retriever
 
             qa_chain = ConversationalRetrievalChain.from_llm(
@@ -454,12 +470,13 @@ if query and option:
                 memory=st.session_state.buffer_memory
             )
 
-            # Use invoke to get sources for UI
+            # Use invoke to get sources for UI (predict is deprecated)
             result = qa_chain.invoke({"question": query})
-            response = result["answer"]
-            source_docs = result.get("source_documents", [])
+            # LangChain returns dict with "answer" and "source_documents"
+            response = result["answer"] if isinstance(result, dict) else str(result)
+            source_docs = (result.get("source_documents", []) if isinstance(result, dict) else []) or []
 
-            # Add the new Q&A to buffer memory so follow-ups work
+            # Keep buffer memory updated
             st.session_state.buffer_memory.chat_memory.add_user_message(raw_query)
             st.session_state.buffer_memory.chat_memory.add_ai_message(response)
 
@@ -470,7 +487,8 @@ if query and option:
                 f"Rewrite the answer below in no more than 2 sentences, clear and direct, no equations or jargon.\n\n"
                 f"Answer:\n{response}"
             )
-            response = model.predict(compress_prompt)
+            # use invoke instead of predict (predict is deprecated)
+            response = model.invoke(compress_prompt)
 
         # 5) Log interaction (use UTC for consistency)
         st.session_state["session_log"]["interactions"].append({
@@ -510,48 +528,64 @@ if query and option:
             for i, d in enumerate(source_docs, 1):
                 meta = d.metadata or {}
                 origin = meta.get("source", "unknown")  # 'textbook' / 'user_memory' if you set it
-                st.markdown(f"**[{i}] Source:** `{origin}` — **Textbook:** {meta.get('textbook', 'N/A')}")
+                st.markdown(
+                    f"**[{i}] Source:** `{origin}` — **Textbook:** {meta.get('textbook', 'N/A')}"
+                )
                 st.write(d.page_content[:800] + ("..." if len(d.page_content) > 800 else ""))
                 st.markdown("---")
 
 
-# ------------------- Exit Button -------------------    
+# ------------------- Exit Button -------------------
 def embed_and_upload_logs_on_exit(session_log):
     """
-    After a session ends, take all Q&A pairs and upload to the *user_memory* collection
-    with metadata that matches your retrieval filters (username, textbook, experience_level).
+    Send session Q&A to the user_memory collection with payload fields used by retrieval.
     """
     from langchain.schema import Document
 
-    interactions = session_log.get("interactions", [])
+    interactions = session_log.get("interactions", []) or []
     if not interactions:
-        return  # nothing to upload
+        return 0  # nothing to upload
+
+    if "uploaded_to_memory" in st.session_state and st.session_state["uploaded_to_memory"]:
+        return 0  # already uploaded this session
+
+    if "memory_db" not in globals():
+        st.warning("⚠️ user_memory vector store is not initialized; skipping memory upload.")
+        return 0
 
     new_docs = []
     for entry in interactions:
         q = (entry.get("question") or "").strip()
         a = (entry.get("answer") or "").strip()
         if not q or not a:
-            continue  # skip empty rows
+            continue
+
+        # keep payloads small (helps cost & speed)
+        MAX_CHARS = 3000
+        content = f"Q: {q}\nA: {a}"
+        if len(content) > MAX_CHARS:
+            content = content[:MAX_CHARS] + " …"
 
         metadata = {
             "username": session_log.get("username"),
             "textbook": session_log.get("textbook"),
             "experience_level": entry.get("experience_level"),
             "option": entry.get("option"),
-            "timestamp": entry.get("timestamp"),   # upstream should be UTC
-            "source": "user_memory",               # mark as user memory
+            "timestamp": entry.get("timestamp"),  # UTC upstream
+            "source": "user_memory",
         }
-
-        content = f"Q: {q}\nA: {a}"
         new_docs.append(Document(page_content=content, metadata=metadata))
 
+    uploaded = 0
     if new_docs:
         try:
-            # 🚨 IMPORTANT: write to the user_memory collection, not the textbook collection
             memory_db.add_documents(new_docs)
+            uploaded = len(new_docs)
+            st.session_state["uploaded_to_memory"] = True
         except Exception as e:
             st.warning(f"⚠️ Failed to embed session Q&A to Qdrant user_memory: {e}")
+
+    return uploaded
 
 st.markdown("---")
 col1, col2, col3 = st.columns([1, 2, 1])
@@ -571,20 +605,22 @@ with col2:
     st.markdown(custom_exit, unsafe_allow_html=True)
 
     if st.button("🚪 Exit", key="exit_session"):
-        # ✅ Embed Q&A into vector DB (user memory)
+        uploaded_count = 0
         if "session_log" in st.session_state:
-            embed_and_upload_logs_on_exit(st.session_state["session_log"])
+            # 1) Embed to user_memory
+            uploaded_count = embed_and_upload_logs_on_exit(st.session_state["session_log"])
 
-            # ✅ Push session log to GitHub (record-keeping)
-            success = append_log_to_github(st.session_state["session_log"])
-            if success:
-                st.success("📤 Session log uploaded to GitHub.")
-            else:
-                st.warning("⚠️ Failed to upload session log to GitHub.")
+            # 2) Always push the JSON log (record-keeping)
+            try:
+                success = append_log_to_github(st.session_state["session_log"])
+                if success:
+                    st.success(f"📤 Session log uploaded to GitHub. (Memory docs: {uploaded_count})")
+                else:
+                    st.warning("⚠️ Failed to upload session log to GitHub.")
+            except Exception as e:
+                st.warning(f"⚠️ GitHub upload error: {e}")
 
-        # Optional: clear in-session buffer explicitly (fresh start next login)
-        # st.session_state.buffer_memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
-
+        # Fresh start next login (buffer is rebuilt on login)
         st.session_state.clear()
         st.rerun()
 
