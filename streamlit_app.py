@@ -184,22 +184,30 @@ def login():
             st.markdown(f"**Assigned Textbook:** {assigned_subject}")
 
             # ✅ Correctly map textbook to experience level field
-            subject_key_map = {
-                "Macroeconomics": "macro_level",
-                "Microeconomics": "micro_level",
-                "Stats": "stats_level"
-            }
-            level_key = subject_key_map.get(assigned_subject.replace("Introductory ", "").split()[0], "macro_level")
+            subj = assigned_subject.lower()
+            if "micro" in subj:
+                level_key = "micro_level"
+            elif "stat" in subj:
+                level_key = "stats_level"
+            else:
+                level_key = "macro_level"
             level = user.get(level_key, "Intermediate")
 
             st.session_state["authenticated"] = True
-            st.cache_data.clear()  # Clears old logs
-            SESSION_LOGS = load_existing_logs()  # Reload from GitHub
+            global SESSION_LOGS
+            st.cache_data.clear()
+            SESSION_LOGS = load_existing_logs()
             st.session_state["username"] = username
             st.session_state["voice"] = user["voice"]
             st.session_state["textbook"] = assigned_subject
             st.session_state["experience_level"] = level
             st.session_state["chat_history_enabled"] = user.get("chat_history", False)
+
+            st.session_state.buffer_memory = ConversationBufferMemory(
+                memory_key="chat_history",
+                return_messages=True
+            )
+
             st.session_state["session_log"] = {
                 "username": username,
                 "login_time": str(datetime.datetime.now()),
@@ -379,144 +387,170 @@ elif voice_clicked:
     option = "Concise Answer + Voice"
 
 if query and option:
-    with st.spinner("🔍 Searching for relevant context..."):
-        raw_docs = db.similarity_search_with_score(query, k=5)
-        docs = [(doc, score) for doc, score in raw_docs if doc.page_content.strip()]
-        
-        # Define a minimum score threshold for relevance
-        MIN_SCORE = 0.75
-        relevant_docs = [(doc, score) for doc, score in docs if score >= MIN_SCORE]
+    level = st.session_state.get("experience_level", "Intermediate")
+    selected_textbook = st.session_state.get("textbook", "Introductory Macroeconomics")
 
-        if relevant_docs:
-            top_doc, top_score = sorted(relevant_docs, key=lambda x: x[1], reverse=True)[0]
-            context_text = top_doc.page_content
-        else:
-            context_text = ""
-            top_score = None
+    model = ChatOpenAI(openai_api_key=OPENAI_API_KEY)
 
-    if context_text:
-        # Format prompt based on selected type
-        level = st.session_state.get("experience_level", "Intermediate")
-        
-        if option == "Concise Answer" or "Voice" in option:
-            if level == "Beginner":
-                prompt_template = ChatPromptTemplate.from_template(PROMPT_BEGINNER_CONCISE)
-            elif level == "Advanced":
-                prompt_template = ChatPromptTemplate.from_template(PROMPT_ADVANCED_CONCISE)
-            else:
-                prompt_template = ChatPromptTemplate.from_template(PROMPT_INTERMEDIATE_CONCISE)
-        else:
-            if level == "Beginner":
-                prompt_template = ChatPromptTemplate.from_template(PROMPT_BEGINNER_DETAILED)
-            elif level == "Advanced":
-                prompt_template = ChatPromptTemplate.from_template(PROMPT_ADVANCED_DETAILED)
-            else:
-                prompt_template = ChatPromptTemplate.from_template(PROMPT_INTERMEDIATE_DETAILED)
-        prompt = prompt_template.format(
-            context=context_text,
-            question=query,
-            textbook=selected_textbook
+    with st.spinner("💬 Generating answer..."):
+        answer_type = "Concise" if ("Concise" in option or "Voice" in option) else "Detailed"
+
+        # 1) Try reuse from logs (TF-IDF)
+        existing_answer = find_similar_answer(
+            SESSION_LOGS, query, level, selected_textbook, answer_type
         )
-        model = ChatOpenAI(openai_api_key=OPENAI_API_KEY)
-        with st.spinner("💬 Generating answer..."):
-            answer_type = "Concise" if "Concise" in option or "Voice" in option else "Detailed"
-            existing_answer = find_similar_answer(
-                SESSION_LOGS, query, level, selected_textbook, answer_type
-            )
-            if existing_answer:
-                response = existing_answer
-                st.info("🔁 Reused answer from previous session.")
-            else:
-                retriever = db.as_retriever(
-                    search_type="similarity",
-                    search_kwargs={
-                        "k": 5,
-                        "filter": {
-                            "username": st.session_state.get("username"),
-                            "textbook": st.session_state.get("textbook"),
-                            "experience_level": st.session_state.get("experience_level")
-                        }
-                    }
-                )
 
-                qa_chain = ConversationalRetrievalChain.from_llm(
-                    llm=model,
-                    retriever=retriever,
-                    memory=st.session_state.buffer_memory
-                )
-                
-                response = qa_chain.run(query)
+        source_docs = []
+        if existing_answer:
+            response = existing_answer
+            st.info("🔁 Reused answer from previous session.")
 
-            st.session_state["session_log"]["interactions"].append({
-                "timestamp": str(datetime.datetime.now()),
-                "experience_level": st.session_state.get("experience_level", "Intermediate"),
-                "question": raw_query,
-                "option": option,
-                "answer": response,
-                "context": context_text,
-                "textbook": st.session_state.get("textbook", "Introductory Macroeconomics"),
-                "score": top_score
-            })
+            # Add to in-session memory so follow-ups reference it
+            st.session_state.buffer_memory.chat_memory.add_user_message(raw_query)
+            st.session_state.buffer_memory.chat_memory.add_ai_message(response)
 
-        # Voice only
-        if "Voice" in option:
-            voice_choice = st.session_state.get("voice", "alloy")
-            with st.spinner(f"🎙️ Generating voice with '{voice_choice}'..."):
-                speech_response = openai.audio.speech.create(
-                    model="tts-1",
-                    voice=voice_choice,
-                    input=response
-                )
-                audio_path = "output.mp3"
-                with open(audio_path, "wb") as f:
-                    f.write(speech_response.read())
-                audio_file = open(audio_path, "rb")
-                st.audio(audio_file.read(), format="audio/mp3")
         else:
-            st.markdown("### 📘 Answer")
-            st.write(response)
+            # 2) Build two retrievers: user-memory first, then textbook
+            # --- memory retriever (filtered by user context) ---
+            user_filter = {
+                "username": st.session_state.get("username"),
+                "textbook": st.session_state.get("textbook"),
+                "experience_level": st.session_state.get("experience_level"),
+                # If you later add a metadata flag for user Q&A embeddings:
+                # "source": "user_memory"
+            }
+            memory_retriever = db.as_retriever(
+                search_type="similarity",
+                search_kwargs={"k": 3, "filter": user_filter}
+            )
 
-        with st.expander("📚 Show Supporting Context from Textbook"):
-            st.markdown(f"**Most Relevant Chunk — Score: {top_score:.2f}**")
-            st.write(context_text)
+            # Quick probe: does memory have any hit at all?
+            memory_hits = db.similarity_search_with_score(query, k=1, filter=user_filter)
+            has_memory_match = len(memory_hits) > 0
 
-    else:
-        st.warning("⚠️ This question appears to be outside the scope of the textbook.")
-        # Log out-of-scope question
+            # --- textbook retriever (subject-only) ---
+            textbook_filter = {
+                "textbook": st.session_state.get("textbook"),
+                # If you later add a metadata flag on textbook chunks:
+                # "source": "textbook"
+            }
+            textbook_retriever = db.as_retriever(
+                search_type="similarity",
+                search_kwargs={"k": 5, "filter": textbook_filter}
+            )
+
+            # 3) Route: user memory if any hit; otherwise textbook
+            chosen_retriever = memory_retriever if has_memory_match else textbook_retriever
+
+            qa_chain = ConversationalRetrievalChain.from_llm(
+                llm=model,
+                retriever=chosen_retriever,
+                memory=st.session_state.buffer_memory
+            )
+
+            # Use invoke to get sources for UI
+            result = qa_chain.invoke({"question": query})
+            response = result["answer"]
+            source_docs = result.get("source_documents", [])
+
+            # Add the new Q&A to buffer memory so follow-ups work
+            st.session_state.buffer_memory.chat_memory.add_user_message(raw_query)
+            st.session_state.buffer_memory.chat_memory.add_ai_message(response)
+
+        # 4) Post-process for Concise/Voice option
+        if "Concise" in option or "Voice" in option:
+            # Simple compression step based on level & subject
+            compress_prompt = (
+                f"You are a tutor for {selected_textbook} with a(n) {level} learner. "
+                f"Rewrite the answer below in no more than 2 sentences, clear and direct, no equations or jargon.\n\n"
+                f"Answer:\n{response}"
+            )
+            response = model.predict(compress_prompt)
+
+        # 5) Log interaction (use UTC for consistency)
         st.session_state["session_log"]["interactions"].append({
-            "timestamp": str(datetime.datetime.now()),
+            "timestamp": str(datetime.datetime.utcnow()),
             "experience_level": st.session_state.get("experience_level", "Intermediate"),
             "question": raw_query,
             "option": option,
-            "answer": "⚠️ This question appears to be outside the scope of the textbook.",
-            "context": "",
+            "answer": response,
+            "context": "",  # we rely on source_docs now
             "textbook": selected_textbook,
             "score": None
         })
+
+    # 6) Voice only
+    if "Voice" in option:
+        voice_choice = st.session_state.get("voice", "alloy")
+        with st.spinner(f"🎙️ Generating voice with '{voice_choice}'..."):
+            speech_response = openai.audio.speech.create(
+                model="tts-1",
+                voice=voice_choice,
+                input=response
+            )
+            audio_path = "output.mp3"
+            with open(audio_path, "wb") as f:
+                f.write(speech_response.read())
+            audio_file = open(audio_path, "rb")
+            st.audio(audio_file.read(), format="audio/mp3")
+    else:
+        st.markdown("### 📘 Answer")
+        st.write(response)
+
+    # 7) Show supporting context that the chain actually used
+    with st.expander("📚 Show Supporting Context"):
+        if not source_docs:
+            st.write("No supporting documents returned.")
+        else:
+            for i, d in enumerate(source_docs, 1):
+                meta = d.metadata or {}
+                # 'source' will show as 'unknown' until you add this field in your uploads
+                origin = meta.get("source", "unknown")
+                st.markdown(
+                    f"**[{i}] Source:** `{origin}` — **Textbook:** {meta.get('textbook', 'N/A')}"
+                )
+                st.write(d.page_content[:800] + ("..." if len(d.page_content) > 800 else ""))
+                st.markdown("---")
 
 # ------------------- Exit Button -------------------    
 def embed_and_upload_logs_on_exit(session_log):
     """
     After a session ends, take all Q&A pairs and upload to Qdrant with metadata
+    that matches your retrieval filters (username, textbook, experience_level).
+    Mark these as user memory so you can route cleanly later.
     """
     from langchain.schema import Document
 
+    interactions = session_log.get("interactions", [])
+    if not interactions:
+        return  # nothing to upload
+
     new_docs = []
-    for entry in session_log.get("interactions", []):
-        q = entry["question"]
-        a = entry["answer"]
+    for entry in interactions:
+        q = entry.get("question", "").strip()
+        a = entry.get("answer", "").strip()
+        if not q or not a:
+            continue  # skip empty rows
+
+        # Ensure these match the keys you filter on in retrieval
         metadata = {
-            "username": session_log["username"],
-            "textbook": session_log["textbook"],
-            "experience_level": entry["experience_level"],
-            "option": entry["option"],
-            "timestamp": entry["timestamp"]
+            "username": session_log.get("username"),
+            "textbook": session_log.get("textbook"),
+            "experience_level": entry.get("experience_level"),
+            "option": entry.get("option"),
+            "timestamp": entry.get("timestamp"),   # you’re now logging UTC upstream
+            "source": "user_memory",               # 🔑 mark these as user memory
         }
+
+        # Keep payload reasonable; you can also trim super long answers if needed
         content = f"Q: {q}\nA: {a}"
         new_docs.append(Document(page_content=content, metadata=metadata))
 
     if new_docs:
-        db.add_documents(new_docs)
+        try:
+            db.add_documents(new_docs)
+        except Exception as e:
+            st.warning(f"⚠️ Failed to embed session Q&A to Qdrant: {e}")
 
 st.markdown("---")
 col1, col2, col3 = st.columns([1, 2, 1])
@@ -536,16 +570,19 @@ with col2:
     st.markdown(custom_exit, unsafe_allow_html=True)
 
     if st.button("🚪 Exit"):
-        # ✅ Embed Q&A into vector DB
+        # ✅ Embed Q&A into vector DB (user memory)
         if "session_log" in st.session_state:
             embed_and_upload_logs_on_exit(st.session_state["session_log"])
 
-            # ✅ Push session log to GitHub
+            # ✅ Push session log to GitHub (record-keeping)
             success = append_log_to_github(st.session_state["session_log"])
             if success:
                 st.success("📤 Session log uploaded to GitHub.")
             else:
-                st.warning("⚠️ Failed to upload session log.")
+                st.warning("⚠️ Failed to upload session log to GitHub.")
+
+        # Optional: clear in-session buffer explicitly
+        # st.session_state.buffer_memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 
         st.session_state.clear()
         st.rerun()
