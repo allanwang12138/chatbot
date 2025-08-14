@@ -93,3 +93,35 @@ for TEXTBOOK_LABEL in textbook_name:
     )
 
     print(f"🎉 Uploaded textbook chunks to Qdrant. Created {COLLECTION_NAME}")
+
+
+# create collections for user memory
+COLLECTION_NAME = "user_memory"
+
+client = QdrantClient(url=QDRANT_URL, api_key=QDRANT_API_KEY)
+
+existing = [c.name for c in client.get_collections().collections]
+if COLLECTION_NAME in existing:
+    print(f"⚠️ Collection '{COLLECTION_NAME}' exists. Deleting and recreating...")
+    client.delete_collection(collection_name=COLLECTION_NAME)
+
+client.create_collection(
+    collection_name=COLLECTION_NAME,
+    vectors_config=VectorParams(size=1536, distance=Distance.COSINE),
+)
+
+# Index fields you'll filter on
+headers = {"Content-Type": "application/json", "api-key": QDRANT_API_KEY}
+for field in ["username", "textbook", "experience_level", "source"]:
+    resp = requests.put(
+        f"{QDRANT_URL}/collections/{COLLECTION_NAME}/index",
+        headers=headers,
+        json={"field_name": field, "field_schema": "keyword"},
+        timeout=30,
+    )
+    if resp.status_code == 200:
+        print(f"✅ Indexed field: {field}")
+    else:
+        print(f"❌ Failed to index field: {field} -> {resp.status_code} {resp.text}")
+
+print("🎉 Created 'user_memory' collection (empty, ready for Streamlit inserts).")
