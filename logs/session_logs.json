@@ -1046,5 +1046,33 @@
         "score": null
       }
     ]
+  },
+  {
+    "username": "user006",
+    "login_time": "2025-08-15 04:20:17.491682",
+    "experience_level": "Advanced",
+    "textbook": "MATHEMATICS Textbook for Class XI",
+    "interactions": [
+      {
+        "timestamp": "2025-08-15 04:22:53.199463",
+        "experience_level": "Advanced",
+        "question": "can you explain what is Venn diagrams",
+        "option": "Detailed Answer",
+        "answer": "Venn diagrams are graphical representations of sets using circles and rectangles. The universal set is typically represented by a rectangle, and subsets are shown using circles within the rectangle. The elements of the sets are written inside their respective circles. Venn diagrams help visually represent relationships between sets, such as union, intersection, and subsets. They are named after the English logician, John Venn.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XI",
+        "score": null
+      },
+      {
+        "timestamp": "2025-08-15 04:23:22.953662",
+        "experience_level": "Advanced",
+        "question": "can you give me more examples on that?",
+        "option": "Detailed Answer",
+        "answer": "I don't have access to specific examples of Venn diagrams beyond the context provided.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XI",
+        "score": null
+      }
+    ]
   }
 ]
