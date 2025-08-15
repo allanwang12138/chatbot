@@ -153,21 +153,44 @@ def append_log_to_github(log_entry):
 
 
 # ------------------- Load credentials with voice assignment -------------------
+# ------------------- Load credentials (dynamic {subject}_level) -------------------
+import re
+
+def _slugify(name: str) -> str:
+    s = name.lower()
+    s = re.sub(r"[^a-z0-9]+", "_", s)
+    s = re.sub(r"_+", "_", s).strip("_")
+    return s
+
 @st.cache_data
 def load_credentials():
-    df = pd.read_csv("sample_credentials_with_levels.csv")  # updated filename
-    return {
-        row["username"]: {
-            "password": row["password"],
-            "voice": row["voice"],
-            "macro_level": row["macro_level"],
-            "micro_level": row["micro_level"],
-            "stats_level": row["stats_level"],
-            "chat_history": str(row["chat_history"]).strip().lower() == "yes",
-            "assigned_subject": row["assigned_subject"].strip()
+    df = pd.read_csv("sample_credentials_with_levels.csv")
+
+    creds = {}
+    for _, row in df.iterrows():
+        username = str(row["username"]).strip()
+        assigned_subject = str(row["assigned_subject"]).strip()
+
+        # Dynamic level column is now "{subject}_level"
+        dyn_key = f"{_slugify(assigned_subject)}_level"
+        level_val = row[dyn_key] if dyn_key in row and pd.notna(row[dyn_key]) else "Intermediate"
+
+        chat_hist = str(row.get("chat_history", "")).strip().lower() == "yes"
+
+        creds[username] = {
+            "password": str(row["password"]),
+            "voice": str(row["voice"]),
+            "assigned_subject": assigned_subject,
+            "experience_level": str(level_val),
+            "chat_history": chat_hist,
+            "dynamic_level_key": dyn_key,  # optional: useful for debugging
         }
-        for _, row in df.iterrows()
-    }
+
+        if dyn_key not in row:
+            st.warning(f"Level column '{dyn_key}' not found for user '{username}'. Defaulting to 'Intermediate'.")
+
+    return creds
+
 CREDENTIALS = load_credentials()
 
 def login():
@@ -177,33 +200,27 @@ def login():
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
 
-
     if st.button("Login"):
         user = CREDENTIALS.get(username)
         if user and user["password"] == password:
-            assigned_subject = user.get("assigned_subject", "Introductory Macroeconomics")
-            st.markdown(f"**Assigned Textbook:** {assigned_subject}")
-
-            # ✅ Correctly map textbook to experience level field
-            subj = assigned_subject.lower()
-            if "micro" in subj:
-                level_key = "micro_level"
-            elif "stat" in subj:
-                level_key = "stats_level"
-            else:
-                level_key = "macro_level"
-            level = user.get(level_key, "Intermediate")
+            assigned_subject = user["assigned_subject"]
+            level = user["experience_level"]  # already resolved dynamically above
 
             st.session_state["authenticated"] = True
+
+            # Refresh logs (GitHub)
             global SESSION_LOGS
             st.cache_data.clear()
             SESSION_LOGS = load_existing_logs()
+
+            # Persist session info
             st.session_state["username"] = username
             st.session_state["voice"] = user["voice"]
             st.session_state["textbook"] = assigned_subject
             st.session_state["experience_level"] = level
-            st.session_state["chat_history_enabled"] = user.get("chat_history", False)
+            st.session_state["chat_history_enabled"] = user["chat_history"]
 
+            # Fresh in-session memory
             st.session_state.buffer_memory = ConversationBufferMemory(
                 memory_key="chat_history",
                 return_messages=True
@@ -216,7 +233,8 @@ def login():
                 "textbook": assigned_subject,
                 "interactions": []
             }
-            st.success(f"✅ Login successful. Welcome, {username}!")
+
+            st.success(f"✅ Login successful. Assigned textbook: **{assigned_subject}**")
             st.rerun()
         else:
             st.error("❌ Invalid username or password. Please try again.")
@@ -230,21 +248,40 @@ if "authenticated" not in st.session_state or not st.session_state["authenticate
 # ------------------- Qdrant Setup -------------------
 embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 client = QdrantClient(url=QDRANT_URL, api_key=QDRANT_API_KEY)
-# Select collection based on textbook choice
+
+# Map human textbook names -> Qdrant collection names
+COLLECTION_MAP = {
+    "Introductory Macroeconomics": "introductory_macroeconomics_collection",
+    "Introductory Microeconomics": "introductory_microeconomics_collection",
+    "Statistics For Economics": "statistics_for_economics_collection",
+    "MATHEMATICS Textbook for Class IX": "mathematics_textbook_for_class_ix_collection",
+    "MATHEMATICS Textbook for Class X": "mathematics_textbook_for_class_x_collection",
+    "MATHEMATICS Textbook for Class XI": "mathematics_textbook_for_class_xi_collection",
+    "MATHEMATICS Textbook for Class XII PART I": "mathematics_textbook_for_class_xii_part_i_collection",
+    "MATHEMATICS Textbook for Class XII PART II": "mathematics_textbook_for_class_xii_part_ii_collection",
+}
+
 selected_textbook = st.session_state.get("textbook", "Introductory Macroeconomics")
-if selected_textbook == "Introductory Macroeconomics":
-    COLLECTION_NAME = "intro_macro_collection"
-elif selected_textbook == "Introductory Microeconomics":
-    COLLECTION_NAME = "intro_micro_collection"
-elif selected_textbook == "Statistics For Economics":
-    COLLECTION_NAME = "stats_econ_collection"
-else:
-    st.error("❌ Invalid textbook selection.")
+COLLECTION_NAME = COLLECTION_MAP.get(selected_textbook)
+
+if not COLLECTION_NAME:
+    st.error(f"❌ No collection configured for textbook: {selected_textbook}")
     st.stop()
+
+# Textbook vector store
 db = Qdrant(client=client, collection_name=COLLECTION_NAME, embeddings=embeddings)
-# New: a separate vector store for user-specific Q&A memory
-USER_MEMORY_COLLECTION = "user_memory"  # you've already created this
+
+# User-specific memory vector store (shared across all subjects)
+USER_MEMORY_COLLECTION = "user_memory"
 memory_db = Qdrant(client=client, collection_name=USER_MEMORY_COLLECTION, embeddings=embeddings)
+
+# (Optional) small debug
+try:
+    info = client.get_collection(COLLECTION_NAME)
+    st.caption(f"🗂️ Using collection **{COLLECTION_NAME}** · status: Active")
+except Exception:
+    st.caption(f"🗂️ Using collection **{COLLECTION_NAME}**")
+
 
 # ------------------- Prompt Templates -------------------
 PROMPT_BEGINNER_DETAILED = """
