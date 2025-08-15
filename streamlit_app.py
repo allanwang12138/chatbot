@@ -30,7 +30,8 @@ def normalize_text(text):
 if "buffer_memory" not in st.session_state:
     st.session_state.buffer_memory = ConversationBufferMemory(
         memory_key="chat_history",
-        return_messages=True
+        return_messages=True,
+        output_key="answer",
     )
 
 # ------------------- Load secrets -------------------
@@ -223,7 +224,8 @@ def login():
             # Fresh in-session memory
             st.session_state.buffer_memory = ConversationBufferMemory(
                 memory_key="chat_history",
-                return_messages=True
+                return_messages=True,
+                output_key="answer",
             )
 
             st.session_state["session_log"] = {
@@ -510,13 +512,13 @@ if query and option:
                 llm=model,
                 retriever=chosen_retriever,
                 memory=st.session_state.buffer_memory,
-                return_source_documents=True
+                return_source_documents=True,
             )
 
             # Use invoke to get sources for UI
             result = qa_chain.invoke({"question": query})
-            response_text = _to_text(result)
-            source_docs = []
+            response_text = result["answer"]
+            source_docs = result.get("source_documents", []) or []
             if isinstance(result, dict) and "source_documents" in result:
                 source_docs = result["source_documents"] or []
 
