@@ -509,14 +509,16 @@ if query and option:
             qa_chain = ConversationalRetrievalChain.from_llm(
                 llm=model,
                 retriever=chosen_retriever,
-                memory=st.session_state.buffer_memory
+                memory=st.session_state.buffer_memory,
+                return_source_documents=True
             )
 
             # Use invoke to get sources for UI
             result = qa_chain.invoke({"question": query})
             response_text = _to_text(result)
-            if isinstance(result, dict):
-                source_docs = result.get("source_documents", []) or []
+            source_docs = []
+            if isinstance(result, dict) and "source_documents" in result:
+                source_docs = result["source_documents"] or []
 
             # Keep buffer memory updated
             st.session_state.buffer_memory.chat_memory.add_user_message(raw_query)
