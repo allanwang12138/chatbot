@@ -1206,5 +1206,23 @@
         "score": null
       }
     ]
+  },
+  {
+    "username": "user021",
+    "login_time": "2025-08-15 17:49:01.821625",
+    "experience_level": "Advanced",
+    "textbook": "MATHEMATICS Textbook for Class XII PART I",
+    "interactions": [
+      {
+        "timestamp": "2025-08-15 17:49:51.616463",
+        "experience_level": "Advanced",
+        "question": "what is matrices",
+        "option": "Detailed Answer",
+        "answer": "Matrices are ordered rectangular arrays of numbers or functions. They are essential in various branches of mathematics and are used as powerful tools to simplify calculations in comparison to other methods. Matrices have applications in fields such as physics, cryptography, genetics, economics, sociology, psychology, and industrial management. They can represent physical operations like magnification, rotation, and reflection through a plane, and come in different types like column matrices, row matrices, and zero matrices.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      }
+    ]
   }
 ]
