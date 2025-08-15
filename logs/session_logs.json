@@ -1074,5 +1074,43 @@
         "score": null
       }
     ]
+  },
+  {
+    "username": "user006",
+    "login_time": "2025-08-15 16:02:01.688324",
+    "experience_level": "Advanced",
+    "textbook": "MATHEMATICS Textbook for Class XI",
+    "interactions": [
+      {
+        "timestamp": "2025-08-15 16:04:15.774598",
+        "experience_level": "Advanced",
+        "question": "If a country\u2019s GDP in 2023 was $4.8 trillion and grew by 3.5% in 2024, what is the GDP in 2024?",
+        "option": "Detailed Answer",
+        "answer": "To determine the GDP in 2024, you would need to calculate the growth from 2023 to 2024. If the GDP in 2023 was 48 trillion and grew by 35%, the GDP in 2024 would be:\n48 trillion + (48 trillion * 0.35) = 48 trillion + 16.8 trillion = 64.8 trillion\n\nTherefore, the GDP in 2024 would be 64.8 trillion.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XI",
+        "score": null
+      },
+      {
+        "timestamp": "2025-08-15 16:04:57.904012",
+        "experience_level": "Advanced",
+        "question": "Solve for  \ud835\udc65 x:  5 \ud835\udc65 + 12 = 2 \ud835\udc65 + 27 5x+12=2x+27.",
+        "option": "Concise Answer",
+        "answer": "The solution for the expression 5x12 - 2x + 27 cannot be determined without additional context or equations.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XI",
+        "score": null
+      },
+      {
+        "timestamp": "2025-08-15 16:05:37.749808",
+        "experience_level": "Advanced",
+        "question": "Solve for  \ud835\udc65 :  5 \ud835\udc65 + 12 = 2 \ud835\udc65 + 27 ",
+        "option": "Concise Answer",
+        "answer": "To solve the equation, first simplify by moving x terms to one side and constants to the other. Subsequently, solve for x by dividing 15 by 3 to find the solution x = 5.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XI",
+        "score": null
+      }
+    ]
   }
 ]
