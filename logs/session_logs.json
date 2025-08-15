@@ -1188,5 +1188,23 @@
         "score": null
       }
     ]
+  },
+  {
+    "username": "user014",
+    "login_time": "2025-08-15 17:48:11.541743",
+    "experience_level": "Intermediate",
+    "textbook": "MATHEMATICS Textbook for Class XII PART I",
+    "interactions": [
+      {
+        "timestamp": "2025-08-15 17:48:28.452294",
+        "experience_level": "Intermediate",
+        "question": "what is matrices?",
+        "option": "Detailed Answer",
+        "answer": "Matrices are ordered rectangular arrays of numbers or functions. They are used in various branches of mathematics and are powerful tools for simplifying mathematical operations and representing various physical operations mathematically. Matrices are essential in fields such as cryptography, genetics, economics, sociology, and more. They can represent data in a structured way and are used in operations like magnification, rotation, and reflection through a plane.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      }
+    ]
   }
 ]
