@@ -1150,5 +1150,43 @@
         "score": null
       }
     ]
+  },
+  {
+    "username": "user010",
+    "login_time": "2025-08-15 17:45:29.259204",
+    "experience_level": "Intermediate",
+    "textbook": "MATHEMATICS Textbook for Class XII PART I",
+    "interactions": [
+      {
+        "timestamp": "2025-08-15 17:45:48.013397",
+        "experience_level": "Intermediate",
+        "question": "what are some main topics of this textbook?",
+        "option": "Detailed Answer",
+        "answer": "Some of the main topics of this textbook appear to be:\n\n- Relations and Functions\n- Inverse Trigonometric Functions\n- Matrices",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      },
+      {
+        "timestamp": "2025-08-15 17:45:58.535455",
+        "experience_level": "Intermediate",
+        "question": "what are some main topics of this textbook?",
+        "option": "Concise Answer",
+        "answer": "This textbook for Class XII covers main topics such as Relations and Functions, Inverse Trigonometric Functions, and Matrices, with each topic further explored in specific chapters.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      },
+      {
+        "timestamp": "2025-08-15 17:46:34.579539",
+        "experience_level": "Intermediate",
+        "question": "can you explain to me what is Matrices",
+        "option": "Detailed Answer",
+        "answer": "A matrix is an ordered rectangular array of numbers or functions. It is used to represent data or information in a structured way. Matrices are defined by their order, which is the number of rows and columns they have. Elements or entries of a matrix refer to the individual numbers or functions within the matrix. Matrices are denoted by capital letters. There are different types of matrices such as column matrices (with only one column) and row matrices (with only one row). Matrices can be used for various mathematical operations like addition, subtraction, scalar multiplication, and matrix multiplication.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      }
+    ]
   }
 ]
