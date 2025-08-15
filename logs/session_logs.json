@@ -1112,5 +1112,43 @@
         "score": null
       }
     ]
+  },
+  {
+    "username": "user006",
+    "login_time": "2025-08-15 17:15:32.425351",
+    "experience_level": "Advanced",
+    "textbook": "MATHEMATICS Textbook for Class XI",
+    "interactions": [
+      {
+        "timestamp": "2025-08-15 17:28:01.937219",
+        "experience_level": "Advanced",
+        "question": "Solve for \ud835\udc65 : 5 \ud835\udc65 + 12 = 2 \ud835\udc65 + 27",
+        "option": "Concise Answer + Voice",
+        "answer": "First, simplify the equation by isolating the x terms on one side and the constants on the other side. Then, solve for x by dividing 15 by 3 to get x = 5.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XI",
+        "score": null
+      },
+      {
+        "timestamp": "2025-08-15 17:32:46.679476",
+        "experience_level": "Advanced",
+        "question": "tell me what is np hard problem",
+        "option": "Detailed Answer",
+        "answer": "I don't have enough context to provide an accurate answer to your question about NP-hard problems.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XI",
+        "score": null
+      },
+      {
+        "timestamp": "2025-08-15 17:33:21.608806",
+        "experience_level": "Advanced",
+        "question": "what is a byte",
+        "option": "Concise Answer",
+        "answer": "A byte is 8 bits of digital information that can represent a single character in a computer or digital system.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XI",
+        "score": null
+      }
+    ]
   }
 ]
