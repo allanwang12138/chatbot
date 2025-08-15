@@ -1028,5 +1028,23 @@
         "score": null
       }
     ]
+  },
+  {
+    "username": "user006",
+    "login_time": "2025-08-15 04:06:52.044792",
+    "experience_level": "Advanced",
+    "textbook": "MATHEMATICS Textbook for Class XI",
+    "interactions": [
+      {
+        "timestamp": "2025-08-15 04:17:48.908401",
+        "experience_level": "Advanced",
+        "question": "eral / Introductory What are the main topics covered in the textbook?",
+        "option": "Detailed Answer",
+        "answer": "The main topics covered in the Mathematics textbook for Class XI include Sets, Relations and Functions, and Trigonometric Functions. Within these topics, subtopics such as set representations, subsets, Venn diagrams, operations on sets, Cartesian product of sets, relations, functions, angles, and more are covered.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XI",
+        "score": null
+      }
+    ]
   }
 ]
