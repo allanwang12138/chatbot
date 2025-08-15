@@ -30,6 +30,7 @@ def normalize_text(text):
 if "buffer_memory" not in st.session_state:
     st.session_state.buffer_memory = ConversationBufferMemory(
         memory_key="chat_history",
+        input_key="question", 
         return_messages=True,
         output_key="answer",
     )
@@ -219,7 +220,9 @@ def login():
 
             st.session_state.buffer_memory = ConversationBufferMemory(
                 memory_key="chat_history",
-                return_messages=True
+                input_key="question", 
+                return_messages=True,
+                output_key="answer", 
             )
 
             st.session_state["session_log"] = {
@@ -455,9 +458,6 @@ if query and option:
             response_text = existing_answer
             st.info("🔁 Reused answer from previous session.")
 
-            # Keep in-session memory coherent for follow-ups
-            st.session_state.buffer_memory.chat_memory.add_user_message(raw_query)
-            st.session_state.buffer_memory.chat_memory.add_ai_message(response_text)
 
         else:
             # 2) Build two retrievers: user_memory first, then textbook
