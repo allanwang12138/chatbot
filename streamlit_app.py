@@ -152,11 +152,7 @@ def append_log_to_github(log_entry):
     put_response = requests.put(api_url, headers=headers, data=json.dumps(payload))
     return put_response.status_code in [200, 201]
 
-
-# ------------------- Load credentials with voice assignment -------------------
 # ------------------- Load credentials (dynamic {subject}_level) -------------------
-import re
-
 def _slugify(name: str) -> str:
     s = name.lower()
     s = re.sub(r"[^a-z0-9]+", "_", s)
@@ -168,13 +164,19 @@ def load_credentials():
     df = pd.read_csv("sample_credentials_with_levels.csv")
 
     creds = {}
+    cols = set(df.columns)  # faster membership check
     for _, row in df.iterrows():
         username = str(row["username"]).strip()
         assigned_subject = str(row["assigned_subject"]).strip()
 
-        # Dynamic level column is now "{subject}_level"
         dyn_key = f"{_slugify(assigned_subject)}_level"
-        level_val = row[dyn_key] if dyn_key in row and pd.notna(row[dyn_key]) else "Intermediate"
+
+        # Robust key check + normalization
+        if dyn_key in cols and pd.notna(row[dyn_key]):
+            level_val = str(row[dyn_key]).strip().title()  # -> 'Beginner'/'Intermediate'/'Advanced'
+        else:
+            level_val = "Intermediate"  # safe default
+            st.warning(f"Level column '{dyn_key}' not found for user '{username}'. Defaulting to 'Intermediate'.")
 
         chat_hist = str(row.get("chat_history", "")).strip().lower() == "yes"
 
@@ -182,13 +184,10 @@ def load_credentials():
             "password": str(row["password"]),
             "voice": str(row["voice"]),
             "assigned_subject": assigned_subject,
-            "experience_level": str(level_val),
+            "experience_level": level_val,   # <-- use this later at login
             "chat_history": chat_hist,
-            "dynamic_level_key": dyn_key,  # optional: useful for debugging
+            "dynamic_level_key": dyn_key,    # optional for debugging
         }
-
-        if dyn_key not in row:
-            st.warning(f"Level column '{dyn_key}' not found for user '{username}'. Defaulting to 'Intermediate'.")
 
     return creds
 
@@ -205,41 +204,37 @@ def login():
         user = CREDENTIALS.get(username)
         if user and user["password"] == password:
             assigned_subject = user["assigned_subject"]
-            level = user["experience_level"]  # already resolved dynamically above
+            level = user["experience_level"]  # <-- use exactly what we loaded
 
             st.session_state["authenticated"] = True
-
-            # Refresh logs (GitHub)
             global SESSION_LOGS
             st.cache_data.clear()
             SESSION_LOGS = load_existing_logs()
 
-            # Persist session info
             st.session_state["username"] = username
             st.session_state["voice"] = user["voice"]
             st.session_state["textbook"] = assigned_subject
-            st.session_state["experience_level"] = level
+            st.session_state["experience_level"] = level              # <-- set here
             st.session_state["chat_history_enabled"] = user["chat_history"]
 
-            # Fresh in-session memory
             st.session_state.buffer_memory = ConversationBufferMemory(
                 memory_key="chat_history",
-                return_messages=True,
-                output_key="answer",
+                return_messages=True
             )
 
             st.session_state["session_log"] = {
                 "username": username,
                 "login_time": str(datetime.datetime.now()),
-                "experience_level": level,
+                "experience_level": level,                            # <-- and here
                 "textbook": assigned_subject,
                 "interactions": []
             }
 
-            st.success(f"✅ Login successful. Assigned textbook: **{assigned_subject}**")
+            st.success(f"✅ Login successful. Welcome, {username}!")
             st.rerun()
         else:
             st.error("❌ Invalid username or password. Please try again.")
+
 
 
 # ------------------- Authentication Gate -------------------
