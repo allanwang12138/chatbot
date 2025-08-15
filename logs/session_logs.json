@@ -1224,5 +1224,23 @@
         "score": null
       }
     ]
+  },
+  {
+    "username": "user010",
+    "login_time": "2025-08-15 20:09:14.342649",
+    "experience_level": "Beginner",
+    "textbook": "MATHEMATICS Textbook for Class XII PART I",
+    "interactions": [
+      {
+        "timestamp": "2025-08-15 20:09:34.788734",
+        "experience_level": "Beginner",
+        "question": "what are some main topics ",
+        "option": "Detailed Answer",
+        "answer": "Based on the provided context, some main topics covered in the textbook could include mathematical modeling of real-life problems using matrix, calculus, and linear programming techniques. Additionally, the textbook may cover topics related to the importance of various mathematical concepts, historical backgrounds of topics, and the organization of chapters into sections with different concepts and sub-concepts. It also emphasizes providing opportunities for contemplation, hands-on experiences, and group discussions to enhance learning.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      }
+    ]
   }
 ]
