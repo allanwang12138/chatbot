@@ -1278,5 +1278,23 @@
         "score": null
       }
     ]
+  },
+  {
+    "username": "user010",
+    "login_time": "2025-08-16 17:45:37.290637",
+    "experience_level": "Beginner",
+    "textbook": "MATHEMATICS Textbook for Class XII PART I",
+    "interactions": [
+      {
+        "timestamp": "2025-08-16 17:53:28.572892",
+        "experience_level": "Beginner",
+        "question": "A rectangular pen is to be built along a straight river, with no fence along the river side. The total length of fencing available for the other three sides is 60 meters.  Write the area  \ud835\udc34 A in terms of the width  \ud835\udc65 x of the pen.",
+        "option": "Detailed Answer",
+        "answer": "To find the area of the rectangular pen in terms of the width x, we need to consider that the pen has no fence along the side facing the river. This means that the length of the pen will consist of the river side and the two other sides for which the fencing is available, while the width will be the side perpendicular to the river.\n\nGiven that the total length of fencing available for the other three sides is 60 meters, we can express this in terms of the dimensions of the pen. Let the length of the two sides perpendicular to the river be L and the width of the pen be x. Therefore, the total length of these three sides will be L + x + x = L + 2x.\n\nSince the total length of fencing available is 60 meters, we have:\n\nL + 2x = 60\n\nFrom this equation, we can express L in terms of x as:\n\nL = 60 - 2x\n\nThe area A of the rectangular pen can be calculated as the product of its length and width, which is:\n\nA = L * x\n\nSubstitute the expression for L in terms of x into the equation for the area:\n\nA = (60 - 2x) * x\n\nSimplify this expression to find the area A in terms of the width x of the pen.",
+        "context": "MATHEMATICS184\n5. Find the maximum area of an isosceles triangle inscribed in the ellipse \n2 2\n2 2 1x y\na b\n+ =\nwith its vertex at one end of the major axis.\n6. A tank with rectangular base and rectangular sides, open at the top is to be\nconstructed so that its depth is 2 m and volume is 8 m3. If building of tank costs\nRs 70 per sq metres for the base and Rs 45 per square metre for sides. What is\nthe cost of least expensive tank?",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      }
+    ]
   }
 ]
