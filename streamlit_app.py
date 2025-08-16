@@ -527,7 +527,7 @@ if query and option:
             )
 
             # Use invoke to get sources for UI
-            result = qa_chain.invoke({"question": query})
+            result = qa_chain.invoke({"question": query, "textbook": selected_textbook})
             response_text = result["answer"]
             source_docs = result.get("source_documents", []) or []
             if isinstance(result, dict) and "source_documents" in result:
