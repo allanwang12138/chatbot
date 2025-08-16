@@ -428,7 +428,7 @@ elif voice_clicked:
     option = "Concise Answer + Voice"
 
 # ------------------- MAIN Q&A BLOCK -------------------
-from langchain.schema import BaseMessage  # for robust response -> string handling
+
 
 def _to_text(x):
     """Coerce LangChain outputs (dict/AIMessage/str) into a clean string."""
@@ -502,12 +502,28 @@ if query and option:
 
             # 3) Route: prefer user memory if there’s any hit; otherwise textbook
             chosen_retriever = memory_retriever if has_memory_match else textbook_retriever
+            # --- choose prompt by level & answer type ---
+            if answer_type == "Concise":
+                if level == "Beginner":
+                    selected_prompt = ChatPromptTemplate.from_template(PROMPT_BEGINNER_CONCISE)
+                elif level == "Advanced":
+                    selected_prompt = ChatPromptTemplate.from_template(PROMPT_ADVANCED_CONCISE)
+                else:
+                    selected_prompt = ChatPromptTemplate.from_template(PROMPT_INTERMEDIATE_CONCISE)
+            else:  # Detailed
+                if level == "Beginner":
+                    selected_prompt = ChatPromptTemplate.from_template(PROMPT_BEGINNER_DETAILED)
+                elif level == "Advanced":
+                    selected_prompt = ChatPromptTemplate.from_template(PROMPT_ADVANCED_DETAILED)
+                else:
+                    selected_prompt = ChatPromptTemplate.from_template(PROMPT_INTERMEDIATE_DETAILED)
 
             qa_chain = ConversationalRetrievalChain.from_llm(
                 llm=model,
                 retriever=chosen_retriever,
                 memory=st.session_state.buffer_memory,
                 return_source_documents=True,
+                combine_docs_chain_kwargs={"prompt": selected_prompt}
             )
 
             # Use invoke to get sources for UI
