@@ -1303,5 +1303,23 @@
     "experience_level": "Intermediate",
     "textbook": "MATHEMATICS Textbook for Class XII PART I",
     "interactions": []
+  },
+  {
+    "username": "user014",
+    "login_time": "2025-08-16 17:54:10.800006",
+    "experience_level": "Intermediate",
+    "textbook": "MATHEMATICS Textbook for Class XII PART I",
+    "interactions": [
+      {
+        "timestamp": "2025-08-16 17:54:18.965432",
+        "experience_level": "Intermediate",
+        "question": "A rectangular pen is to be built along a straight river, with no fence along the river side. The total length of fencing available for the other three sides is 60 meters.  Write the area  \ud835\udc34 A in terms of the width  \ud835\udc65 x of the pen.",
+        "option": "Detailed Answer",
+        "answer": "To write the area a of the rectangular pen in terms of the width x, we first need to identify the dimensions of the pen. Since there is no fence along the river side, the pen has two equal sides of length x and a length of 60 - 2x for the side opposite the river. \n\nThe total length of fencing available for the other three sides is 60 meters, so the perimeter P of the pen can be expressed as P = 2x + (60 - 2x) + 2x = 60 + 2x. \n\nSince the perimeter of a rectangle is twice the sum of its length and width, we have P = 2(l + w), where l is the length and w is the width. Substituting the expressions for the perimeter and dimensions of the pen, we get 60 + 2x = 2(60 - 2x + x), which simplifies to 60 + 2x = 120 - 2x + 2x. \n\nTherefore, the width of the pen is x and the length is 60 - 2x. The area A of the pen is given by A = length x width, so we have A = (60 - 2x)x = 60x - 2x^2, which is the area of the rectangular pen in terms of the width x.",
+        "context": "MATHEMATICS184\n5. Find the maximum area of an isosceles triangle inscribed in the ellipse \n2 2\n2 2 1x y\na b\n+ =\nwith its vertex at one end of the major axis.\n6. A tank with rectangular base and rectangular sides, open at the top is to be\nconstructed so that its depth is 2 m and volume is 8 m3. If building of tank costs\nRs 70 per sq metres for the base and Rs 45 per square metre for sides. What is\nthe cost of least expensive tank?",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      }
+    ]
   }
 ]
