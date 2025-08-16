@@ -1242,5 +1242,23 @@
         "score": null
       }
     ]
+  },
+  {
+    "username": "user010",
+    "login_time": "2025-08-16 15:41:53.873585",
+    "experience_level": "Beginner",
+    "textbook": "MATHEMATICS Textbook for Class XII PART I",
+    "interactions": [
+      {
+        "timestamp": "2025-08-16 15:42:42.367421",
+        "experience_level": "Beginner",
+        "question": "can you explain the concept of math",
+        "option": "Detailed Answer",
+        "answer": "Mathematics is a field of study that deals with numbers, shapes, patterns, and the relationships between them. It is a fundamental science that allows us to understand and quantify the world around us. Mathematics is essential in various branches of science, technology, engineering, and economics. It involves concepts like arithmetic, algebra, geometry, and calculus. The essence of mathematics lies in its ability to provide a logical way of thinking and problem-solving. Math helps us make sense of the universe and solve complex problems using tools like equations, theorems, and proofs.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      }
+    ]
   }
 ]
