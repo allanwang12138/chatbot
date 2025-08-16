@@ -520,7 +520,14 @@ if query and option:
             # Keep buffer memory updated
             st.session_state.buffer_memory.chat_memory.add_user_message(raw_query)
             st.session_state.buffer_memory.chat_memory.add_ai_message(response_text)
-
+        # Pick the most relevant context (first source document, if any)
+        top_context = ""
+        if source_docs:
+            top_doc = source_docs[0]
+            # keep context reasonable for logs
+            top_context = (top_doc.page_content or "").strip()
+            if len(top_context) > 1200:
+                top_context = top_context[:1200] + "..."
         # 4) Post-process for Concise/Voice option
         if "Concise" in option or "Voice" in option:
             compress_prompt = (
@@ -538,7 +545,7 @@ if query and option:
             "question": raw_query,
             "option": option,
             "answer": response_text,
-            "context": "",  # we rely on source_docs now
+            "context": top_context,  # we rely on source_docs now
             "textbook": selected_textbook,
             "score": None
         })
@@ -566,12 +573,12 @@ if query and option:
         if not source_docs:
             st.write("No supporting documents returned.")
         else:
-            for i, d in enumerate(source_docs, 1):
-                meta = d.metadata or {}
-                origin = meta.get("source", "unknown")  # 'textbook' / 'user_memory' if you set it
-                st.markdown(f"**[{i}] Source:** `{origin}` — **Textbook:** {meta.get('textbook', 'N/A')}")
-                st.write(d.page_content[:800] + ("..." if len(d.page_content) > 800 else ""))
-                st.markdown("---")
+            top_doc = source_docs[0]
+            meta = top_doc.metadata or {}
+            origin = meta.get("source", "unknown")  # 'textbook' / 'user_memory' if you set it
+            st.markdown(f"**Source:** `{origin}` — **Textbook:** {meta.get('textbook', 'N/A')}")
+            snippet = (top_doc.page_content or "").strip()
+            st.write(snippet[:1200] + ("..." if len(snippet) > 1200 else ""))
 
 
 # ------------------- Exit Button -------------------
