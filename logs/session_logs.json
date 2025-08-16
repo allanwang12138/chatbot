@@ -1369,5 +1369,23 @@
         "score": null
       }
     ]
+  },
+  {
+    "username": "user014",
+    "login_time": "2025-08-16 17:56:25.406513",
+    "experience_level": "Intermediate",
+    "textbook": "MATHEMATICS Textbook for Class XII PART I",
+    "interactions": [
+      {
+        "timestamp": "2025-08-16 17:56:34.705570",
+        "experience_level": "Intermediate",
+        "question": "can you explain to me what is Inverse Trigonometric Functions",
+        "option": "Detailed Answer",
+        "answer": "Inverse trigonometric functions are functions that undo the actions of trigonometric functions and allow us to find the original angle from a given trigonometric value. These functions include arcsin (sin\u20131), arccos (cos\u20131), arctan (tan\u20131), arccsc (csc\u20131), arcsec (sec\u20131), and arccot (cot\u20131). \n\nThe restrictions on the domains and ranges of trigonometric functions ensure the existence of their inverses. For example, the domain of arcsin is [-1,1], the range of arccos is [0,\u03c0], and so on.\n\nWe can define inverse trigonometric functions with the help of right triangles or unit circle representations. The value of an inverse trigonometric function that lies within the principal branch range is called the principal value. \n\nInverse trigonometric functions are used in calculus to define integrals, and they have applications in science and engineering. The distinction between inverse trigonometric functions (sin\u20131x) and the reciprocal trigonometric functions ((sin x)\u20131) is important.\n\nIn summary, inverse trigonometric functions help us find angles based on trigonometric values, have specific domain and range restrictions, are useful in calculus, and play crucial roles in various fields of science and engineering.",
+        "context": "inverses do not exist. In this chapter, we shall study about\nthe restrictions on domains and ranges of trigonometric\nfunctions which ensure the existence of their inverses and\nobserve their behaviour through graphical representations.\nBesides, some elementary properties will also be discussed.\nThe inverse trigonometric functions play an important\nrole in calculus for they serve to define many integrals.\nThe concepts of inverse trigonometric functions is also used in science and engineering.",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      }
+    ]
   }
 ]
