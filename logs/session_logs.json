@@ -1433,5 +1433,23 @@
         "score": null
       }
     ]
+  },
+  {
+    "username": "user010",
+    "login_time": "2025-08-22 17:06:40.553779",
+    "experience_level": "Beginner",
+    "textbook": "MATHEMATICS Textbook for Class XII PART I",
+    "interactions": [
+      {
+        "timestamp": "2025-08-22 17:06:50.284305",
+        "experience_level": "Beginner",
+        "question": "A company\u2019s profit is given by  P=\u22122x 2 +40x\u2212150, where   x is the number of products sold in hundreds. Find the number of products that maximize profit.",
+        "option": "Detailed Answer",
+        "answer": "To find the number of products that maximize profit for the company, we first need to understand the profit function given in the question. The profit function is represented by p(x) = 2x^2 - 40x + 150, where x is the number of products sold in hundreds.\n\nIn this profit function, x represents the number of products sold, and the equation shows how profit changes based on the number of products sold. The function has three components: 2x^2 represents the profit earned from selling products, -40x represents the cost incurred from production, and 150 represents any additional fixed costs or revenue.\n\nTo maximize profit, we need to find the maximum point on the profit function graph. This maximum point will indicate the optimal number of products to sell to achieve the highest profit. To find this maximum point, we need to calculate the derivative of the profit function, which helps us identify the slope of the profit curve at different points.\n\nTaking the derivative of the profit function p(x), we get p'(x) = 4x - 40. Setting this derivative equal to zero (p'(x) = 0) helps us find the critical points where the slope of the profit curve changes. Solving 4x - 40 = 0 gives us x = 10. This critical point x = 10 represents the optimal number of products to sell for maximum profit.\n\nTherefore, the number of products that maximizes profit for the company is 1000 (since x represents the number of products sold in hundreds), which corresponds to 10 units in the real world. By selling 1000 products, the company can achieve the highest profit as calculated from the profit function p(x).",
+        "context": "of money by selling its products and wants to ensure that it is maximum. For convenience,\nwe assume that all units produced are sold immediately.\nThe mathematical model\nLet x = number of units produced and sold\nC = total cost of production (in rupees)\nI = income from sales (in rupees)\nP = profit (in rupees)\nOur assumptions above state that C consists of two parts:\n(i) fixed cost = a (in rupees),\n(ii) variable cost = b (rupees/unit produced).\nThen C = a + bx ... (1)",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      }
+    ]
   }
 ]
