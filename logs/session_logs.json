@@ -1387,5 +1387,23 @@
         "score": null
       }
     ]
+  },
+  {
+    "username": "user010",
+    "login_time": "2025-08-22 17:03:17.618360",
+    "experience_level": "Beginner",
+    "textbook": "MATHEMATICS Textbook for Class XII PART I",
+    "interactions": [
+      {
+        "timestamp": "2025-08-22 17:03:42.414716",
+        "experience_level": "Beginner",
+        "question": "What is macro economics?",
+        "option": "Detailed Answer",
+        "answer": "Macroeconomics is a branch of economics that focuses on the overall economy and its large-scale factors, such as economic growth, inflation, unemployment, and national income. Just like how you would look at the big picture of a puzzle to understand how all the pieces fit together, macroeconomics looks at the economy as a whole to study how different aspects, like government policies, international trade, and overall economic activity, impact each other. It's like looking at a forest instead of just focusing on individual trees. By studying macroeconomics, we can better understand how different economic variables interact and how governments can use policies to manage and stabilize the economy for the well-being of its citizens.",
+        "context": "oceanography, pollution control etc. Mathematical modellers from all disciplines \u2014\nmathematics, computer science, physics, engineering, social sciences, etc., are involved\nin meeting these challenges with courage.\n\u2014 v vv vv\u2014\nReprint 2025-26",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      }
+    ]
   }
 ]
