@@ -1405,5 +1405,33 @@
         "score": null
       }
     ]
+  },
+  {
+    "username": "user014",
+    "login_time": "2025-08-22 17:04:11.827764",
+    "experience_level": "Intermediate",
+    "textbook": "MATHEMATICS Textbook for Class XII PART I",
+    "interactions": [
+      {
+        "timestamp": "2025-08-22 17:04:29.967665",
+        "experience_level": "Intermediate",
+        "question": "can you explain to me what is matrices",
+        "option": "Detailed Answer",
+        "answer": "A matrix is an ordered rectangular array of numbers or functions. It is used to represent data or information in a structured way. Matrices are defined by their order, which is the number of rows and columns they have. Elements or entries of a matrix refer to the individual numbers or functions within the matrix. Matrices are denoted by capital letters. There are different types of matrices such as column matrices (with only one column) and row matrices (with only one row). Matrices can be used for various mathematical operations like addition, subtraction, scalar multiplication, and matrix multiplication.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      },
+      {
+        "timestamp": "2025-08-22 17:06:12.893287",
+        "experience_level": "Intermediate",
+        "question": "A company\u2019s profit is given by  P=\u22122x 2 +40x\u2212150, where   x is the number of products sold in hundreds. Find the number of products that maximize profit.",
+        "option": "Detailed Answer",
+        "answer": "To find the number of products that maximize profit for the company, we need to first understand the profit function provided: p(x) = 2x^2 - 40x + 150.\n\nThe profit function is a quadratic equation in terms of x, where x represents the number of products sold in hundreds.\n\nTo maximize profit, we need to find the vertex of the quadratic function, which represents the maximum point on the graph of the function.\n\nThe x-coordinate of the vertex of a quadratic function in the form ax^2 + bx + c is given by x = -b/2a.\n\nIn this case, a = 2, and b = -40. Therefore, x = -(-40) / (2*2) = 40 / 4 = 10.\n\nThe number of products that maximizes profit is obtained by multiplying x by 100 (since x represents the number of products sold in hundreds). Hence, the number of products that maximizes profit is 10 * 100 = 1000 products.\n\nTherefore, the company should sell 1000 products to maximize profit.",
+        "context": "of money by selling its products and wants to ensure that it is maximum. For convenience,\nwe assume that all units produced are sold immediately.\nThe mathematical model\nLet x = number of units produced and sold\nC = total cost of production (in rupees)\nI = income from sales (in rupees)\nP = profit (in rupees)\nOur assumptions above state that C consists of two parts:\n(i) fixed cost = a (in rupees),\n(ii) variable cost = b (rupees/unit produced).\nThen C = a + bx ... (1)",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      }
+    ]
   }
 ]
