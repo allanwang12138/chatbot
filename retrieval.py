@@ -68,3 +68,35 @@ def ping_collection(client: QdrantClient, collection_name: str) -> str:
         return f"🗂️ Using collection **{collection_name}** · status: Active"
     except Exception:
         return f"🗂️ Using collection **{collection_name}**"
+
+
+def is_in_scope(
+    query: str,
+    textbook: str,
+    db: LcQdrant,
+    *,
+    k: int = 3,
+    sim_threshold: float = 0.72,   # tune 0.68–0.78 for your data
+) -> tuple[bool, float]:
+    """
+    Quick semantic gate: if no textbook doc is close enough, treat query as out-of-scope.
+    Assumes Qdrant returns cosine *distance* as score; we convert to similarity ≈ 1 - distance.
+    Returns (in_scope_bool, max_similarity).
+    """
+    try:
+        hits = db.similarity_search_with_score(query, k=k, filter={"textbook": textbook})
+    except Exception:
+        hits = db.similarity_search_with_score(query, k=k)
+
+    if not hits:
+        return False, 0.0
+
+    sims = []
+    for _, score in hits:
+        try:
+            sims.append(1.0 - float(score))  # distance → similarity
+        except Exception:
+            sims.append(float(score) if isinstance(score, (int, float)) else 0.0)
+
+    max_sim = max(sims) if sims else 0.0
+    return (max_sim >= sim_threshold, max_sim)
