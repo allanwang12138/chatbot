@@ -11,11 +11,11 @@ from langchain_openai import ChatOpenAI
 from langchain.chains import ConversationalRetrievalChain
 from langchain.schema import BaseMessage, Document
 
-from retrieval import make_retrievers, top_context_from_sources
+from retrieval import make_retrievers, top_context_from_sources, is_in_scope
 
 # ----- types -----
 AnswerType = Literal["Concise", "Detailed"]
-RouteType  = Literal["reuse", "memory", "textbook"]
+RouteType  = Literal["reuse", "memory", "textbook", "oos"]
 
 @dataclass
 class QAResult:
@@ -144,7 +144,25 @@ def answer(
     openai_api_key: str,
 ) -> QAResult:
     ans_type: AnswerType = "Concise" if ("Concise" in option or "Voice" in option) else "Detailed"
-
+    
+    # 0) Subject-scope gate (block early)
+    in_scope, _ = is_in_scope(raw_question, textbook, db)
+    if not in_scope:
+        msg = (
+            f"This question looks outside the scope of **{textbook}**. "
+            f"Please ask about topics covered in this textbook."
+        )
+        if ans_type == "Concise":
+            msg = f"Outside **{textbook}**. Please ask about topics from this textbook."
+        return QAResult(
+            answer=msg,
+            sources=[],
+            context_snippet="",
+            route="oos",
+            answer_type=ans_type,
+            level=level,
+            textbook=textbook,
+        )
     # 1) reuse path
     reused = reuse_answer_from_logs(logs, raw_question, level, textbook, ans_type)
     if reused:
