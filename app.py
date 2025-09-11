@@ -59,30 +59,57 @@ with col3:
     if st.button("🔊 Voice Answer"):   option = "Concise Answer + Voice"
 
 if raw_query and option:
-    result = qa.answer(
-        raw_question=raw_query, option=option, username=username, level=level, textbook=textbook,
-        memory=st.session_state.buffer_memory, db=db, memory_db=memory_db, logs=logs,
-        openai_api_key=OPENAI_API_KEY,
+    is_voice = ("Voice" in option)
+
+    result: QAResult = qa.answer(
+        raw_question=raw_query,
+        option=option,
+        username=username,
+        level=level,
+        textbook=textbook,
+        memory=st.session_state.buffer_memory,
+        db=db,
+        memory_db=memory_db,
+        logs=logs,
+        openai_api_key=env.OPENAI_API_KEY,
     )
-    if result.route == "reuse": st.info("🔁 Reused answer from previous session.")
-    elif result.route == "memory": st.caption("🧠 Using your personal memory context.")
-    else: st.caption("📚 Using textbook context.")
 
-    st.markdown("### 📘 Answer"); st.write(result.answer)
-    with st.expander("📚 Show Supporting Context"):
-        if not result.sources:
-            st.write("No supporting documents returned.")
-        else:
-            top = result.sources[0]; meta = getattr(top, "metadata", {}) or {}
-            st.markdown(f"**Source:** `{meta.get('source','unknown')}` — **Textbook:** {meta.get('textbook','N/A')}")
-            snippet = (top.page_content or "")
-            st.write(snippet[:1200] + ("..." if len(snippet) > 1200 else ""))
+    # Route hint
+    if result.route == "reuse":
+        st.info("🔁 Reused answer from previous session.")
+    elif result.route == "memory":
+        st.caption("🧠 Using your personal memory context.")
+    else:
+        st.caption("📚 Using textbook context.")
 
-    if "Voice" in option:
-        import openai; openai.api_key = OPENAI_API_KEY  # needed for voice_speech
+    # Render: hide text if Voice Answer was chosen
+    if is_voice:
+        st.markdown("### 🔊 Voice Answer")
+    else:
+        ui.render_answer(result.answer)
+
+    # Sources still shown (keep this if you want the context expander even in voice mode)
+    ui.render_sources(result.sources)
+
+    # Voice playback
+    if is_voice:
         voice_choice = st.session_state.get("voice", "alloy")
         with st.spinner(f"🎙️ Generating voice with '{voice_choice}'..."):
-            audio = synthesize(result.answer, voice_choice); play_in_streamlit(audio)
+            audio_bytes = synthesize(result.answer, voice_choice)
+            play_in_streamlit(audio_bytes)
+
+    # Log interaction (unchanged)
+    st.session_state.setdefault("session_log", {"interactions": []})
+    st.session_state["session_log"]["interactions"].append({
+        "timestamp": datetime.datetime.utcnow().isoformat(),
+        "experience_level": level,
+        "question": raw_query,
+        "option": option,
+        "answer": result.answer,                 # keep logging full text for memory/upload
+        "context": result.context_snippet,
+        "textbook": textbook,
+        "score": None,
+    })
 
     st.session_state.setdefault("session_log", {"interactions": []})
     st.session_state["session_log"]["interactions"].append({
