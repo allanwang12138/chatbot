@@ -71,7 +71,7 @@ if raw_query and option:
         db=db,
         memory_db=memory_db,
         logs=logs,
-        openai_api_key=env.OPENAI_API_KEY,
+        openai_api_key=OPENAI_API_KEY,
     )
 
     # Route hint
