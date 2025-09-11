@@ -23,13 +23,19 @@ COLLECTION_MAP: dict[str, str] = {
 def build_clients(openai_api_key: str, qdrant_url: str, qdrant_api_key: str | None = None) -> tuple[OpenAIEmbeddings, QdrantClient]:
     return OpenAIEmbeddings(openai_api_key=openai_api_key), QdrantClient(url=qdrant_url, api_key=qdrant_api_key or None)
 
-@st.cache_resource(show_spinner=False)
-def get_textbook_store(client: QdrantClient, collection_name: str, embeddings: OpenAIEmbeddings) -> LcQdrant:
-    return LcQdrant(client=client, collection_name=collection_name, embeddings=embeddings)
+# retrieval.py
 
 @st.cache_resource(show_spinner=False)
-def get_user_memory_store(client: QdrantClient, embeddings: OpenAIEmbeddings, collection_name: str = "user_memory") -> LcQdrant:
-    return LcQdrant(client=client, collection_name=collection_name, embeddings=embeddings)
+def get_textbook_store(_client: QdrantClient, collection_name: str, _embeddings: OpenAIEmbeddings) -> LcQdrant:
+    """LangChain Qdrant store for textbook collection."""
+    return LcQdrant(client=_client, collection_name=collection_name, embeddings=_embeddings)
+
+
+@st.cache_resource(show_spinner=False)
+def get_user_memory_store(_client: QdrantClient, _embeddings: OpenAIEmbeddings, collection_name: str = "user_memory") -> LcQdrant:
+    """LangChain Qdrant store for user-specific memory collection."""
+    return LcQdrant(client=_client, collection_name=collection_name, embeddings=_embeddings)
+
 
 def make_retrievers(
     query: str, username: str, textbook: str, level: str,
