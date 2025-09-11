@@ -1547,5 +1547,53 @@
         "score": null
       }
     ]
+  },
+  {
+    "username": "user010",
+    "login_time": "2025-09-11 05:12:09.966619",
+    "experience_level": "Beginner",
+    "textbook": "MATHEMATICS Textbook for Class XII PART I",
+    "interactions": [
+      {
+        "timestamp": "2025-09-11T05:12:22.934440",
+        "experience_level": "Beginner",
+        "question": "what is physics",
+        "option": "Concise Answer",
+        "answer": "Physics is a branch of science that studies matter, energy, and their interactions to explain how the universe works and natural phenomena. It helps us understand the world and is important in many other scientific fields.",
+        "context": "experiment etc. Also, many physical operations such as magnification, rotation and\nreflection through a plane can be represented mathematically by matrices. Matrices\nare also used in cryptography. This mathematical tool is not only used in certain branches\nof sciences, but also in genetics, economics, sociology, modern psychology and industrial\nmanagement.\nIn this chapter , we shall find it interesting to become acquainted with the\nfundamentals of matrix and matrix algebra.\n3.2  Matrix",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      },
+      {
+        "timestamp": "2025-09-11T05:13:04.754821",
+        "experience_level": "Beginner",
+        "question": "what is economics",
+        "option": "Concise Answer",
+        "answer": "Economics is the study of how resources like money and goods are used to meet people's needs and wants. It looks at how things are made, shared, and bought, and how choices are made to reach goals and make the economy grow.",
+        "context": "Then C = a + bx ... (1)\nAlso, income I depends on selling price s (rupees/unit)\nThus I = sx ... (2)\nThe profit P is then the difference between income and costs. So\nP = I \u2013 C\n= sx \u2013 (a + bx)\n= (s \u2013 \nb) x \u2013 a ... (3)\nWe now have a mathematical model of the r elationships (1)  to  (3)  between\nthe variables x, C, I, P, a, b, s. These variables may be classified as:\nindependent x\ndependent C, I, P\nparameters a, b, s\nThe manufacturer, knowing x, a, b, s can determine P.",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      },
+      {
+        "timestamp": "2025-09-11T05:26:48.493007",
+        "experience_level": "Beginner",
+        "question": "what is economics",
+        "option": "Concise Answer",
+        "answer": "Outside **MATHEMATICS Textbook for Class XII PART I**. Please ask about topics from this textbook.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      },
+      {
+        "timestamp": "2025-09-11T05:26:53.423012",
+        "experience_level": "Beginner",
+        "question": "what is economics",
+        "option": "Concise Answer + Voice",
+        "answer": "Outside **MATHEMATICS Textbook for Class XII PART I**. Please ask about topics from this textbook.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      }
+    ]
   }
 ]
