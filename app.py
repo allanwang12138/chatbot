@@ -61,7 +61,7 @@ with col3:
 if raw_query and option:
     is_voice = ("Voice" in option)
 
-    result: QAResult = qa.answer(
+    result = qa.answer(
         raw_question=raw_query,
         option=option,
         username=username,
