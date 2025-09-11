@@ -159,16 +159,3 @@ requests>=2.31
 
 > Versions are indicative; pin to the exact versions that work in your environment.
 
----
-
-## Privacy & Notes
-
-- Session transcripts are uploaded to your GitHub repo and to the Qdrant `user_memory` collection. Treat both as **persistent** storage.
-- Streamlit caching (`@st.cache_data` / `@st.cache_resource`) is used for logs and heavy clients.
-- The TTS feature calls OpenAI’s API and returns MP3 bytes.
-
----
-
-## License
-
-Choose a license that fits your use (MIT/Apache-2.0/etc.) and add it to the repository.
