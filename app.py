@@ -79,8 +79,10 @@ if raw_query and option:
         st.info("🔁 Reused answer from previous session.")
     elif result.route == "memory":
         st.caption("🧠 Using your personal memory context.")
-    else:
+    elif result.route == "textbook":
         st.caption("📚 Using textbook context.")
+    elif result.route == "oos":
+        st.warning(f"🚫 Outside the scope of **{textbook}**.")
 
     # Render: hide text if Voice Answer was chosen
     if is_voice:
@@ -90,15 +92,16 @@ if raw_query and option:
         st.write(result.answer)
 
     # Supporting context (shown in both modes; remove this block if you want to hide in voice)
-    with st.expander("📚 Show Supporting Context"):
-        if not result.sources:
-            st.write("No supporting documents returned.")
-        else:
-            top = result.sources[0]
-            meta = getattr(top, "metadata", {}) or {}
-            st.markdown(f"**Source:** `{meta.get('source','unknown')}` — **Textbook:** {meta.get('textbook','N/A')}")
-            snippet = (top.page_content or "")
-            st.write(snippet[:1200] + ("..." if len(snippet) > 1200 else ""))
+    if result.route != "oos":
+        with st.expander("📚 Show Supporting Context"):
+            if not result.sources:
+                st.write("No supporting documents returned.")
+            else:
+                top = result.sources[0]
+                meta = getattr(top, "metadata", {}) or {}
+                st.markdown(f"**Source:** `{meta.get('source','unknown')}` — **Textbook:** {meta.get('textbook','N/A')}")
+                snippet = (top.page_content or "")
+                st.write(snippet[:1200] + ("..." if len(snippet) > 1200 else ""))
 
     # Voice playback
     if is_voice:
