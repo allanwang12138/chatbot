@@ -1509,5 +1509,43 @@
         "score": null
       }
     ]
+  },
+  {
+    "username": "user010",
+    "login_time": "2025-09-11 05:01:41.478720",
+    "experience_level": "Beginner",
+    "textbook": "MATHEMATICS Textbook for Class XII PART I",
+    "interactions": [
+      {
+        "timestamp": "2025-09-11T05:11:45.995334",
+        "experience_level": "Beginner",
+        "question": "what is matrices",
+        "option": "Concise Answer + Voice",
+        "answer": "Matrices are grids of numbers used to organize data and solve problems in various fields like genetics, economics, and psychology. They make calculations simpler and help create accurate models.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      },
+      {
+        "timestamp": "2025-09-11T05:11:51.645645",
+        "experience_level": "Beginner",
+        "question": "what is matrices",
+        "option": "Concise Answer",
+        "answer": "Matrices are like grids of numbers that are used to organize information and solve problems. They are applied in various fields to make calculations easier and create precise models.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      },
+      {
+        "timestamp": "2025-09-11T05:11:53.550319",
+        "experience_level": "Beginner",
+        "question": "what is matrices",
+        "option": "Detailed Answer",
+        "answer": "Matrices are ordered rectangular arrays of numbers or functions. They are essential in various branches of mathematics and are used as a powerful tool to simplify complex calculations and representations of data. Matrices are used in a wide range of fields such as physics, genetics, economics, sociology, cryptography, and more. Additionally, matrices can represent physical operations like magnification, rotation, and reflection through a plane.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      }
+    ]
   }
 ]
