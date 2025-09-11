@@ -29,7 +29,7 @@ class QAResult:
 
 
 # ----- prompt templates (inlined) -----
-_BEGINNER_DETAILED = """You are a patient tutor for {textbook}. Explain clearly in ≤20 sentences, no jargon.
+_BEGINNER_DETAILED = """You are a patient tutor for {textbook}. Explain clearly to someone new to this subject in ≤20 sentences, no jargon.
 Context:
 {context}
 Question:
@@ -43,14 +43,14 @@ Question:
 {question}
 Answer:
 """
-_INTERMEDIATE_DETAILED = """You are an experienced tutor for {textbook}. Answer clearly in ≤20 sentences.
+_INTERMEDIATE_DETAILED = """You are an experienced tutor for {textbook}. Explain to someone somewhat familiar with this subject in ≤20 sentences.
 Context:
 {context}
 Question:
 {question}
 Answer:
 """
-_INTERMEDIATE_CONCISE = """Provide a concise answer (≤4 sentences) for {textbook}.
+_INTERMEDIATE_CONCISE = """Provide a concise answer to someone somewhat familiar with for {textbook} in less than 4 sentences.
 Context:
 {context}
 Question:
