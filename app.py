@@ -86,10 +86,19 @@ if raw_query and option:
     if is_voice:
         st.markdown("### 🔊 Voice Answer")
     else:
-        ui.render_answer(result.answer)
+        st.markdown("### 📘 Answer")
+        st.write(result.answer)
 
-    # Sources still shown (keep this if you want the context expander even in voice mode)
-    ui.render_sources(result.sources)
+    # Supporting context (shown in both modes; remove this block if you want to hide in voice)
+    with st.expander("📚 Show Supporting Context"):
+        if not result.sources:
+            st.write("No supporting documents returned.")
+        else:
+            top = result.sources[0]
+            meta = getattr(top, "metadata", {}) or {}
+            st.markdown(f"**Source:** `{meta.get('source','unknown')}` — **Textbook:** {meta.get('textbook','N/A')}")
+            snippet = (top.page_content or "")
+            st.write(snippet[:1200] + ("..." if len(snippet) > 1200 else ""))
 
     # Voice playback
     if is_voice:
@@ -98,25 +107,19 @@ if raw_query and option:
             audio_bytes = synthesize(result.answer, voice_choice)
             play_in_streamlit(audio_bytes)
 
-    # Log interaction (unchanged)
+    # Log interaction (only once)
     st.session_state.setdefault("session_log", {"interactions": []})
     st.session_state["session_log"]["interactions"].append({
         "timestamp": datetime.datetime.utcnow().isoformat(),
         "experience_level": level,
         "question": raw_query,
         "option": option,
-        "answer": result.answer,                 # keep logging full text for memory/upload
+        "answer": result.answer,
         "context": result.context_snippet,
         "textbook": textbook,
         "score": None,
     })
 
-    st.session_state.setdefault("session_log", {"interactions": []})
-    st.session_state["session_log"]["interactions"].append({
-        "timestamp": datetime.datetime.utcnow().isoformat(),
-        "experience_level": level, "question": raw_query, "option": option,
-        "answer": result.answer, "context": result.context_snippet, "textbook": textbook, "score": None,
-    })
 
 st.markdown("---")
 if st.button("🚪 Exit", key="exit_session"):
