@@ -1,5 +1,5 @@
-# app.py (vector-only; no GitHub logs/TF-IDF)
-import os, datetime
+# app.py
+import os, re, datetime
 from dotenv import load_dotenv
 import streamlit as st
 import openai
@@ -16,18 +16,21 @@ import qa
 from memory_store import upload_session_to_user_memory
 from voice_speech import synthesize, play_in_streamlit
 
-# ENV
+from langchain.schema import Document
+from qdrant_client.http import models as qmodels  # Filter types
+
+# ------------------ ENV ------------------
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY") or ""
 QDRANT_URL     = os.getenv("QDRANT_URL") or ""
 QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")  # may be None/empty for local/public Qdrant
 openai.api_key = OPENAI_API_KEY  # for voice_speech
 
-# Auth (no GitHub logs refresh)
+# ------------------ AUTH ------------------
 CREDS = load_credentials("sample_credentials_with_levels.csv")
-require_auth(CREDS)  # 👈 no refresh_logs_fn
+require_auth(CREDS)  # no GitHub logs
 
-# Stores
+# ------------------ STORES ------------------
 textbook = st.session_state.get("textbook")
 username = st.session_state.get("username")
 level    = st.session_state.get("experience_level", "Intermediate")
@@ -42,100 +45,90 @@ db = get_textbook_store(client, collection, embeddings)
 memory_db = get_user_memory_store(client, embeddings)
 st.caption(ping_collection(client, collection))
 
-# ---- UI ----
-st.title(f"📄 {textbook} Q&A App")
-raw_query = st.text_input(f"Ask a question about {textbook}:")
-col1, col2, col3 = st.columns(3)
-option = None
-with col1:
-    if st.button("📖 Detailed Answer"):
-        option = "Detailed Answer"
-with col2:
-    if st.button("✂️ Concise Answer"):
-        option = "Concise Answer"
-with col3:
-    if st.button("🔊 Voice Answer"):
-        option = "Concise Answer + Voice"
+USER_MEMORY_COLLECTION = "user_memory"
 
-# ---- Answer flow (Qdrant-only) ----
-if raw_query and option:
-    is_voice = ("Voice" in option)
+# ------------------ HISTORY HELPERS (Qdrant) ------------------
+def _parse_qa_from_memory(text: str) -> tuple[str, str]:
+    """Extract Q and A from 'Q: ...\\nA: ...'; be forgiving if format differs."""
+    if not text:
+        return "", ""
+    m = re.search(r"Q:\s*(.*?)\nA:\s*(.*)\Z", text, flags=re.DOTALL)
+    if m:
+        return m.group(1).strip(), m.group(2).strip()
+    return "", text.strip()  # fallback: treat all as answer
 
-    result = qa.answer(
-        raw_question=raw_query,
-        option=option,
-        username=username,
-        level=level,
-        textbook=textbook,
-        memory=st.session_state.buffer_memory,
-        db=db,
-        memory_db=memory_db,
-        logs=[],                      # 👈 no JSON logs; ignored by qa.answer
-        openai_api_key=OPENAI_API_KEY,
+def _safe_iso(ts: str) -> datetime.datetime:
+    try:
+        return datetime.datetime.fromisoformat(ts)
+    except Exception:
+        return datetime.datetime.min
+
+def fetch_user_history_from_qdrant(
+    _client,
+    username: str,
+    textbook: str,
+    level: str,
+    limit: int = 100,
+) -> list[dict]:
+    """Return recent Q/A items for the sidebar from the user_memory collection."""
+    flt = qmodels.Filter(
+        must=[
+            qmodels.FieldCondition(key="username", match=qmodels.MatchValue(value=username)),
+            qmodels.FieldCondition(key="textbook", match=qmodels.MatchValue(value=textbook)),
+            qmodels.FieldCondition(key="experience_level", match=qmodels.MatchValue(value=level)),
+        ]
     )
+    try:
+        records, _ = _client.scroll(
+            collection_name=USER_MEMORY_COLLECTION,
+            scroll_filter=flt,
+            with_payload=True,
+            with_vectors=False,
+            limit=limit,
+        )
+    except Exception as e:
+        st.warning(f"⚠️ Could not load history from Qdrant: {e}")
+        return []
 
-    # Route hint
-    if result.route == "reuse":
-        st.info("🔁 Reused a similar answer from your personal memory.")
-    elif result.route == "memory":
-        st.caption("🧠 Using your personal memory context.")
-    elif result.route == "textbook":
-        st.caption("📚 Using textbook context.")
-    elif result.route == "oos":
-        st.warning(f"🚫 Outside the scope of **{textbook}**.")
+    items = []
+    for rec in records or []:
+        payload = (rec.payload or {})
+        # LangChain Qdrant store flattens page_content + metadata into payload
+        content = payload.get("page_content") or payload.get("text") or payload.get("content") or ""
+        q, a = _parse_qa_from_memory(content)
+        items.append({
+            "question": q,
+            "answer": a,
+            "timestamp": payload.get("timestamp", ""),
+            "option": payload.get("option", ""),
+        })
+    items.sort(key=lambda x: _safe_iso(x.get("timestamp", "")), reverse=True)
+    return items
 
-    # Render: hide text if Voice Answer was chosen
-    if is_voice:
-        st.markdown("### 🔊 Voice Answer")
-    else:
-        st.markdown("### 📘 Answer")
-        st.write(result.answer)
-
-    # Supporting context (hide if out-of-scope)
-    if result.route != "oos":
-        with st.expander("📚 Show Supporting Context"):
-            if not result.sources:
-                st.write("No supporting documents returned.")
-            else:
-                top = result.sources[0]
-                meta = getattr(top, "metadata", {}) or {}
-                st.markdown(
-                    f"**Source:** `{meta.get('source','unknown')}` — "
-                    f"**Textbook:** {meta.get('textbook','N/A')}"
-                )
-                snippet = (top.page_content or "")
-                st.write(snippet[:1200] + ("..." if len(snippet) > 1200 else ""))
-
-    # Voice playback
-    if is_voice:
-        voice_choice = st.session_state.get("voice", "alloy")
-        with st.spinner(f"🎙️ Generating voice with '{voice_choice}'..."):
-            audio_bytes = synthesize(result.answer, voice_choice)
-            play_in_streamlit(audio_bytes)
-
-    # Log interaction locally (for memory upload)
-    st.session_state.setdefault("session_log", {"interactions": []})
-    st.session_state["session_log"]["interactions"].append({
-        "timestamp": datetime.datetime.utcnow().isoformat(),
-        "experience_level": level,
-        "question": raw_query,
-        "option": option,
-        "answer": result.answer,
-        "context": result.context_snippet,
-        "textbook": textbook,
-        "score": None,
-    })
-
-st.markdown("---")
-
-# ---- Exit: upload Q&A pairs to user_memory only (no GitHub) ----
-if st.button("🚪 Exit", key="exit_session"):
-    uploaded = 0
-    if "session_log" in st.session_state:
-        uploaded = upload_session_to_user_memory(st.session_state["session_log"], memory_db)
-        if uploaded:
-            st.success(f"📤 Added {uploaded} Q&A item(s) to your personal memory.")
-        else:
-            st.info("No new Q&A to upload to personal memory.")
-    st.session_state.clear()
-    st.rerun()
+def upsert_interaction_to_memory(
+    memory_db,
+    *,
+    username: str,
+    textbook: str,
+    level: str,
+    option: str,
+    question: str,
+    answer: str,
+    timestamp_iso: str,
+):
+    """Immediately add this Q/A to user_memory so it is retrievable right away."""
+    content = f"Q: {question}\nA: {answer}"
+    doc = Document(
+        page_content=content,
+        metadata={
+            "username": username,
+            "textbook": textbook,
+            "experience_level": level,
+            "option": option,
+            "timestamp": timestamp_iso,
+            "source": "user_memory",
+        },
+    )
+    try:
+        memory_db.add_documents([doc])
+        # Prevent exit uploader from dupl
