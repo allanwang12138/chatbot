@@ -164,7 +164,7 @@ def is_in_scope(
         pass if (top_sim >= T1) AND (avg_top3 >= T2 OR count_above>=2)
       Thresholds are tightened when query shares no salient tokens with the title.
     """
-    # 1) Probe
+    # 1) Probe textbook store
     try:
         hits = db.similarity_search_with_score(query, k=k, filter={"textbook": textbook})
         if not hits:
@@ -183,20 +183,20 @@ def is_in_scope(
     title_tokens = set(_tokens(textbook))
     overlap = bool(q_tokens & title_tokens)
 
-    # Base thresholds (good defaults for OpenAI text-embedding-3-large on Qdrant cosine)
-    T1 = 0.62   # top similarity must at least clear this
-    T2 = 0.54   # average of top 3 should be reasonably related
+    # Base thresholds (tuned for OpenAI embeddings on Qdrant/cosine)
+    T1 = 0.58   # require a decent top match
+    T2 = 0.50   # and reasonable average of top 3
 
-    # Short queries tend to be noisier: raise bar slightly
+    # Short queries: raise slightly (they're noisier)
     qlen = max(1, len(_norm(query).split()))
     if qlen <= 4:
         T1 += 0.03
         T2 += 0.02
 
-    # If no topical overlap with the title, be stricter
+    # No topical overlap with the title? be stricter
     if not overlap:
-        T1 += 0.06
-        T2 += 0.05
+        T1 += 0.05
+        T2 += 0.04
 
     in_scope = (max_sim >= T1) and ((avg_top3 >= T2) or (count_above >= 2))
     return in_scope, max_sim
