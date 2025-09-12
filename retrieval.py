@@ -56,8 +56,7 @@ def make_retrievers(
 
     # Memory retriever + probe
     memory_retriever = memory_db.as_retriever(
-        search_type="similarity",
-        search_kwargs={"k": memory_k, "filter": user_filter},
+        search_type="similarity", search_kwargs={"k": memory_k, "filter": user_filter}
     )
     try:
         has_memory_match = len(memory_db.similarity_search_with_score(query, k=1, filter=user_filter)) > 0
@@ -95,8 +94,8 @@ def ping_collection(client: QdrantClient, collection_name: str) -> str:
 
 # -------------------- In-scope Gate --------------------
 _STOPWORDS = {
-    "textbook", "for", "class", "part", "i", "ii", "iii", "the", "of", "and",
-    "introduction", "introductory", "a", "an", "to", "in", "on",
+    "textbook","for","class","part","i","ii","iii","the","of","and",
+    "introduction","introductory","a","an","to","in","on",
 }
 
 def _norm(s: str) -> str:
@@ -130,7 +129,7 @@ def is_in_scope(
     """
     Scope gate against textbook content only.
     - Try filtered by textbook; if empty, retry unfiltered.
-    - Multi-signal rule: require decent top hit + some supporting evidence.
+    - Multi-signal rule: require strong top hit + supporting evidence.
     """
     # 1) Probe textbook store
     try:
@@ -143,41 +142,39 @@ def is_in_scope(
     if not hits:
         return False, 0.0
 
-    # 2) Convert scores to similarities
+    # 2) Convert to similarities & gather signals
     sims = [_score_to_similarity(score) for _, score in hits]
     sims_sorted = sorted(sims, reverse=True)
     max_sim = sims_sorted[0]
     avg_top3 = sum(sims_sorted[:3]) / min(3, len(sims_sorted))
-    # weak-but-related count (low bar)
-    count_lo = sum(1 for s in sims_sorted[:5] if s >= 0.06)
+    count_lo  = sum(1 for s in sims_sorted[:5] if s >= 0.08)  # support at a slightly higher low bar
 
-    # Optional one-line debug
     if st.session_state.get("debug_scope"):
         st.caption(f"[scope] sims={ [round(x,4) for x in sims_sorted] } "
-                   f"max={max_sim:.3f} avg3={avg_top3:.3f} count≥0.06={count_lo}")
+                   f"max={max_sim:.3f} avg3={avg_top3:.3f} count≥0.08={count_lo}")
 
-    # 3) Dynamic thresholds
+    # 3) Dynamic thresholds (slightly stricter than before)
     q_tokens = set(_tokens(query))
     title_tokens = set(_tokens(textbook))
     overlap = bool(q_tokens & title_tokens)
 
-    # Baselines tuned for small sim ranges
-    T1 = 0.06   # top must clear this
-    T2 = 0.05   # avg of top-3 must be reasonably related
+    T1 = 0.08   # top must clear this
+    T2 = 0.06   # avg of top-3 must be reasonably related
 
-    # Short queries are noisier → nudge up slightly
+    # Short queries → nudge up
     qlen = max(1, len(_norm(query).split()))
     if qlen <= 4:
         T1 += 0.02
         T2 += 0.01
 
-    # No topical overlap with the title? be stricter
+    # No topical overlap with the title → be stricter
     if not overlap:
-        T1 += 0.03
-        T2 += 0.02
+        T1 += 0.04
+        T2 += 0.03
 
     # Extra signal: clear dominance over #2
     gap_ok = (len(sims_sorted) > 1) and (max_sim - sims_sorted[1] >= 0.02)
 
-    in_scope = (max_sim >= T1) and (avg_top3 >= T2 or count_lo >= 2 or gap_ok)
+    # Stricter combo: need top strong AND (avg strong + at least 2 weak supporters) OR a big gap
+    in_scope = (max_sim >= T1) and ((avg_top3 >= T2 and count_lo >= 2) or gap_ok)
     return in_scope, max_sim
