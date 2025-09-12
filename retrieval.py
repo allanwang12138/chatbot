@@ -43,20 +43,34 @@ def make_retrievers(
     db: LcQdrant, memory_db: LcQdrant, *, memory_k: int = 3, textbook_k: int = 5
 ) -> tuple[Any, bool, Any]:
     user_filter = {"username": username, "textbook": textbook, "experience_level": level}
-    memory_retriever = memory_db.as_retriever(search_type="similarity", search_kwargs={"k": memory_k, "filter": user_filter})
-    has_memory_match = False
+    memory_retriever = memory_db.as_retriever(
+        search_type="similarity", search_kwargs={"k": memory_k, "filter": user_filter}
+    )
     try:
         has_memory_match = len(memory_db.similarity_search_with_score(query, k=1, filter=user_filter)) > 0
     except Exception:
         has_memory_match = False
 
+    # --- Textbook retriever: probe filtered; if it returns *empty*, build unfiltered ---
     try:
-        _ = db.similarity_search_with_score(query, k=1, filter={"textbook": textbook})
-        textbook_retriever = db.as_retriever(search_type="similarity", search_kwargs={"k": textbook_k, "filter": {"textbook": textbook}})
+        probe = db.similarity_search_with_score(query, k=1, filter={"textbook": textbook})
+        if probe:
+            textbook_retriever = db.as_retriever(
+                search_type="similarity",
+                search_kwargs={"k": textbook_k, "filter": {"textbook": textbook}},
+            )
+        else:
+            textbook_retriever = db.as_retriever(
+                search_type="similarity", search_kwargs={"k": textbook_k}
+            )
     except Exception:
-        textbook_retriever = db.as_retriever(search_type="similarity", search_kwargs={"k": textbook_k})
+        textbook_retriever = db.as_retriever(
+            search_type="similarity", search_kwargs={"k": textbook_k}
+        )
 
-    return (memory_retriever if has_memory_match else textbook_retriever), has_memory_match, textbook_retriever
+    chosen = memory_retriever if has_memory_match else textbook_retriever
+    return chosen, has_memory_match, textbook_retriever
+
 
 def top_context_from_sources(source_docs: list[Document], max_chars: int = 1200) -> str:
     if not source_docs: return ""
@@ -102,35 +116,36 @@ def is_in_scope(
     db,
     *,
     k: int = 4,
-    base_threshold: float = 0.55,   # was 0.72; more forgiving
+    base_threshold: float = 0.50,   # a bit more permissive
 ) -> Tuple[bool, float]:
     """
-    Gate on textbook content only. If no doc is sufficiently close, mark OOS.
+    Gate on textbook *content only*. If no doc is close, treat as out-of-scope.
+    Important: if the payload filter yields zero hits, retry unfiltered.
     """
     qn = _norm(query)
-    tn = _norm(textbook)
 
-    # 1) Probe textbook collection
+    # 1) Probe textbook collection (filtered), then unfiltered if empty
     try:
         hits = db.similarity_search_with_score(query, k=k, filter={"textbook": textbook})
+        if not hits:
+            hits = db.similarity_search_with_score(query, k=k)  # <-- fallback on empty
     except Exception:
         hits = db.similarity_search_with_score(query, k=k)
 
     if not hits:
         return False, 0.0
 
-    # 2) Convert to similarity & choose a dynamic threshold
+    # 2) Convert distance->similarity and apply a dynamic threshold
     sims = [_score_to_similarity(score) for _, score in hits]
     max_sim = max(sims) if sims else 0.0
 
-    # Short queries are inherently vague — lower the bar a bit.
+    # Very short or generic queries tend to score lower; lower the bar slightly.
     qlen = max(1, len(qn.split()))
     dyn_thresh = base_threshold
     if qlen <= 4:
-        dyn_thresh -= 0.12     # very short query
+        dyn_thresh -= 0.10
     elif qlen <= 8:
-        dyn_thresh -= 0.06     # short query
-
-    dyn_thresh = max(0.40, min(0.85, dyn_thresh))  # clamp
+        dyn_thresh -= 0.05
+    dyn_thresh = max(0.40, min(0.85, dyn_thresh))
 
     return (max_sim >= dyn_thresh, max_sim)
