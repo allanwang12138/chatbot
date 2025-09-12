@@ -6,6 +6,7 @@ from qdrant_client import QdrantClient
 from langchain_qdrant import Qdrant as LcQdrant
 from langchain_openai import OpenAIEmbeddings
 from langchain.schema import Document
+import re
 
 # Human-name -> Qdrant collection
 COLLECTION_MAP: dict[str, str] = {
@@ -70,19 +71,46 @@ def ping_collection(client: QdrantClient, collection_name: str) -> str:
         return f"🗂️ Using collection **{collection_name}**"
 
 
+def _norm(s: str) -> str:
+    s = (s or "").lower().strip()
+    s = re.sub(r"[^a-z0-9\s]+", " ", s)
+    s = re.sub(r"\s+", " ", s)
+    return s
+
+def _score_to_similarity(score: float) -> float:
+    """Convert various Qdrant/LC score conventions to a [0,1] similarity."""
+    try:
+        s = float(score)
+    except Exception:
+        return 0.0
+    # Cosine distance (0..1 or 0..2) -> similarity
+    if 0.0 <= s <= 2.0:
+        sim = 1.0 - s
+        # if distance was up to 2, clamp to [0,1]
+        if sim < 0.0:  # e.g., s > 1.0 from unnormalized vectors
+            sim = max(0.0, min(1.0, sim))
+        return max(0.0, min(1.0, sim))
+    # Already a similarity in [-1,1] (rare)
+    if -1.0 <= s <= 1.0:
+        return max(0.0, min(1.0, s))
+    # Fallback
+    return 0.0
+
 def is_in_scope(
     query: str,
     textbook: str,
-    db: LcQdrant,
+    db,
     *,
-    k: int = 3,
-    sim_threshold: float = 0.72,   # tune 0.68–0.78 for your data
-) -> tuple[bool, float]:
+    k: int = 4,
+    base_threshold: float = 0.55,   # was 0.72; more forgiving
+) -> Tuple[bool, float]:
     """
-    Quick semantic gate: if no textbook doc is close enough, treat query as out-of-scope.
-    Assumes Qdrant returns cosine *distance* as score; we convert to similarity ≈ 1 - distance.
-    Returns (in_scope_bool, max_similarity).
+    Gate on textbook content only. If no doc is sufficiently close, mark OOS.
     """
+    qn = _norm(query)
+    tn = _norm(textbook)
+
+    # 1) Probe textbook collection
     try:
         hits = db.similarity_search_with_score(query, k=k, filter={"textbook": textbook})
     except Exception:
@@ -91,12 +119,18 @@ def is_in_scope(
     if not hits:
         return False, 0.0
 
-    sims = []
-    for _, score in hits:
-        try:
-            sims.append(1.0 - float(score))  # distance → similarity
-        except Exception:
-            sims.append(float(score) if isinstance(score, (int, float)) else 0.0)
-
+    # 2) Convert to similarity & choose a dynamic threshold
+    sims = [_score_to_similarity(score) for _, score in hits]
     max_sim = max(sims) if sims else 0.0
-    return (max_sim >= sim_threshold, max_sim)
+
+    # Short queries are inherently vague — lower the bar a bit.
+    qlen = max(1, len(qn.split()))
+    dyn_thresh = base_threshold
+    if qlen <= 4:
+        dyn_thresh -= 0.12     # very short query
+    elif qlen <= 8:
+        dyn_thresh -= 0.06     # short query
+
+    dyn_thresh = max(0.40, min(0.85, dyn_thresh))  # clamp
+
+    return (max_sim >= dyn_thresh, max_sim)
