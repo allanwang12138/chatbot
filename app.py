@@ -1,22 +1,31 @@
+# app.py (vector-only; no GitHub logs/TF-IDF)
 import os, datetime
 from dotenv import load_dotenv
 import streamlit as st
+import openai
 
 from auth import load_credentials, require_auth
-from retrieval import build_clients, get_textbook_store, get_user_memory_store, COLLECTION_MAP, ping_collection
-import history, qa
+from retrieval import (
+    build_clients,
+    get_textbook_store,
+    get_user_memory_store,
+    COLLECTION_MAP,
+    ping_collection,
+)
+import qa
 from memory_store import upload_session_to_user_memory
 from voice_speech import synthesize, play_in_streamlit
 
 # ENV
 load_dotenv()
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-QDRANT_URL     = os.getenv("QDRANT_URL")
-QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY") or ""
+QDRANT_URL     = os.getenv("QDRANT_URL") or ""
+QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")  # may be None/empty for local/public Qdrant
+openai.api_key = OPENAI_API_KEY  # for voice_speech
 
-# Auth
+# Auth (no GitHub logs refresh)
 CREDS = load_credentials("sample_credentials_with_levels.csv")
-require_auth(CREDS, refresh_logs_fn=history.load_existing_logs)
+require_auth(CREDS)  # 👈 no refresh_logs_fn
 
 # Stores
 textbook = st.session_state.get("textbook")
@@ -26,38 +35,29 @@ level    = st.session_state.get("experience_level", "Intermediate")
 embeddings, client = build_clients(OPENAI_API_KEY, QDRANT_URL, QDRANT_API_KEY)
 collection = COLLECTION_MAP.get(textbook)
 if not collection:
-    st.error(f"❌ No collection configured for textbook: {textbook}"); st.stop()
+    st.error(f"❌ No collection configured for textbook: {textbook}")
+    st.stop()
 
 db = get_textbook_store(client, collection, embeddings)
 memory_db = get_user_memory_store(client, embeddings)
 st.caption(ping_collection(client, collection))
 
-# UI (inline)
-if "show_chat_history" not in st.session_state:
-    st.session_state["show_chat_history"] = False
-if st.session_state.get("chat_history_enabled", False):
-    if st.button("📜 Show/Hide Chat History", key="toggle_chat_history"):
-        st.session_state["show_chat_history"] = not st.session_state["show_chat_history"]
-
-logs = st.session_state.get("SESSION_LOGS", [])
-if st.session_state["show_chat_history"]:
-    st.sidebar.title("📜 Chat History")
-    for item in reversed(history.get_user_chat_history(logs, username, textbook)[-10:]):
-        st.sidebar.markdown(f"**Q:** {item.get('question','')}  \n🕒 {item.get('timestamp','')}")
-        st.sidebar.markdown(f"**A ({item.get('option','')}):** {item.get('answer','')}")
-        st.sidebar.markdown('---')
-
+# ---- UI ----
 st.title(f"📄 {textbook} Q&A App")
 raw_query = st.text_input(f"Ask a question about {textbook}:")
 col1, col2, col3 = st.columns(3)
 option = None
 with col1:
-    if st.button("📖 Detailed Answer"): option = "Detailed Answer"
+    if st.button("📖 Detailed Answer"):
+        option = "Detailed Answer"
 with col2:
-    if st.button("✂️ Concise Answer"): option = "Concise Answer"
+    if st.button("✂️ Concise Answer"):
+        option = "Concise Answer"
 with col3:
-    if st.button("🔊 Voice Answer"):   option = "Concise Answer + Voice"
+    if st.button("🔊 Voice Answer"):
+        option = "Concise Answer + Voice"
 
+# ---- Answer flow (Qdrant-only) ----
 if raw_query and option:
     is_voice = ("Voice" in option)
 
@@ -70,13 +70,13 @@ if raw_query and option:
         memory=st.session_state.buffer_memory,
         db=db,
         memory_db=memory_db,
-        logs=logs,
+        logs=[],                      # 👈 no JSON logs; ignored by qa.answer
         openai_api_key=OPENAI_API_KEY,
     )
 
     # Route hint
     if result.route == "reuse":
-        st.info("🔁 Reused answer from previous session.")
+        st.info("🔁 Reused a similar answer from your personal memory.")
     elif result.route == "memory":
         st.caption("🧠 Using your personal memory context.")
     elif result.route == "textbook":
@@ -91,7 +91,7 @@ if raw_query and option:
         st.markdown("### 📘 Answer")
         st.write(result.answer)
 
-    # Supporting context (shown in both modes; remove this block if you want to hide in voice)
+    # Supporting context (hide if out-of-scope)
     if result.route != "oos":
         with st.expander("📚 Show Supporting Context"):
             if not result.sources:
@@ -99,7 +99,10 @@ if raw_query and option:
             else:
                 top = result.sources[0]
                 meta = getattr(top, "metadata", {}) or {}
-                st.markdown(f"**Source:** `{meta.get('source','unknown')}` — **Textbook:** {meta.get('textbook','N/A')}")
+                st.markdown(
+                    f"**Source:** `{meta.get('source','unknown')}` — "
+                    f"**Textbook:** {meta.get('textbook','N/A')}"
+                )
                 snippet = (top.page_content or "")
                 st.write(snippet[:1200] + ("..." if len(snippet) > 1200 else ""))
 
@@ -110,7 +113,7 @@ if raw_query and option:
             audio_bytes = synthesize(result.answer, voice_choice)
             play_in_streamlit(audio_bytes)
 
-    # Log interaction (only once)
+    # Log interaction locally (for memory upload)
     st.session_state.setdefault("session_log", {"interactions": []})
     st.session_state["session_log"]["interactions"].append({
         "timestamp": datetime.datetime.utcnow().isoformat(),
@@ -123,16 +126,16 @@ if raw_query and option:
         "score": None,
     })
 
-
 st.markdown("---")
+
+# ---- Exit: upload Q&A pairs to user_memory only (no GitHub) ----
 if st.button("🚪 Exit", key="exit_session"):
     uploaded = 0
     if "session_log" in st.session_state:
         uploaded = upload_session_to_user_memory(st.session_state["session_log"], memory_db)
-        try:
-            ok = history.append_log_to_github(st.session_state["session_log"])
-            if ok: st.success(f"📤 Session log uploaded. (Memory docs: {uploaded})")
-            else:  st.warning("⚠️ Failed to upload session log.")
-        except Exception as e:
-            st.warning(f"⚠️ GitHub upload error: {e}")
-    st.session_state.clear(); st.rerun()
+        if uploaded:
+            st.success(f"📤 Added {uploaded} Q&A item(s) to your personal memory.")
+        else:
+            st.info("No new Q&A to upload to personal memory.")
+    st.session_state.clear()
+    st.rerun()
