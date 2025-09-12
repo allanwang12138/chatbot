@@ -179,24 +179,31 @@ def is_in_scope(
     max_sim, avg_top3, count_above = _sim_stats(hits)
 
     # 3) Dynamic thresholds
-    q_tokens = set(_tokens(query))
-    title_tokens = set(_tokens(textbook))
+    # q_tokens = set(_tokens(query))
+    # title_tokens = set(_tokens(textbook))
     overlap = bool(q_tokens & title_tokens)
-
-    # Base thresholds (tuned for OpenAI embeddings on Qdrant/cosine)
-    T1 = 0.1   # require a decent top match
-    T2 = 0.18   # and reasonable average of top 3
-
-    # Short queries: raise slightly (they're noisier)
+    sims_sorted = sorted(sims, reverse=True)
+    max_sim = sims_sorted[0]
+    avg_top3 = sum(sims_sorted[:3]) / min(3, len(sims_sorted))
+    count_lo  = sum(1 for s in sims_sorted[:5] if s >= 0.06)  # low bar for weak-but-related
+    
+    # Base thresholds tuned for “small” similarities
+    T1 = 0.06    # top match must clear this
+    T2 = 0.05    # and the average of top 3 should be reasonably related
+    
+    # Short queries are noisier → nudge up slightly
     qlen = max(1, len(_norm(query).split()))
     if qlen <= 4:
+        T1 += 0.02
+        T2 += 0.01
+    
+    # No topical overlap with the title → be stricter
+    if not overlap:
         T1 += 0.03
         T2 += 0.02
-
-    # No topical overlap with the title? be stricter
-    if not overlap:
-        T1 += 0.05
-        T2 += 0.04
-
-    in_scope = (max_sim >= T1) and ((avg_top3 >= T2) or (count_above >= 2))
+    
+    # Optional “top-gap” signal: a clearly dominant match
+    gap_ok = (len(sims_sorted) > 1) and (max_sim - sims_sorted[1] >= 0.02)
+    
+    in_scope = (max_sim >= T1) and (avg_top3 >= T2 or count_lo >= 2 or gap_ok)
     return in_scope, max_sim
