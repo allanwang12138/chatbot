@@ -1643,5 +1643,23 @@
         "score": null
       }
     ]
+  },
+  {
+    "username": "user001",
+    "login_time": "2025-09-12 02:32:00.888943",
+    "experience_level": "Beginner",
+    "textbook": "Statistics For Economics",
+    "interactions": [
+      {
+        "timestamp": "2025-09-12T02:32:29.305616",
+        "experience_level": "Beginner",
+        "question": "What is statistics?",
+        "option": "Detailed Answer",
+        "answer": "This question looks outside the scope of **Statistics For Economics**. Please ask about topics covered in this textbook.",
+        "context": "",
+        "textbook": "Statistics For Economics",
+        "score": null
+      }
+    ]
   }
 ]
