@@ -1,6 +1,6 @@
 # retrieval.py
 from __future__ import annotations
-from typing import Any, Tuple, Dict
+from typing import Any, Tuple, Dict, List
 import re
 import streamlit as st
 
@@ -11,7 +11,6 @@ from langchain.schema import Document
 
 
 # -------------------- Collections --------------------
-# Human-name -> Qdrant collection
 COLLECTION_MAP: Dict[str, str] = {
     "Introductory Macroeconomics": "introductory_macroeconomics_collection",
     "Introductory Microeconomics": "introductory_microeconomics_collection",
@@ -31,7 +30,6 @@ def build_clients(
     qdrant_url: str,
     qdrant_api_key: str | None = None,
 ) -> tuple[OpenAIEmbeddings, QdrantClient]:
-    """Create and cache embeddings + Qdrant client."""
     embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
     client = QdrantClient(url=qdrant_url, api_key=qdrant_api_key or None)
     return embeddings, client
@@ -39,13 +37,11 @@ def build_clients(
 
 @st.cache_resource(show_spinner=False)
 def get_textbook_store(_client: QdrantClient, collection_name: str, _embeddings: OpenAIEmbeddings) -> LcQdrant:
-    """LangChain Qdrant store for textbook collection."""
     return LcQdrant(client=_client, collection_name=collection_name, embeddings=_embeddings)
 
 
 @st.cache_resource(show_spinner=False)
 def get_user_memory_store(_client: QdrantClient, _embeddings: OpenAIEmbeddings, collection_name: str = "user_memory") -> LcQdrant:
-    """LangChain Qdrant store for user-specific memory collection."""
     return LcQdrant(client=_client, collection_name=collection_name, embeddings=_embeddings)
 
 
@@ -63,7 +59,7 @@ def make_retrievers(
     """
     Build retrievers and decide route.
     - Memory retriever uses strict payload filter.
-    - Textbook retriever tries filtered-by-textbook; if that returns 0 hits, falls back to unfiltered.
+    - Textbook retriever: try filtered; if the probe returns 0 hits, fall back to unfiltered.
     """
     user_filter = {"username": username, "textbook": textbook, "experience_level": level}
 
@@ -80,7 +76,7 @@ def make_retrievers(
     # Textbook retriever: filtered probe; if empty, unfiltered
     try:
         probe = db.similarity_search_with_score(query, k=1, filter={"textbook": textbook})
-        if probe:
+        if probe and len(probe) > 0:
             textbook_retriever = db.as_retriever(
                 search_type="similarity",
                 search_kwargs={"k": textbook_k, "filter": {"textbook": textbook}},
@@ -116,30 +112,42 @@ def ping_collection(client: QdrantClient, collection_name: str) -> str:
 
 
 # -------------------- In-scope Gate --------------------
+_STOPWORDS = {
+    "textbook", "for", "class", "part", "i", "ii", "iii", "the", "of", "and",
+    "introduction", "introductory", "a", "an", "to", "in", "on",
+}
+
 def _norm(s: str) -> str:
     s = (s or "").lower().strip()
     s = re.sub(r"[^a-z0-9\s]+", " ", s)
     s = re.sub(r"\s+", " ", s)
     return s
 
+def _tokens(s: str) -> List[str]:
+    return [t for t in _norm(s).split() if len(t) >= 4 and t not in _STOPWORDS]
 
 def _score_to_similarity(score: float) -> float:
-    """
-    Convert Qdrant/LC scores to [0,1] similarity.
-    - Cosine distance (0..1 or 0..2) → 1 - distance, clamped to [0,1].
-    - If it's already in [-1,1], clamp to [0,1].
-    """
+    """Convert Qdrant/LC scores to [0,1] similarity. (Distance → 1 - distance.)"""
     try:
         s = float(score)
     except Exception:
         return 0.0
-
-    if 0.0 <= s <= 2.0:  # distance
-        sim = 1.0 - s
-        return max(0.0, min(1.0, sim))
-    if -1.0 <= s <= 1.0:  # already similarity-ish
+    if 0.0 <= s <= 2.0:           # cosine distance in [0,1] or [0,2]
+        return max(0.0, min(1.0, 1.0 - s))
+    if -1.0 <= s <= 1.0:          # already similarity-ish
         return max(0.0, min(1.0, s))
     return 0.0
+
+def _sim_stats(hits) -> tuple[float, float, int]:
+    """Return (max_sim, avg_top3, count_above_055) from (doc, score) hits."""
+    sims = [_score_to_similarity(score) for _, score in (hits or [])]
+    if not sims:
+        return 0.0, 0.0, 0
+    sims_sorted = sorted(sims, reverse=True)
+    max_sim = sims_sorted[0]
+    avg_top3 = sum(sims_sorted[:3]) / min(3, len(sims_sorted))
+    count_above_055 = sum(1 for s in sims_sorted[:5] if s >= 0.55)
+    return max_sim, avg_top3, count_above_055
 
 
 def is_in_scope(
@@ -147,37 +155,48 @@ def is_in_scope(
     textbook: str,
     db: LcQdrant,
     *,
-    k: int = 4,
-    base_threshold: float = 0.50,
+    k: int = 5,
 ) -> Tuple[bool, float]:
     """
-    Check if the query is close enough to *textbook content*.
-    We first try a payload-filtered probe; if that returns zero hits,
-    we retry unfiltered before deciding it's out-of-scope.
+    Decide if the query is in scope based on textbook content only.
+    - Try filtered probe; if it returns 0 hits, retry unfiltered.
+    - Two-signal rule:
+        pass if (top_sim >= T1) AND (avg_top3 >= T2 OR count_above>=2)
+      Thresholds are tightened when query shares no salient tokens with the title.
     """
-    qn = _norm(query)
-
-    # Probe filtered; if empty, try unfiltered
+    # 1) Probe
     try:
         hits = db.similarity_search_with_score(query, k=k, filter={"textbook": textbook})
         if not hits:
-            hits = db.similarity_search_with_score(query, k=k)
+            hits = db.similarity_search_with_score(query, k=k)  # fallback if filter yields 0
     except Exception:
         hits = db.similarity_search_with_score(query, k=k)
 
     if not hits:
         return False, 0.0
 
-    sims = [_score_to_similarity(score) for _, score in hits]
-    max_sim = max(sims) if sims else 0.0
+    # 2) Similarity stats
+    max_sim, avg_top3, count_above = _sim_stats(hits)
 
-    # Dynamic threshold: short/generic queries get a slightly lower bar
-    qlen = max(1, len(qn.split()))
-    dyn_thresh = base_threshold
+    # 3) Dynamic thresholds
+    q_tokens = set(_tokens(query))
+    title_tokens = set(_tokens(textbook))
+    overlap = bool(q_tokens & title_tokens)
+
+    # Base thresholds (good defaults for OpenAI text-embedding-3-large on Qdrant cosine)
+    T1 = 0.62   # top similarity must at least clear this
+    T2 = 0.54   # average of top 3 should be reasonably related
+
+    # Short queries tend to be noisier: raise bar slightly
+    qlen = max(1, len(_norm(query).split()))
     if qlen <= 4:
-        dyn_thresh -= 0.10
-    elif qlen <= 8:
-        dyn_thresh -= 0.05
-    dyn_thresh = max(0.40, min(0.85, dyn_thresh))
+        T1 += 0.03
+        T2 += 0.02
 
-    return (max_sim >= dyn_thresh, max_sim)
+    # If no topical overlap with the title, be stricter
+    if not overlap:
+        T1 += 0.06
+        T2 += 0.05
+
+    in_scope = (max_sim >= T1) and ((avg_top3 >= T2) or (count_above >= 2))
+    return in_scope, max_sim
