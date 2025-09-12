@@ -2,6 +2,9 @@
 from __future__ import annotations
 import os, json, base64, requests
 import streamlit as st
+from typing import List, Dict
+from qdrant_client import QdrantClient
+from qdrant_client.models import Filter, FieldCondition, MatchValue
 
 @st.cache_data
 def load_existing_logs() -> list:
@@ -44,3 +47,61 @@ def get_user_chat_history(logs: list, username: str, textbook: str) -> list:
         if s.get("username")==username and s.get("textbook")==textbook:
             hist.extend(s.get("interactions", []))
     return hist
+def get_user_chat_history_from_memory(
+    client: QdrantClient,
+    collection_name: str,
+    username: str,
+    textbook: str,
+    limit: int = 10,
+) -> List[Dict]:
+    """
+    Read past Q&A from the user_memory collection (all sessions), newest first.
+    Assumes each point has payload: username, textbook, timestamp, option, and page_content "Q: ...\\nA: ...".
+    """
+    # Pull a reasonable batch and sort by payload timestamp in Python
+    flt = Filter(
+        must=[
+            FieldCondition(key="username", match=MatchValue(value=username)),
+            FieldCondition(key="textbook", match=MatchValue(value=textbook)),
+        ]
+    )
+
+    points, _ = client.scroll(
+        collection_name=collection_name,
+        scroll_filter=flt,
+        limit=512,
+        with_payload=True,
+        with_vectors=False,
+    )
+
+    def _parse_qa(content: str) -> tuple[str, str]:
+        q, a = "", ""
+        if content:
+            parts = content.splitlines()
+            for line in parts:
+                if line.startswith("Q:"):
+                    q = line[2:].strip()
+                elif line.startswith("A:"):
+                    a = line[2:].strip()
+        return q, a
+
+    items = []
+    for p in points or []:
+        pl = p.payload or {}
+        q, a = _parse_qa(pl.get("content") or pl.get("text") or pl.get("page_content") or "")
+        if not q or not a:
+            # Try page_content if stored via LangChain Document
+            q2, a2 = _parse_qa(pl.get("page_content", ""))
+            q = q or q2
+            a = a or a2
+        items.append({
+            "timestamp": pl.get("timestamp", ""),
+            "option": pl.get("option", ""),
+            "question": q,
+            "answer": a,
+            "oos": bool(pl.get("oos", False)),
+        })
+
+    # Sort by timestamp (ISO strings) and return newest first, limited
+    items.sort(key=lambda x: x.get("timestamp",""), reverse=True)
+    return items[:limit]
