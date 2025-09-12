@@ -1679,5 +1679,33 @@
         "score": null
       }
     ]
+  },
+  {
+    "username": "user010",
+    "login_time": "2025-09-12 02:38:00.666194",
+    "experience_level": "Beginner",
+    "textbook": "MATHEMATICS Textbook for Class XII PART I",
+    "interactions": [
+      {
+        "timestamp": "2025-09-12T02:38:12.133916",
+        "experience_level": "Beginner",
+        "question": "what is matrices",
+        "option": "Detailed Answer",
+        "answer": "This question looks outside the scope of **MATHEMATICS Textbook for Class XII PART I**. Please ask about topics covered in this textbook.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      },
+      {
+        "timestamp": "2025-09-12T02:38:26.795297",
+        "experience_level": "Beginner",
+        "question": "what are some main topics of this textbook?",
+        "option": "Detailed Answer",
+        "answer": "This question looks outside the scope of **MATHEMATICS Textbook for Class XII PART I**. Please ask about topics covered in this textbook.",
+        "context": "",
+        "textbook": "MATHEMATICS Textbook for Class XII PART I",
+        "score": null
+      }
+    ]
   }
 ]
