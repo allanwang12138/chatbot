@@ -179,8 +179,8 @@ def is_in_scope(
     max_sim, avg_top3, count_above = _sim_stats(hits)
 
     # 3) Dynamic thresholds
-    # q_tokens = set(_tokens(query))
-    # title_tokens = set(_tokens(textbook))
+    q_tokens = set(_tokens(query))
+    title_tokens = set(_tokens(textbook))
     overlap = bool(q_tokens & title_tokens)
     sims_sorted = sorted(sims, reverse=True)
     max_sim = sims_sorted[0]
