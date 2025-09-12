@@ -184,8 +184,8 @@ def is_in_scope(
     overlap = bool(q_tokens & title_tokens)
 
     # Base thresholds (tuned for OpenAI embeddings on Qdrant/cosine)
-    T1 = 0.58   # require a decent top match
-    T2 = 0.50   # and reasonable average of top 3
+    T1 = 0.00   # require a decent top match
+    T2 = 0.00   # and reasonable average of top 3
 
     # Short queries: raise slightly (they're noisier)
     qlen = max(1, len(_norm(query).split()))
