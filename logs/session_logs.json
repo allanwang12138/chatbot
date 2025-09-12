@@ -1595,5 +1595,53 @@
         "score": null
       }
     ]
+  },
+  {
+    "username": "user001",
+    "login_time": "2025-09-12 00:32:05.827078",
+    "experience_level": "Beginner",
+    "textbook": "Statistics For Economics",
+    "interactions": [
+      {
+        "timestamp": "2025-09-12T00:32:20.454566",
+        "experience_level": "Beginner",
+        "question": "what is GDP?",
+        "option": "Detailed Answer",
+        "answer": "This question looks outside the scope of **Statistics For Economics**. Please ask about topics covered in this textbook.",
+        "context": "",
+        "textbook": "Statistics For Economics",
+        "score": null
+      },
+      {
+        "timestamp": "2025-09-12T00:32:42.236367",
+        "experience_level": "Beginner",
+        "question": "what are some concepts covered in the textbook",
+        "option": "Detailed Answer",
+        "answer": "This question looks outside the scope of **Statistics For Economics**. Please ask about topics covered in this textbook.",
+        "context": "",
+        "textbook": "Statistics For Economics",
+        "score": null
+      },
+      {
+        "timestamp": "2025-09-12T00:32:51.596624",
+        "experience_level": "Beginner",
+        "question": "what is economics",
+        "option": "Detailed Answer",
+        "answer": "This question looks outside the scope of **Statistics For Economics**. Please ask about topics covered in this textbook.",
+        "context": "",
+        "textbook": "Statistics For Economics",
+        "score": null
+      },
+      {
+        "timestamp": "2025-09-12T00:33:01.842936",
+        "experience_level": "Beginner",
+        "question": "what is statistics",
+        "option": "Detailed Answer",
+        "answer": "This question looks outside the scope of **Statistics For Economics**. Please ask about topics covered in this textbook.",
+        "context": "",
+        "textbook": "Statistics For Economics",
+        "score": null
+      }
+    ]
   }
 ]
