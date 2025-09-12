@@ -1,15 +1,18 @@
 # retrieval.py
 from __future__ import annotations
-from typing import Any, Tuple
+from typing import Any, Tuple, Dict
+import re
 import streamlit as st
+
 from qdrant_client import QdrantClient
 from langchain_qdrant import Qdrant as LcQdrant
 from langchain_openai import OpenAIEmbeddings
 from langchain.schema import Document
-import re
 
+
+# -------------------- Collections --------------------
 # Human-name -> Qdrant collection
-COLLECTION_MAP: dict[str, str] = {
+COLLECTION_MAP: Dict[str, str] = {
     "Introductory Macroeconomics": "introductory_macroeconomics_collection",
     "Introductory Microeconomics": "introductory_microeconomics_collection",
     "Statistics For Economics": "statistics_for_economics_collection",
@@ -20,11 +23,19 @@ COLLECTION_MAP: dict[str, str] = {
     "MATHEMATICS Textbook for Class XII PART II": "mathematics_textbook_for_class_xii_part_ii_collection",
 }
 
-@st.cache_resource(show_spinner=False)
-def build_clients(openai_api_key: str, qdrant_url: str, qdrant_api_key: str | None = None) -> tuple[OpenAIEmbeddings, QdrantClient]:
-    return OpenAIEmbeddings(openai_api_key=openai_api_key), QdrantClient(url=qdrant_url, api_key=qdrant_api_key or None)
 
-# retrieval.py
+# -------------------- Clients / Stores --------------------
+@st.cache_resource(show_spinner=False)
+def build_clients(
+    openai_api_key: str,
+    qdrant_url: str,
+    qdrant_api_key: str | None = None,
+) -> tuple[OpenAIEmbeddings, QdrantClient]:
+    """Create and cache embeddings + Qdrant client."""
+    embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+    client = QdrantClient(url=qdrant_url, api_key=qdrant_api_key or None)
+    return embeddings, client
+
 
 @st.cache_resource(show_spinner=False)
 def get_textbook_store(_client: QdrantClient, collection_name: str, _embeddings: OpenAIEmbeddings) -> LcQdrant:
@@ -39,19 +50,34 @@ def get_user_memory_store(_client: QdrantClient, _embeddings: OpenAIEmbeddings, 
 
 
 def make_retrievers(
-    query: str, username: str, textbook: str, level: str,
-    db: LcQdrant, memory_db: LcQdrant, *, memory_k: int = 3, textbook_k: int = 5
+    query: str,
+    username: str,
+    textbook: str,
+    level: str,
+    db: LcQdrant,
+    memory_db: LcQdrant,
+    *,
+    memory_k: int = 3,
+    textbook_k: int = 5,
 ) -> tuple[Any, bool, Any]:
+    """
+    Build retrievers and decide route.
+    - Memory retriever uses strict payload filter.
+    - Textbook retriever tries filtered-by-textbook; if that returns 0 hits, falls back to unfiltered.
+    """
     user_filter = {"username": username, "textbook": textbook, "experience_level": level}
+
+    # Memory retriever + quick probe
     memory_retriever = memory_db.as_retriever(
-        search_type="similarity", search_kwargs={"k": memory_k, "filter": user_filter}
+        search_type="similarity",
+        search_kwargs={"k": memory_k, "filter": user_filter},
     )
     try:
         has_memory_match = len(memory_db.similarity_search_with_score(query, k=1, filter=user_filter)) > 0
     except Exception:
         has_memory_match = False
 
-    # --- Textbook retriever: probe filtered; if it returns *empty*, build unfiltered ---
+    # Textbook retriever: filtered probe; if empty, unfiltered
     try:
         probe = db.similarity_search_with_score(query, k=1, filter={"textbook": textbook})
         if probe:
@@ -61,11 +87,13 @@ def make_retrievers(
             )
         else:
             textbook_retriever = db.as_retriever(
-                search_type="similarity", search_kwargs={"k": textbook_k}
+                search_type="similarity",
+                search_kwargs={"k": textbook_k},
             )
     except Exception:
         textbook_retriever = db.as_retriever(
-            search_type="similarity", search_kwargs={"k": textbook_k}
+            search_type="similarity",
+            search_kwargs={"k": textbook_k},
         )
 
     chosen = memory_retriever if has_memory_match else textbook_retriever
@@ -73,9 +101,11 @@ def make_retrievers(
 
 
 def top_context_from_sources(source_docs: list[Document], max_chars: int = 1200) -> str:
-    if not source_docs: return ""
+    if not source_docs:
+        return ""
     text = (source_docs[0].page_content or "").strip()
     return text[:max_chars] + ("..." if len(text) > max_chars else "")
+
 
 def ping_collection(client: QdrantClient, collection_name: str) -> str:
     try:
@@ -85,61 +115,63 @@ def ping_collection(client: QdrantClient, collection_name: str) -> str:
         return f"🗂️ Using collection **{collection_name}**"
 
 
+# -------------------- In-scope Gate --------------------
 def _norm(s: str) -> str:
     s = (s or "").lower().strip()
     s = re.sub(r"[^a-z0-9\s]+", " ", s)
     s = re.sub(r"\s+", " ", s)
     return s
 
+
 def _score_to_similarity(score: float) -> float:
-    """Convert various Qdrant/LC score conventions to a [0,1] similarity."""
+    """
+    Convert Qdrant/LC scores to [0,1] similarity.
+    - Cosine distance (0..1 or 0..2) → 1 - distance, clamped to [0,1].
+    - If it's already in [-1,1], clamp to [0,1].
+    """
     try:
         s = float(score)
     except Exception:
         return 0.0
-    # Cosine distance (0..1 or 0..2) -> similarity
-    if 0.0 <= s <= 2.0:
+
+    if 0.0 <= s <= 2.0:  # distance
         sim = 1.0 - s
-        # if distance was up to 2, clamp to [0,1]
-        if sim < 0.0:  # e.g., s > 1.0 from unnormalized vectors
-            sim = max(0.0, min(1.0, sim))
         return max(0.0, min(1.0, sim))
-    # Already a similarity in [-1,1] (rare)
-    if -1.0 <= s <= 1.0:
+    if -1.0 <= s <= 1.0:  # already similarity-ish
         return max(0.0, min(1.0, s))
-    # Fallback
     return 0.0
+
 
 def is_in_scope(
     query: str,
     textbook: str,
-    db,
+    db: LcQdrant,
     *,
     k: int = 4,
-    base_threshold: float = 0.50,   # a bit more permissive
+    base_threshold: float = 0.50,
 ) -> Tuple[bool, float]:
     """
-    Gate on textbook *content only*. If no doc is close, treat as out-of-scope.
-    Important: if the payload filter yields zero hits, retry unfiltered.
+    Check if the query is close enough to *textbook content*.
+    We first try a payload-filtered probe; if that returns zero hits,
+    we retry unfiltered before deciding it's out-of-scope.
     """
     qn = _norm(query)
 
-    # 1) Probe textbook collection (filtered), then unfiltered if empty
+    # Probe filtered; if empty, try unfiltered
     try:
         hits = db.similarity_search_with_score(query, k=k, filter={"textbook": textbook})
         if not hits:
-            hits = db.similarity_search_with_score(query, k=k)  # <-- fallback on empty
+            hits = db.similarity_search_with_score(query, k=k)
     except Exception:
         hits = db.similarity_search_with_score(query, k=k)
 
     if not hits:
         return False, 0.0
 
-    # 2) Convert distance->similarity and apply a dynamic threshold
     sims = [_score_to_similarity(score) for _, score in hits]
     max_sim = max(sims) if sims else 0.0
 
-    # Very short or generic queries tend to score lower; lower the bar slightly.
+    # Dynamic threshold: short/generic queries get a slightly lower bar
     qlen = max(1, len(qn.split()))
     dyn_thresh = base_threshold
     if qlen <= 4:
