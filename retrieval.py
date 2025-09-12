@@ -11,7 +11,6 @@ from langchain.schema import Document
 
 
 # -------------------- Collections --------------------
-# Human-name -> Qdrant collection
 COLLECTION_MAP: Dict[str, str] = {
     "Introductory Macroeconomics": "introductory_macroeconomics_collection",
     "Introductory Microeconomics": "introductory_microeconomics_collection",
@@ -31,7 +30,6 @@ def build_clients(
     qdrant_url: str,
     qdrant_api_key: str | None = None,
 ) -> tuple[OpenAIEmbeddings, QdrantClient]:
-    """Create and cache embeddings + Qdrant client."""
     embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
     client = QdrantClient(url=qdrant_url, api_key=qdrant_api_key or None)
     return embeddings, client
@@ -39,13 +37,11 @@ def build_clients(
 
 @st.cache_resource(show_spinner=False)
 def get_textbook_store(_client: QdrantClient, collection_name: str, _embeddings: OpenAIEmbeddings) -> LcQdrant:
-    """LangChain Qdrant store for textbook collection."""
     return LcQdrant(client=_client, collection_name=collection_name, embeddings=_embeddings)
 
 
 @st.cache_resource(show_spinner=False)
 def get_user_memory_store(_client: QdrantClient, _embeddings: OpenAIEmbeddings, collection_name: str = "user_memory") -> LcQdrant:
-    """LangChain Qdrant store for user-specific memory collection."""
     return LcQdrant(client=_client, collection_name=collection_name, embeddings=_embeddings)
 
 
@@ -63,7 +59,7 @@ def make_retrievers(
     """
     Build retrievers and decide route.
     - Memory retriever uses strict payload filter.
-    - Textbook retriever tries filtered-by-textbook; if that returns 0 hits, falls back to unfiltered.
+    - Textbook retriever: try filtered; if the probe returns 0 hits, fall back to unfiltered.
     """
     user_filter = {"username": username, "textbook": textbook, "experience_level": level}
 
@@ -80,7 +76,7 @@ def make_retrievers(
     # Textbook retriever: filtered probe; if empty, unfiltered
     try:
         probe = db.similarity_search_with_score(query, k=1, filter={"textbook": textbook})
-        if probe:
+        if probe and len(probe) > 0:
             textbook_retriever = db.as_retriever(
                 search_type="similarity",
                 search_kwargs={"k": textbook_k, "filter": {"textbook": textbook}},
@@ -124,20 +120,14 @@ def _norm(s: str) -> str:
 
 
 def _score_to_similarity(score: float) -> float:
-    """
-    Convert Qdrant/LC scores to [0,1] similarity.
-    - Cosine distance (0..1 or 0..2) → 1 - distance, clamped to [0,1].
-    - If it's already in [-1,1], clamp to [0,1].
-    """
+    """Convert Qdrant/LC scores to [0,1] similarity. (Distance → 1 - distance.)"""
     try:
         s = float(score)
     except Exception:
         return 0.0
-
-    if 0.0 <= s <= 2.0:  # distance
-        sim = 1.0 - s
-        return max(0.0, min(1.0, sim))
-    if -1.0 <= s <= 1.0:  # already similarity-ish
+    if 0.0 <= s <= 2.0:           # cosine distance in [0,1] or [0,2]
+        return max(0.0, min(1.0, 1.0 - s))
+    if -1.0 <= s <= 1.0:          # already similarity-ish
         return max(0.0, min(1.0, s))
     return 0.0
 
@@ -148,15 +138,13 @@ def is_in_scope(
     db: LcQdrant,
     *,
     k: int = 4,
-    base_threshold: float = 0.50,
+    sim_cutoff: float = 0.05,   # VERY lenient – only block truly off-topic queries
 ) -> Tuple[bool, float]:
     """
-    Check if the query is close enough to *textbook content*.
-    We first try a payload-filtered probe; if that returns zero hits,
-    we retry unfiltered before deciding it's out-of-scope.
+    Decide if the query is in scope based on textbook content only.
+    1) Try filtered probe; if it returns 0 hits, retry unfiltered.
+    2) If we get any hits at all, treat it as in-scope unless the top similarity is *extremely* low.
     """
-    qn = _norm(query)
-
     # Probe filtered; if empty, try unfiltered
     try:
         hits = db.similarity_search_with_score(query, k=k, filter={"textbook": textbook})
@@ -171,13 +159,5 @@ def is_in_scope(
     sims = [_score_to_similarity(score) for _, score in hits]
     max_sim = max(sims) if sims else 0.0
 
-    # Dynamic threshold: short/generic queries get a slightly lower bar
-    qlen = max(1, len(qn.split()))
-    dyn_thresh = base_threshold
-    if qlen <= 4:
-        dyn_thresh -= 0.10
-    elif qlen <= 8:
-        dyn_thresh -= 0.05
-    dyn_thresh = max(0.40, min(0.85, dyn_thresh))
-
-    return (max_sim >= dyn_thresh, max_sim)
+    # Lenient gate: treat as in-scope if we have any reasonable hit
+    return (max_sim >= sim_cutoff, max_sim)
