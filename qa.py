@@ -4,10 +4,12 @@ from typing import Any, List, Optional, Literal
 import re
 from dataclasses import dataclass
 
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
 from langchain_openai import ChatOpenAI
 from langchain.chains import ConversationalRetrievalChain
 from langchain.schema import BaseMessage, Document
-from langchain.prompts import ChatPromptTemplate
 
 from retrieval import make_retrievers, top_context_from_sources, is_in_scope
 
@@ -48,7 +50,7 @@ Question:
 {question}
 Answer:
 """
-_INTERMEDIATE_CONCISE = """Provide a concise answer to someone somewhat familiar with {textbook} in less than 4 sentences.
+_INTERMEDIATE_CONCISE = """Provide a concise answer to someone somewhat familiar with for {textbook} in less than 4 sentences.
 Context:
 {context}
 Question:
@@ -69,6 +71,8 @@ Question:
 {question}
 Answer:
 """
+
+from langchain.prompts import ChatPromptTemplate
 
 def _get_prompt(level: str, answer_type: AnswerType, textbook: str) -> ChatPromptTemplate:
     lvl = (level or "Intermediate").title()
@@ -92,51 +96,28 @@ def _build_llm(openai_api_key: str) -> ChatOpenAI:
     return ChatOpenAI(openai_api_key=openai_api_key)
 
 
-# ----- vector-based reuse from user_memory (Qdrant only) -----
-def _extract_answer_from_doc_text(text: str) -> str:
-    """Our memory docs are stored as 'Q: ...\\nA: ...'. Pull just the answer if present."""
-    if not text:
-        return ""
-    m = re.search(r"\bA:\s*(.*)\Z", text, flags=re.DOTALL)
-    return (m.group(1).strip() if m else text.strip())
-
-def vector_reuse_from_memory(
+# ----- reuse-from-logs (TF-IDF) -----
+def reuse_answer_from_logs(
+    logs: list,
     question: str,
-    username: str,
-    textbook: str,
     level: str,
-    memory_db,
+    textbook: str,
+    answer_type: AnswerType,
     *,
-    k: int = 1,
-    similarity_threshold: float = 0.78,  # tune 0.68–0.82 for your data
+    threshold: float = 0.75,
 ) -> Optional[str]:
-    """Return a reused answer from user_memory if the nearest doc is similar enough."""
-    user_filter = {
-        "username": username,
-        "textbook": textbook,
-        "experience_level": level,
-    }
-    try:
-        hits = memory_db.similarity_search_with_score(question, k=k, filter=user_filter)
-    except Exception:
-        return None
-
-    if not hits:
-        return None
-
-    # Qdrant with cosine distance returns distance in [0,2]; LC normalizes to [0,1].
-    # We convert to similarity ≈ 1 - distance.
-    doc, score = hits[0]
-    try:
-        sim = 1.0 - float(score)
-    except Exception:
-        # If already similarity, use it; else treat as low sim
-        sim = float(score) if isinstance(score, (int, float)) else 0.0
-
-    if sim >= similarity_threshold:
-        return _extract_answer_from_doc_text(getattr(doc, "page_content", "") or "")
-
-    return None
+    def prep(t: str) -> str: return re.sub(r"[^\w\s]", "", (t or "").lower()).strip()
+    new_q = prep(question); qs, ans = [], []
+    for session in logs or []:
+        for e in session.get("interactions", []):
+            same = (("Concise" in e.get("option","") and answer_type == "Concise")
+                    or ("Detailed" in e.get("option","") and answer_type == "Detailed"))
+            if e.get("experience_level")==level and e.get("textbook")==textbook and same:
+                qs.append(prep(e.get("question",""))); ans.append(e.get("answer",""))
+    if not qs: return None
+    vec = TfidfVectorizer().fit(qs + [new_q]); M = vec.transform(qs + [new_q])
+    sims = cosine_similarity(M[-1], M[:-1])[0]; i = sims.argmax()
+    return ans[i] if sims[i] >= threshold else None
 
 
 # ----- optional compress step for Concise/Voice -----
@@ -159,11 +140,11 @@ def answer(
     memory,                              # ConversationBufferMemory
     db,                                  # textbook LC Qdrant store
     memory_db,                           # user_memory LC Qdrant store
-    logs: list,                          # kept for compatibility; ignored now
+    logs: list,
     openai_api_key: str,
 ) -> QAResult:
     ans_type: AnswerType = "Concise" if ("Concise" in option or "Voice" in option) else "Detailed"
-
+    
     # 0) Subject-scope gate (block early)
     in_scope, _ = is_in_scope(raw_question, textbook, db)
     if not in_scope:
@@ -182,9 +163,8 @@ def answer(
             level=level,
             textbook=textbook,
         )
-
-    # 1) vector-based reuse from user_memory (Qdrant only)
-    reused = vector_reuse_from_memory(raw_question, username, textbook, level, memory_db)
+    # 1) reuse path
+    reused = reuse_answer_from_logs(logs, raw_question, level, textbook, ans_type)
     if reused:
         final_text = reused
         if ans_type == "Concise":
