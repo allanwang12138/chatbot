@@ -131,4 +131,143 @@ def upsert_interaction_to_memory(
     )
     try:
         memory_db.add_documents([doc])
-        # Prevent exit uploader from dupl
+        # Prevent exit uploader from duplicating
+        st.session_state["uploaded_to_memory"] = True
+    except Exception as e:
+        st.warning(f"⚠️ Could not update personal memory: {e}")
+
+# ------------------ SIDEBAR TOGGLE ------------------
+if "show_chat_history" not in st.session_state:
+    st.session_state["show_chat_history"] = False
+
+if st.session_state.get("chat_history_enabled", False):
+    if st.button("📜 Show/Hide Chat History", key="toggle_chat_history"):
+        st.session_state["show_chat_history"] = not st.session_state["show_chat_history"]
+
+# ------------------ MAIN UI ------------------
+st.title(f"📄 {textbook} Q&A App")
+raw_query = st.text_input(f"Ask a question about {textbook}:")
+col1, col2, col3 = st.columns(3)
+option = None
+with col1:
+    if st.button("📖 Detailed Answer"):
+        option = "Detailed Answer"
+with col2:
+    if st.button("✂️ Concise Answer"):
+        option = "Concise Answer"
+with col3:
+    if st.button("🔊 Voice Answer"):
+        option = "Concise Answer + Voice"
+
+# ------------------ ANSWER FLOW ------------------
+just_upserted = False
+
+if raw_query and option:
+    is_voice = ("Voice" in option)
+
+    result = qa.answer(
+        raw_question=raw_query,
+        option=option,
+        username=username,
+        level=level,
+        textbook=textbook,
+        memory=st.session_state.buffer_memory,
+        db=db,
+        memory_db=memory_db,
+        logs=[],  # not used; vector-only
+        openai_api_key=OPENAI_API_KEY,
+    )
+
+    # Route hint
+    if result.route == "reuse":
+        st.info("🔁 Reused a similar answer from your personal memory.")
+    elif result.route == "memory":
+        st.caption("🧠 Using your personal memory context.")
+    elif result.route == "textbook":
+        st.caption("📚 Using textbook context.")
+    elif result.route == "oos":
+        st.warning(f"🚫 Outside the scope of **{textbook}**.")
+
+    # Render: hide text if Voice Answer was chosen
+    if is_voice:
+        st.markdown("### 🔊 Voice Answer")
+    else:
+        st.markdown("### 📘 Answer")
+        st.write(result.answer)
+
+    # Supporting context (hide if out-of-scope)
+    if result.route != "oos":
+        with st.expander("📚 Show Supporting Context"):
+            if not result.sources:
+                st.write("No supporting documents returned.")
+            else:
+                top = result.sources[0]
+                meta = getattr(top, "metadata", {}) or {}
+                st.markdown(
+                    f"**Source:** `{meta.get('source','unknown')}` — "
+                    f"**Textbook:** {meta.get('textbook','N/A')}"
+                )
+                snippet = (top.page_content or "")
+                st.write(snippet[:1200] + ("..." if len(snippet) > 1200 else ""))
+
+    # Voice playback
+    if is_voice:
+        voice_choice = st.session_state.get("voice", "alloy")
+        with st.spinner(f"🎙️ Generating voice with '{voice_choice}'..."):
+            audio_bytes = synthesize(result.answer, voice_choice)
+            play_in_streamlit(audio_bytes)
+
+    # Log interaction locally (for exit analytics) + immediate upsert to memory
+    st.session_state.setdefault("session_log", {"interactions": []})
+    ts_iso = datetime.datetime.utcnow().isoformat()
+    st.session_state["session_log"]["interactions"].append({
+        "timestamp": ts_iso,
+        "experience_level": level,
+        "question": raw_query,
+        "option": option,
+        "answer": result.answer,
+        "context": result.context_snippet,
+        "textbook": textbook,
+        "score": None,
+    })
+    # Upsert now so history + reuse see it immediately
+    if result.route != "oos":  # don't store OOS messages
+        upsert_interaction_to_memory(
+            memory_db,
+            username=username,
+            textbook=textbook,
+            level=level,
+            option=option,
+            question=raw_query,
+            answer=result.answer,
+            timestamp_iso=ts_iso,
+        )
+        just_upserted = True
+
+st.markdown("---")
+
+# ------------------ SIDEBAR RENDER (after potential upsert) ------------------
+if st.session_state.get("chat_history_enabled", False) and st.session_state["show_chat_history"]:
+    st.sidebar.title("📜 Chat History")
+    hist_items = fetch_user_history_from_qdrant(client, username, textbook, level, limit=100)
+    if not hist_items:
+        st.sidebar.info("No previous interactions found.")
+    else:
+        for item in hist_items[:10]:  # show most recent 10
+            ts = item.get("timestamp") or ""
+            st.sidebar.markdown(f"**Q:** {item.get('question','') or '—'}  \n🕒 {ts}")
+            st.sidebar.markdown(f"**A ({item.get('option','')}):** {item.get('answer','') or '—'}")
+            st.sidebar.markdown("---")
+
+# ------------------ EXIT: upload Q&A to user_memory (no GitHub) ------------------
+if st.button("🚪 Exit", key="exit_session"):
+    uploaded = 0
+    if "session_log" in st.session_state:
+        # Most items were already upserted live; this is a safety net (skips if flag set)
+        uploaded = upload_session_to_user_memory(st.session_state["session_log"], memory_db)
+        if uploaded:
+            st.success(f"📤 Added {uploaded} Q&A item(s) to your personal memory.")
+        else:
+            st.info("No new Q&A to upload to personal memory.")
+    st.session_state.clear()
+    st.rerun()
